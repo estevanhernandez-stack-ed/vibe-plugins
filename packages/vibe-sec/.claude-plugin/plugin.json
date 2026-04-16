@@ -1,0 +1,6 @@
+{
+  "name": "vibe-sec",
+  "version": "0.0.1",
+  "description": "Vibe Sec — security scanner and fix generator for vibe-coded apps. Detects the predictable security gaps AI-prototyped applications ship with, and fixes what it can. Tiered by app type and deployment context.",
+  "author": { "name": "626Labs LLC" }
+}

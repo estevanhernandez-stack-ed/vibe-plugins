@@ -1,0 +1,6 @@
+{
+  "name": "vibe-test",
+  "version": "0.0.1",
+  "description": "Vibe Test — test analyzer and generator for vibe-coded apps. Reads what the app actually does, classifies its testing tier, and generates tests proportional to maturity and deployment risk.",
+  "author": { "name": "626Labs LLC" }
+}

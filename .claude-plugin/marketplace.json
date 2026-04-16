@@ -1,0 +1,19 @@
+{
+  "name": "vibe-plugins",
+  "owner": {
+    "name": "626Labs LLC"
+  },
+  "description": "The Vibe Plugins ecosystem — spec-driven development, documentation, security, and testing for vibe-coded apps. Each plugin is independently versioned; installing this marketplace gives you the full set.",
+  "plugins": [
+    {
+      "name": "vibe-sec",
+      "source": "./packages/vibe-sec",
+      "description": "Security scanner and fix generator for vibe-coded apps. Classification-driven. Tiered by deployment context."
+    },
+    {
+      "name": "vibe-test",
+      "source": "./packages/vibe-test",
+      "description": "Test analyzer and generator for vibe-coded apps. Layered (smoke → behavioral → edge → integration → performance), proportional to app maturity."
+    }
+  ]
+}
