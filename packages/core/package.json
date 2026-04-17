@@ -1,0 +1,76 @@
+{
+  "name": "@626labs/plugin-core",
+  "version": "0.0.1",
+  "description": "Shared infrastructure for the 626Labs Vibe Plugins ecosystem — file scanner, classifier scaffolding, session logger, state management, CI check pattern, unified profile helpers, and ecosystem composition utilities.",
+  "author": "626Labs LLC",
+  "license": "MIT",
+  "homepage": "https://github.com/estevanhernandez-stack-ed/vibe-plugins#readme",
+  "bugs": "https://github.com/estevanhernandez-stack-ed/vibe-plugins/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/estevanhernandez-stack-ed/vibe-plugins.git",
+    "directory": "packages/core"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./scanner": {
+      "types": "./dist/scanner/index.d.ts",
+      "default": "./dist/scanner/index.js"
+    },
+    "./classifier": {
+      "types": "./dist/classifier/index.d.ts",
+      "default": "./dist/classifier/index.js"
+    },
+    "./session-logger": {
+      "types": "./dist/session-logger/index.d.ts",
+      "default": "./dist/session-logger/index.js"
+    },
+    "./state": {
+      "types": "./dist/state/index.d.ts",
+      "default": "./dist/state/index.js"
+    },
+    "./ci-check": {
+      "types": "./dist/ci-check/index.d.ts",
+      "default": "./dist/ci-check/index.js"
+    },
+    "./profile": {
+      "types": "./dist/profile/index.d.ts",
+      "default": "./dist/profile/index.js"
+    },
+    "./composition": {
+      "types": "./dist/composition/index.d.ts",
+      "default": "./dist/composition/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "fast-glob": "^3.3.2",
+    "simple-git": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.6",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "vibe-plugins",
+    "626labs",
+    "claude-code-plugin",
+    "shared-library"
+  ]
+}
