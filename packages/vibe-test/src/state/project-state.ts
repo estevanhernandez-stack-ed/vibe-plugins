@@ -79,20 +79,52 @@ export const DEFAULT_PROJECT_STATE: ProjectState = {
   covered_surfaces_written_at: null,
 };
 
-/** Read project state for a given repo root. Stub: returns defaults (schema_version 1). */
-export async function readProjectState(_repoRoot: string): Promise<ProjectState | null> {
-  return null;
+import { promises as fs } from 'node:fs';
+import { join } from 'node:path';
+
+import { atomicWriteJson } from './atomic-write.js';
+
+/** Read project state for a given repo root. Returns `null` if absent or unparseable. */
+export async function readProjectState(repoRoot: string): Promise<ProjectState | null> {
+  const path = projectStatePath(repoRoot);
+  try {
+    const raw = await fs.readFile(path, 'utf8');
+    const parsed = JSON.parse(raw) as ProjectState;
+    if (typeof parsed !== 'object' || parsed === null) return null;
+    return parsed;
+  } catch {
+    return null;
+  }
 }
 
-/** Persist project state. Stub: no-op. */
+/** Persist project state atomically. */
 export async function writeProjectState(
-  _repoRoot: string,
-  _state: ProjectState,
+  repoRoot: string,
+  state: ProjectState,
 ): Promise<void> {
-  return;
+  const stamped: ProjectState = {
+    ...state,
+    last_updated: state.last_updated ?? new Date().toISOString(),
+  };
+  await atomicWriteJson(projectStatePath(repoRoot), stamped);
 }
 
 /** Compute the path where per-project state lives. Public for callers needing the path. */
 export function projectStatePath(repoRoot: string): string {
-  return `${repoRoot}/.vibe-test/state.json`;
+  return join(repoRoot, '.vibe-test', 'state.json');
+}
+
+/** Compute the per-command sidecar path (e.g., `<repo>/.vibe-test/state/audit.json`). */
+export function projectStateSidecarPath(repoRoot: string, command: string, scopeHash?: string): string {
+  const name = scopeHash ? `${command}-${scopeHash}.json` : `${command}.json`;
+  return join(repoRoot, '.vibe-test', 'state', name);
+}
+
+/** Deterministic short-hash for a scope string — used in scoped-audit sidecar paths. */
+export function scopeHash(scope: string): string {
+  let h = 5381;
+  for (let i = 0; i < scope.length; i += 1) {
+    h = ((h << 5) + h + scope.charCodeAt(i)) >>> 0;
+  }
+  return h.toString(16).padStart(8, '0');
 }
