@@ -15,6 +15,7 @@ coverage/
 .vibe-doc/
 .vibe-sec/
 .vibe-test/
+.626labs/
 .idea/
 .vscode/
 *.swp
