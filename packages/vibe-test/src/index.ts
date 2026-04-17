@@ -1,12 +1,16 @@
 /**
  * @esthernandez/vibe-test — public entry point.
  *
- * v0.2 items #1–#11 populate the layers below. Today (item #1) only the
- * state layer has implementation; the other barrel re-exports exist so
- * imports in future items compile cleanly.
+ * v0.2 items #1–#11 populate the layers below. After item #2 the scanner,
+ * coverage, reporter, and composition primitives are live; generator, runtime,
+ * handoff, and cli are still pending their own items.
  */
 
 export * as state from './state/index.js';
+export * as scanner from './scanner/index.js';
+export * as coverage from './coverage/index.js';
+export * as reporter from './reporter/index.js';
+export * as composition from './composition/index.js';
 
 // Re-export commonly used state types at the top level for ergonomic imports.
 export type {
@@ -23,5 +27,17 @@ export type {
   WinEntry,
   BeaconEntry,
 } from './state/index.js';
+
+// Ergonomic re-exports for the new primitives.
+export type { Inventory } from './scanner/index.js';
+export type { Coverage, WeightedScoreInput, WeightedScoreResult } from './coverage/index.js';
+export type {
+  ReportObject,
+  CommandName,
+  Finding,
+  Action,
+  Deferral,
+} from './reporter/index.js';
+export type { AnchoredEntry, ComplementStatus } from './composition/index.js';
 
 export const VERSION = '0.2.0' as const;
