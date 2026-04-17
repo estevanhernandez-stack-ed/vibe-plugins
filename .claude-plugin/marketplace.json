@@ -13,7 +13,7 @@
     {
       "name": "vibe-test",
       "source": "./packages/vibe-test",
-      "description": "Test analyzer and generator for vibe-coded apps. Layered (smoke → behavioral → edge → integration → performance), proportional to app maturity."
+      "description": "Test analyzer and generator for vibe-coded apps. Classifies by app type and maturity tier, measures coverage honestly (no cherry-picked denominators), generates tests proportional to deployment risk — and catches the broken harnesses every other test tool assumes away."
     }
   ]
 }

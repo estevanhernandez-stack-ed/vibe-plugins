@@ -1,6 +1,54 @@
 {
   "name": "vibe-test",
-  "version": "0.0.1",
-  "description": "Vibe Test — test analyzer and generator for vibe-coded apps. Reads what the app actually does, classifies its testing tier, and generates tests proportional to maturity and deployment risk.",
-  "author": { "name": "626Labs LLC" }
+  "version": "0.2.0",
+  "description": "Test analyzer and generator for vibe-coded apps. Classifies your app by type and maturity tier, audits existing coverage honestly (no cherry-picked denominators), and generates the tests that actually matter proportional to deployment risk.",
+  "author": {
+    "name": "626Labs LLC",
+    "url": "https://github.com/estevanhernandez-stack-ed/vibe-plugins"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/estevanhernandez-stack-ed/vibe-plugins/tree/main/packages/vibe-test",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/estevanhernandez-stack-ed/vibe-plugins.git",
+    "directory": "packages/vibe-test"
+  },
+  "keywords": [
+    "testing",
+    "coverage",
+    "test-generation",
+    "vibe-coding",
+    "audit",
+    "ci-gate"
+  ],
+  "commands": [
+    {
+      "name": "vibe-test",
+      "description": "Router — identity, state-awareness, next-step prompt"
+    },
+    {
+      "name": "vibe-test:audit",
+      "description": "Inventory + classify + score — diagnoses whole testing posture"
+    },
+    {
+      "name": "vibe-test:generate",
+      "description": "Confidence-tiered test generation (auto / stage / inline)"
+    },
+    {
+      "name": "vibe-test:fix",
+      "description": "Diagnose + repair broken tests or harnesses"
+    },
+    {
+      "name": "vibe-test:coverage",
+      "description": "Honest-denominator coverage measurement with tier interpretation"
+    },
+    {
+      "name": "vibe-test:gate",
+      "description": "CI-safe pass/fail against app tier threshold"
+    },
+    {
+      "name": "vibe-test:posture",
+      "description": "Read-only ambient summary of current testing posture"
+    }
+  ]
 }
