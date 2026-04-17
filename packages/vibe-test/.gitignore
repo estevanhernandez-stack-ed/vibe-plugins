@@ -1,6 +1,8 @@
 node_modules/
 dist/
-coverage/
+# Ignore the vitest coverage output directory at the package root only — our
+# source modules at src/coverage/ and tests/unit/coverage/ must remain tracked.
+/coverage/
 .vibe-test/
 *.bak
 *.bak.*

@@ -1,6 +1,13 @@
 node_modules/
 dist/
+# Ignore coverage-output directories anywhere except when they're source modules
+# named coverage/ (e.g., packages/vibe-test/src/coverage/ + tests/unit/coverage/).
+# Track them explicitly with the negation below.
 coverage/
+!packages/vibe-test/src/coverage/
+!packages/vibe-test/src/coverage/**
+!packages/vibe-test/tests/unit/coverage/
+!packages/vibe-test/tests/unit/coverage/**
 .DS_Store
 *.log
 .env
