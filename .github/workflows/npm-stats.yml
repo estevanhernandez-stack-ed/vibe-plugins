@@ -1,0 +1,53 @@
+name: npm download stats
+
+on:
+  schedule:
+    # 14:00 UTC = 09:00 America/Chicago (CST).
+    # DST shifts this to 08:00 local in summer; re-evaluate if that bothers Este.
+    - cron: "0 14 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: npm-stats
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    name: Collect and commit daily npm stats
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 1
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run npm-stats collector
+        run: python scripts/npm-stats.py
+
+      - name: Commit snapshot
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add data/stats/
+
+          if git diff --cached --quiet; then
+            echo "no stats changes — skipping commit"
+            exit 0
+          fi
+
+          DAY="$(date -u +%Y-%m-%d)"
+          git commit -m "stats: daily npm download snapshot ${DAY}"
+          git push

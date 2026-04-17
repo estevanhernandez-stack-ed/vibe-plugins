@@ -70,3 +70,7 @@ Built by [626Labs LLC](https://626labs.dev) — Fort Worth, TX.
 ## License
 
 MIT
+
+## Ecosystem stats
+
+Daily npm download counts for every tracked package are collected by [`scripts/npm-stats.py`](./scripts/npm-stats.py) and committed to [`data/stats/`](./data/stats/) by the `npm download stats` workflow at 14:00 UTC daily. The append-only [`history.jsonl`](./data/stats/history.jsonl) is the data source for the eventual 626Labs Dashboard widget; `data/stats/YYYY-MM-DD.json` holds the latest snapshot for each day.
