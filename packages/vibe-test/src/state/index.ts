@@ -47,6 +47,8 @@ export {
   readProjectState,
   writeProjectState,
   projectStatePath,
+  projectStateSidecarPath,
+  scopeHash,
   DEFAULT_PROJECT_STATE,
 } from './project-state.js';
 export type {

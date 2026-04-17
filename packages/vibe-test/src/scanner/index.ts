@@ -259,3 +259,24 @@ export type {
   ModelEntry,
   IntegrationEntry,
 };
+
+export { classifyAppType } from './classify-app-type.js';
+export type {
+  ClassifyAppTypeInput,
+  ClassifyAppTypeResult,
+} from './classify-app-type.js';
+
+export { classifyModifiers } from './classify-modifiers.js';
+export type { ClassifyModifiersInput, ContextModifier } from './classify-modifiers.js';
+
+export {
+  extractCoveredSurfaces,
+  loadTestContents,
+} from './covered-surfaces.js';
+export type {
+  CoveredSurface,
+  CoveredSurfacesDoc,
+  ExtractInput as ExtractCoveredSurfacesInput,
+  SurfaceKind,
+  SurfaceCoverageLevel,
+} from './covered-surfaces.js';
