@@ -1,0 +1,45 @@
+{
+  "name": "@esthernandez/vibe-test-cli",
+  "version": "0.2.0",
+  "description": "CLI wrapper for @esthernandez/vibe-test — headless audit/coverage/gate/posture for CI pipelines.",
+  "author": "626Labs LLC",
+  "license": "MIT",
+  "homepage": "https://github.com/estevanhernandez-stack-ed/vibe-plugins#readme",
+  "bugs": "https://github.com/estevanhernandez-stack-ed/vibe-plugins/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/estevanhernandez-stack-ed/vibe-plugins.git",
+    "directory": "packages/vibe-test-cli"
+  },
+  "bin": {
+    "vibe-test": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs --clean",
+    "type-check": "tsc --noEmit",
+    "test": "echo 'cli tests in item 10'"
+  },
+  "dependencies": {
+    "@esthernandez/vibe-test": "workspace:*",
+    "commander": "^12.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.10",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "keywords": [
+    "vibe-plugins",
+    "626labs",
+    "cli",
+    "testing",
+    "ci"
+  ]
+}

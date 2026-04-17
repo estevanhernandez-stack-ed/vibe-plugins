@@ -1,5 +1,6 @@
 node_modules/
 dist/
+coverage/
 .DS_Store
 *.log
 .env
@@ -11,6 +12,9 @@ dist/
 .vscode/
 *.swp
 *.swo
+*.bak
+*.bak.*
+*.tmp.*
 Thumbs.db
 desktop.ini
 .claude/

@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://vibe-plugins.626labs.com/schemas/vibe-test/covered-surfaces.schema.json",
+  "title": "Vibe Test Covered Surfaces (output for Vibe Sec)",
+  "description": "Written by Vibe Test audit to <project>/.vibe-test/state/covered-surfaces.json. Vibe Sec reads this for cross-plugin coordination (EC5). Contains route names + model names + component identifiers — never secrets.",
+  "type": "object",
+  "required": ["schema_version", "generated_at", "surfaces"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "plugin_version": { "type": "string" },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "project": {
+      "type": "object",
+      "properties": {
+        "repo_root": { "type": "string" },
+        "commit_hash": { "type": ["string", "null"] }
+      }
+    },
+    "surfaces": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["kind", "identifier", "coverage_level"],
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": ["route", "component", "model", "middleware", "integration"]
+          },
+          "identifier": {
+            "type": "string",
+            "description": "Public name (e.g., `GET /users/:id`, `BadgeManager`, `userSchema`). Must not contain secrets."
+          },
+          "file_path": { "type": "string" },
+          "coverage_level": {
+            "type": "string",
+            "enum": ["none", "smoke", "behavioral", "edge", "integration", "performance"]
+          },
+          "test_files": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "last_verified_at": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "properties": {
+        "total_surfaces": { "type": "integer", "minimum": 0 },
+        "covered_surfaces": { "type": "integer", "minimum": 0 },
+        "coverage_by_kind": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "total": { "type": "integer" },
+              "covered": { "type": "integer" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

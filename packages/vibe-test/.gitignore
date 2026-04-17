@@ -1,0 +1,9 @@
+node_modules/
+dist/
+coverage/
+.vibe-test/
+*.bak
+*.bak.*
+*.tmp.*
+.DS_Store
+*.log

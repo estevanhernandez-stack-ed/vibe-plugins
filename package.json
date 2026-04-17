@@ -1,0 +1,28 @@
+{
+  "name": "vibe-plugins-monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "description": "The Vibe Plugins monorepo — spec-driven development, documentation, security, and testing for vibe-coded apps.",
+  "author": "626Labs LLC",
+  "license": "MIT",
+  "homepage": "https://github.com/estevanhernandez-stack-ed/vibe-plugins#readme",
+  "bugs": "https://github.com/estevanhernandez-stack-ed/vibe-plugins/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/estevanhernandez-stack-ed/vibe-plugins.git"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "pnpm -r --filter=./packages/* build",
+    "type-check": "pnpm -r --filter=./packages/* type-check",
+    "test": "pnpm -r --filter=./packages/* test",
+    "clean": "pnpm -r --filter=./packages/* clean"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.15.9"
+}

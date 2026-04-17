@@ -1,0 +1,154 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://vibe-plugins.626labs.com/schemas/vibe-test/audit-state.schema.json",
+  "title": "Vibe Test Audit State",
+  "description": "Per-project audit state. Written at <project>/.vibe-test/state.json and .vibe-test/state/audit.json.",
+  "type": "object",
+  "required": ["schema_version", "last_updated"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "command": { "type": "string", "const": "audit" },
+    "last_updated": { "type": "string", "format": "date-time" },
+    "plugin_version": { "type": "string" },
+    "project": {
+      "type": "object",
+      "required": ["repo_root"],
+      "properties": {
+        "repo_root": { "type": "string" },
+        "scope": { "type": ["string", "null"] },
+        "commit_hash": { "type": ["string", "null"] }
+      }
+    },
+    "classification": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "required": ["app_type", "tier", "confidence"],
+          "properties": {
+            "app_type": {
+              "type": "string",
+              "enum": [
+                "static",
+                "spa",
+                "spa-api",
+                "full-stack-db",
+                "api-service",
+                "multi-tenant-saas"
+              ]
+            },
+            "tier": {
+              "type": "string",
+              "enum": [
+                "prototype",
+                "internal",
+                "public-facing",
+                "customer-facing-saas",
+                "regulated"
+              ]
+            },
+            "modifiers": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+            "mixed_stack_portions": {
+              "type": "array",
+              "description": "For mixed-stack repos (A8), one classification entry per coherent portion.",
+              "items": {
+                "type": "object",
+                "required": ["path_glob", "app_type", "tier", "confidence"],
+                "properties": {
+                  "path_glob": { "type": "string" },
+                  "app_type": { "type": "string" },
+                  "tier": { "type": "string" },
+                  "confidence": { "type": "number" }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "inventory": {
+      "type": "object",
+      "description": "Scanner-emitted inventory. Shape fleshed out in item #2.",
+      "properties": {
+        "routes": { "type": "array" },
+        "components": { "type": "array" },
+        "models": { "type": "array" },
+        "integrations": { "type": "array" },
+        "test_frameworks": { "type": "array", "items": { "type": "string" } },
+        "existing_test_files": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "coverage_snapshot": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "required": ["current_score", "target_score", "measured_at"],
+          "properties": {
+            "current_score": { "type": "number" },
+            "target_score": { "type": "number" },
+            "per_level": {
+              "type": "object",
+              "additionalProperties": { "type": "number" }
+            },
+            "denominator_honest": { "type": "boolean" },
+            "measured_at": { "type": "string", "format": "date-time" }
+          }
+        }
+      ]
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "severity", "category"],
+        "properties": {
+          "id": { "type": "string" },
+          "severity": {
+            "type": "string",
+            "enum": ["critical", "high", "medium", "low", "info"]
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "gap-smoke",
+              "gap-behavioral",
+              "gap-edge",
+              "gap-integration",
+              "gap-performance",
+              "harness-break",
+              "classification-mismatch",
+              "cherry-picked-denominator"
+            ]
+          },
+          "title": { "type": "string" },
+          "rationale": { "type": "string" },
+          "effort": {
+            "type": "string",
+            "enum": ["low", "medium", "high"]
+          },
+          "example_pattern": { "type": "string" }
+        }
+      }
+    },
+    "framework": { "type": ["string", "null"] },
+    "ci_integrated": { "type": "boolean" },
+    "generated_tests": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "rejected_tests": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "covered_surfaces_written_at": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    }
+  }
+}
