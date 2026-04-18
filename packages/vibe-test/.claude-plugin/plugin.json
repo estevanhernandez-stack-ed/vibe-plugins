@@ -1,6 +1,6 @@
 {
   "name": "vibe-test",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Test analyzer and generator for vibe-coded apps. Classifies your app by type and maturity tier, audits existing coverage honestly (no cherry-picked denominators), and generates the tests that actually matter proportional to deployment risk.",
   "author": {
     "name": "626Labs LLC",
@@ -8,11 +8,7 @@
   },
   "license": "MIT",
   "homepage": "https://github.com/estevanhernandez-stack-ed/vibe-plugins/tree/main/packages/vibe-test",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/estevanhernandez-stack-ed/vibe-plugins.git",
-    "directory": "packages/vibe-test"
-  },
+  "repository": "https://github.com/estevanhernandez-stack-ed/vibe-plugins.git",
   "keywords": [
     "testing",
     "coverage",

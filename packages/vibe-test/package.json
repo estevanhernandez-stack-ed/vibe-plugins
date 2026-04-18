@@ -1,6 +1,6 @@
 {
   "name": "@esthernandez/vibe-test",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Test analyzer and generator for vibe-coded apps. Classification-driven. Tiered by deployment context. Catches the broken harnesses every other test tool assumes away.",
   "author": "626Labs LLC",
   "license": "MIT",
