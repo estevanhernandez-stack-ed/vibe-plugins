@@ -218,6 +218,26 @@ After the three renders succeed, commit state:
 
 On any state-write failure other than `covered-surfaces.json`: log a `runtime_hook_failure` friction entry and continue — the user already saw the banner + markdown. On a `covered-surfaces.json` failure: log the same but also add a `harness-break` finding to the audit state so the next run notices.
 
+### Step 11a — Builder-Sustainable Handoff writes (Epic 8)
+
+Immediately after state writes, invoke the handoff writers in the order below. These produce the plain-markdown artifacts that survive an uninstall of Vibe Test (stories H1, H2, H5, H7). Each writer is deterministic plumbing — compose the prose in this SKILL and pass it as the writer's `payload`.
+
+Import surface: `import { writeTestingMd, appendTestPlanSession, renderGraduatingSection, renderEcosystemSection, detectTierTransition } from '@esthernandez/vibe-test/handoff'` (via `dist/handoff/index.js`).
+
+1. **Tier transition check** — call `detectTierTransition(prior?.classification?.tier, current.classification.tier)` against the prior-audit `project-state.json` (loaded in Step 11.1). If transitioned, the graduating section MUST be regenerated for the new tier. Log `friction_type: "classification_mismatch"` with confidence `low` if the transition was unexpected (e.g., builder overrode the picked tier).
+
+2. **Render graduating section** — call `renderGraduatingSection({current_tier, transition_summary, changes_list, new_tests_list, new_patterns_list})`. `transition_summary` is YOUR 2-3 sentence prose; the three list payloads are bullet-line content (no leading `-`) that you compose from the classification matrix. At the top tier (`regulated`), the writer emits a sentinel "already at top tier" section automatically.
+
+3. **Render ecosystem section** — call `renderEcosystemSection({recommendations, availableSkills})`. `recommendations` is your SKILL-composed list (see the 7 anchored complements in `plays-well-with.md` + any dynamic-discovery hits). `availableSkills` comes from the agent's available-skills context. The writer filters out already-installed plugins; if every recommendation is filtered out, the returned `content` is empty — skip the ecosystem section in the payload.
+
+4. **Write `docs/TESTING.md`** — call `writeTestingMd(repoRoot, payload)`. Payload fields: `project_name` (use repo basename), `testing_overview` / `classification_summary` / `coverage_posture` / `run_instructions` / `add_test_instructions` (YOUR prose), `graduating_section` (the output of step 2 above), `ecosystem_section` (the `content` from step 3). The writer preserves any builder edits placed OUTSIDE the `<!-- vibe-test:start/end:X -->` markers.
+
+5. **Append to `docs/test-plan.md`** — call `appendTestPlanSession(repoRoot, entry)` with `entry.command: 'audit'`, `entry.timestamp` = ISO now, `entry.sessionUUID` from Step 0, `entry.classification` = a 1-2 sentence prose summary of your step-4 reasoning, `entry.generated_tests: []` (audit generates no tests), `entry.rejected_with_reason: []`. This is chronological, append-only.
+
+6. **CI stub — DO NOT invoke at audit time.** `writeCiStub` is opt-in and belongs in the generate SKILL (story H4). Audit MAY mention in the banner that a CI stub would be offered at generate time; do not write it here.
+
+On any handoff-writer failure: log `friction_type: "runtime_hook_failure"` with confidence `low`, attach `harness-break` finding with `severity: "low"` to the ReportObject (so the next audit notices), and continue — these artifacts are nice-to-have, not core to the audit's diagnostic value.
+
 ### Step 12 — Handoff line
 
 Persona-adapted handoff line per [guide > "Handoff Language Rules"](../guide/SKILL.md#handoff-language-rules):
