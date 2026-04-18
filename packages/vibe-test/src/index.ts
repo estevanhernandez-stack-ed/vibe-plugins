@@ -11,6 +11,7 @@ export * as scanner from './scanner/index.js';
 export * as coverage from './coverage/index.js';
 export * as reporter from './reporter/index.js';
 export * as composition from './composition/index.js';
+export * as handoff from './handoff/index.js';
 
 // Re-export commonly used state types at the top level for ergonomic imports.
 export type {

@@ -1,0 +1,41 @@
+# Vibe Test — CI gate workflow
+#
+# Runs `vibe-test gate --ci` on pushes to main and on pull requests. Exits with
+# a non-zero code when coverage falls below the tier-appropriate threshold. The
+# command emits GitHub Actions `::error::` / `::warning::` annotations when
+# `GITHUB_ACTIONS=true` is set (it is by default in GH runners).
+#
+# How to adapt for other CI:
+#   - GitLab:    put the `npx @esthernandez/vibe-test-cli gate --ci` step under
+#                a `script:` block in `.gitlab-ci.yml`; the CLI detects
+#                `GITLAB_CI=true` and emits GitLab-style annotations.
+#   - CircleCI:  wrap the step in a job inside `.circleci/config.yml`; use the
+#                `cimg/node:20` image so Node 20+ is available.
+#   - Jenkins:   add a `sh 'npx @esthernandez/vibe-test-cli gate --ci'` step.
+#
+# Set real secret values via your repo's "Settings > Secrets and variables >
+# Actions" page. Below, every detected env var is listed as a placeholder.
+
+name: vibe-test-gate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: {{install_step}}
+      - name: Run Vibe Test gate
+        run: npx @esthernandez/vibe-test-cli gate --ci
+        env:
+{{env_vars}}
