@@ -12,6 +12,7 @@ export * as coverage from './coverage/index.js';
 export * as reporter from './reporter/index.js';
 export * as composition from './composition/index.js';
 export * as handoff from './handoff/index.js';
+export * as generator from './generator/index.js';
 
 // Re-export commonly used state types at the top level for ergonomic imports.
 export type {
@@ -40,5 +41,18 @@ export type {
   Deferral,
 } from './reporter/index.js';
 export type { AnchoredEntry, ComplementStatus } from './composition/index.js';
+export type {
+  EnvVarReference,
+  EnvVarSource,
+  PendingMetadata,
+  StageInput,
+  StageResult,
+  AcceptInput,
+  AcceptResult,
+  PendingListEntry,
+  IdiomMatcher,
+  IdiomTemplate,
+  PlaywrightBridgeResult,
+} from './generator/index.js';
 
 export const VERSION = '0.2.0' as const;
