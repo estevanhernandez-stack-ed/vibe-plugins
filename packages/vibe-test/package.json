@@ -51,6 +51,14 @@
     "./handoff": {
       "types": "./dist/handoff/index.d.ts",
       "default": "./dist/handoff/index.js"
+    },
+    "./runtime": {
+      "types": "./dist/runtime/index.d.ts",
+      "default": "./dist/runtime/index.js"
+    },
+    "./composition": {
+      "types": "./dist/composition/index.d.ts",
+      "default": "./dist/composition/index.js"
     }
   },
   "scripts": {

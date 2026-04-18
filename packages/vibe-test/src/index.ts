@@ -13,6 +13,7 @@ export * as reporter from './reporter/index.js';
 export * as composition from './composition/index.js';
 export * as handoff from './handoff/index.js';
 export * as generator from './generator/index.js';
+export * as runtime from './runtime/index.js';
 
 // Re-export commonly used state types at the top level for ergonomic imports.
 export type {

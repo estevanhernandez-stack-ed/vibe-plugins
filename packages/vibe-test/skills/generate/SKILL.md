@@ -1,7 +1,7 @@
 ---
 name: generate
 description: "This skill should be used when the user says `/vibe-test:generate`. Generates tests for the gaps the most recent audit identified. Confidence-tiered routing — high-confidence tests auto-write, medium-confidence stage in `.vibe-test/pending/` for batch review, low-confidence show inline in chat for per-test accept/reject. Honors scoped audits, env-var detection, detected framework idioms, and prior team decisions. Playwright E2E generation defers to the `playwright` plugin via Pattern #13."
-argument-hint: "[--path <glob>] [--full] [--force] [--dry-run] [--apply-last-dry-run]"
+argument-hint: "[--path <glob>] [--full] [--force] [--dry-run] [--apply-last-dry-run] [--with-runtime <dev-server|playwright|both>]"
 ---
 
 # generate — Confidence-Tiered Test Generation
@@ -276,6 +276,37 @@ When in doubt, don't log. False positives poison `/evolve`.
 - Rejection-pattern probe behavior (≥3 consecutive low-confidence rejects) is defined in "Safety Features > B. Rejection-pattern probe (G4)" above.
 - Not a Playwright author. E2E generation defers entirely to the `playwright` plugin via Pattern #13.
 - Not a TDD stand-in. If `superpowers:test-driven-development` is installed and the builder is authoring NEW features, defer.
+
+## Runtime Hooks (opt-in via `--with-runtime`)
+
+Default behavior is **static-only** — the SKILL never spawns a dev server or invokes Playwright MCP unless the builder explicitly opts in.
+
+### `--with-runtime=dev-server` (Path A — API-heavy apps)
+
+Enriches generation with live route observations. Flow runs *between Step 1 (audit-state read) and Step 3 (per-gap loop)*:
+
+1. Import `runDevServerProbe` from `@esthernandez/vibe-test/runtime`.
+2. Call with `{rootPath, routes: inventory.routes.map(r => ({path: r.path, method: r.method})), readiness: {kind: 'either', stdoutPattern: /local:\s+http:\/\/localhost:\d+/i, healthPath: '/'}}`.
+3. **Graceful degradation:** if `result.ready === false`, the SKILL surfaces *"runtime probe unavailable: `<error>` — proceeding with static generation"* in the banner and continues at Step 3 with the static inventory only. Never abort the whole generate.
+4. When ready, fold `result.observations` into the per-gap loop's reasoning — the generator can now read actual response shapes when composing assertions for behavioral / integration tests.
+5. Teardown is automatic — the helper handles SIGTERM, SIGKILL escalation, and child reaping in all paths (success, probe error, timeout).
+
+### `--with-runtime=playwright` (Path B — UI apps)
+
+Composes natural-language probe intents the SKILL forwards to Playwright MCP via tool calls.
+
+1. Import `isAvailable, composeProbeIntent, formatDeferralFinding` from `@esthernandez/vibe-test/runtime`.
+2. Call `isAvailable(availableSkills)`.
+3. **MCP present:** for each E2E gap, `composeProbeIntent({entry, steps, name})` produces the intent text. The SKILL forwards each intent to the Playwright MCP tool that runs `--codegen typescript` to author the `.spec.ts`. This module does NOT issue MCP tool calls — the agent runtime is the only layer that can.
+4. **MCP absent:** call `formatDeferralFinding(uiFlows)` to produce the markdown finding text the SKILL surfaces in the report and ecosystem-recommendations section. Per spec Decision 3, there is no native E2E fallback.
+
+### `--with-runtime=both`
+
+Runs Path A and Path B in sequence (dev-server first so the Playwright probes can target the running server). Both paths degrade gracefully on failure.
+
+### Default (no flag)
+
+Static generation only. The SKILL reads inventory, idiom-matches existing tests, composes candidates, and routes by confidence — without spawning any subprocess or invoking any external MCP.
 
 ## Safety Features
 
