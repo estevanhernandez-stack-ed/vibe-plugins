@@ -1,0 +1,78 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://vibe-cartographer/schemas/friction.schema.json",
+  "title": "Friction Log Entry",
+  "description": "One line of ~/.claude/plugins/data/vibe-cartographer/friction.jsonl. Append-only via scripts/atomic-append-jsonl.js. Defensive default — when in doubt, don't log.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "timestamp",
+    "plugin_version",
+    "command",
+    "project_dir",
+    "sessionUUID",
+    "friction_type",
+    "confidence"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "timestamp": {
+      "type": "string",
+      "description": "ISO datetime when the friction was observed."
+    },
+    "plugin_version": {
+      "type": "string",
+      "description": "Vibe Cartographer version that emitted the entry. Read from .claude-plugin/plugin.json at log time."
+    },
+    "command": {
+      "type": "string",
+      "description": "Slash command that triggered the friction (e.g. 'scope', 'build')."
+    },
+    "project_dir": {
+      "type": "string",
+      "description": "Basename of the project working directory. Used for filtering and orphan correlation."
+    },
+    "project_id": {
+      "type": "string",
+      "description": "Optional 626 Labs Dashboard project ID, when bound."
+    },
+    "sessionUUID": {
+      "type": "string",
+      "description": "UUID v4 issued by session-logger.start(). Ties friction entries back to the originating session-log sentinel + terminal pair."
+    },
+    "friction_type": {
+      "type": "string",
+      "enum": [
+        "command_abandoned",
+        "default_overridden",
+        "complement_rejected",
+        "repeat_question",
+        "artifact_rewritten",
+        "sequence_revised",
+        "rephrase_requested"
+      ],
+      "description": "One of the seven canonical friction types. Source of truth for trigger mapping is skills/guide/references/friction-triggers.md."
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["high", "medium", "low"],
+      "description": "Logger's confidence the signal is real. /evolve weights base = high:1.0, medium:0.6, low:0.3."
+    },
+    "symptom": {
+      "type": "string",
+      "description": "Free-text description of the observable behavior (e.g. \"User chose 'skip cuts' when default was 'walk through cuts'\")."
+    },
+    "agent_guess_at_cause": {
+      "type": "string",
+      "description": "Optional hypothesis from the agent. Useful for /evolve grouping but never authoritative."
+    },
+    "complement_involved": {
+      "type": ["string", "null"],
+      "description": "Name of the Pattern #13 complement involved when friction_type is complement_rejected, else null."
+    }
+  }
+}

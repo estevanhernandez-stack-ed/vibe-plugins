@@ -3,12 +3,17 @@
   "owner": {
     "name": "626Labs LLC"
   },
-  "description": "The Vibe Plugins ecosystem — spec-driven development, documentation, security, and testing for vibe-coded apps. Each plugin is independently versioned; installing this marketplace gives you the full set.",
+  "description": "The Vibe Plugins ecosystem — vibe coding course correction, documentation, and testing for vibe-coded apps. Each plugin is independently versioned; installing this marketplace gives you the full set.",
   "plugins": [
     {
-      "name": "vibe-sec",
-      "source": "./packages/vibe-sec",
-      "description": "Security scanner and fix generator for vibe-coded apps. Classification-driven. Tiered by deployment context."
+      "name": "vibe-cartographer",
+      "source": "./packages/vibe-cartographer",
+      "description": "Plot your course from idea to shipped app. Vibe coding course correction delivered as eight slash commands: onboard, scope, prd, spec, checklist, build, iterate, reflect."
+    },
+    {
+      "name": "vibe-doc",
+      "source": "./packages/vibe-doc",
+      "description": "AI-powered documentation gap analyzer. Scans your codebase, classifies your project, identifies missing technical documentation, and generates professional docs from your existing artifacts."
     },
     {
       "name": "vibe-test",

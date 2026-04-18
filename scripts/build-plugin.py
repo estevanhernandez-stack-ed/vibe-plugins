@@ -89,9 +89,15 @@ def build_plugin(package_name: str) -> tuple[Path, int, int]:
     version = read_version(plugin_root)
 
     BUNDLES_DIR.mkdir(exist_ok=True)
-    output = BUNDLES_DIR / f"{package_name}-{version}.plugin"
-    if output.exists():
-        output.unlink()
+    # Cowork upload pipeline derives the plugin name from the filename
+    # and rejects non-kebab-case basenames. Version belongs in plugin.json,
+    # NOT in the filename — bare `<plugin-name>.plugin` is the convention.
+    # We also stamp a `<plugin-name>-<version>.plugin` copy for archival.
+    output = BUNDLES_DIR / f"{package_name}.plugin"
+    archive = BUNDLES_DIR / f"{package_name}-{version}.plugin"
+    for path in (output, archive):
+        if path.exists():
+            path.unlink()
 
     file_count = 0
     total_bytes = 0
@@ -123,6 +129,9 @@ def build_plugin(package_name: str) -> tuple[Path, int, int]:
                     zipf.write(abs_path, arcname)
                     file_count += 1
                     total_bytes += abs_path.stat().st_size
+
+    import shutil
+    shutil.copy2(output, archive)
 
     return output, file_count, total_bytes
 

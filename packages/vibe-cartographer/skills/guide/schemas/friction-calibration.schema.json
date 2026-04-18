@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://vibe-cartographer/schemas/friction-calibration.schema.json",
+  "title": "Friction Calibration Entry",
+  "description": "One line of ~/.claude/plugins/data/vibe-cartographer/friction.calibration.jsonl. Written by /reflect's calibration check-in to mark friction entries as false_positive or to record missed friction (false_negative). Consumed by /evolve as a weighting input.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "timestamp",
+    "plugin_version",
+    "friction_entry_ref",
+    "calibration"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "timestamp": {
+      "type": "string",
+      "description": "ISO datetime when the calibration entry was written."
+    },
+    "plugin_version": {
+      "type": "string",
+      "description": "Vibe Cartographer version that emitted the calibration entry."
+    },
+    "friction_entry_ref": {
+      "type": "object",
+      "description": "Composite reference to the friction.jsonl entry being calibrated. Triple of (timestamp, friction_type, sessionUUID) uniquely identifies an entry without requiring a stable line ID.",
+      "required": ["timestamp", "friction_type", "sessionUUID"],
+      "additionalProperties": false,
+      "properties": {
+        "timestamp": {
+          "type": "string",
+          "description": "Timestamp of the referenced friction entry."
+        },
+        "friction_type": {
+          "type": "string",
+          "enum": [
+            "command_abandoned",
+            "default_overridden",
+            "complement_rejected",
+            "repeat_question",
+            "artifact_rewritten",
+            "sequence_revised",
+            "rephrase_requested"
+          ]
+        },
+        "sessionUUID": {
+          "type": "string",
+          "description": "sessionUUID of the referenced friction entry."
+        }
+      }
+    },
+    "calibration": {
+      "type": "string",
+      "enum": ["false_positive", "false_negative"],
+      "description": "false_positive zeroes the entry's weight in /evolve. false_negative records friction the logger missed and the builder described after the fact."
+    },
+    "builder_note": {
+      "type": "string",
+      "description": "Optional free-text note from the builder explaining the calibration."
+    }
+  }
+}
