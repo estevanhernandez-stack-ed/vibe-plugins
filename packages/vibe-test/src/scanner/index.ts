@@ -280,3 +280,18 @@ export type {
   SurfaceKind,
   SurfaceCoverageLevel,
 } from './covered-surfaces.js';
+
+export {
+  detectBrokenTestRunner,
+  detectMissingTestBinary,
+  detectCherryPickedDenominator,
+  detectAllHarnessIssues,
+} from './harness-detector.js';
+export type {
+  HarnessFinding,
+  HarnessFindingType,
+  DetectBrokenRunnerInput,
+  DetectMissingBinaryInput,
+  DetectCherryPickedInput,
+  DetectAllHarnessInput,
+} from './harness-detector.js';
