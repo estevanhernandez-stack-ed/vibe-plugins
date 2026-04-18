@@ -43,6 +43,14 @@
     "./reporter": {
       "types": "./dist/reporter/report-object.d.ts",
       "default": "./dist/reporter/report-object.js"
+    },
+    "./generator": {
+      "types": "./dist/generator/index.d.ts",
+      "default": "./dist/generator/index.js"
+    },
+    "./handoff": {
+      "types": "./dist/handoff/index.d.ts",
+      "default": "./dist/handoff/index.js"
     }
   },
   "scripts": {
