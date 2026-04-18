@@ -6,11 +6,11 @@ Each plugin is independently versioned and published to npm, but they share a co
 
 ## Plugins in this monorepo
 
-| Plugin | Status | Purpose |
-|--------|--------|---------|
-| [**vibe-sec**](./packages/vibe-sec/) | 0.0.1 — framework drafted | Security scanning and fix generation for the predictable gaps vibe-coded apps ship with |
-| [**vibe-test**](./packages/vibe-test/) | 0.0.1 — framework drafted | Test analysis and generation, layered from smoke tests to integration, proportional to app maturity |
-| **core** | scaffold | Shared library — scanner, classifier, session logger, state management |
+| Plugin | Status | Install | Purpose |
+|--------|--------|---------|---------|
+| [**vibe-test**](./packages/vibe-test/) | **0.2.0 — shipping** | `/plugin install vibe-test@vibe-plugins` · `npm install -g @esthernandez/vibe-test-cli` | Test audit + generation. Classifies app by maturity tier, measures honest-denominator coverage, generates retrofit tests. Catches the broken harnesses every other test tool assumes away. |
+| [**vibe-sec**](./packages/vibe-sec/) | 0.0.1 — coming soon | `/plugin install vibe-sec@vibe-plugins` (pending v0.2) | Security scanning and fix generation for the predictable gaps vibe-coded apps ship with |
+| **@626labs/plugin-core** | 0.0.1 — scaffold | n/a (internal) | Shared library — scanner, classifier, session logger, state management. Consolidates in Phase 3 once vibe-test + vibe-sec ship. |
 
 ## Plugins living in their own repos (for now)
 
@@ -34,8 +34,16 @@ Both will eventually migrate into this monorepo once the shared core library is 
 
 ```text
 /plugin marketplace add estevanhernandez-stack-ed/vibe-plugins
-/plugin install vibe-sec@vibe-plugins
 /plugin install vibe-test@vibe-plugins
+# vibe-sec v0.2 shipping next — /plugin install vibe-sec@vibe-plugins
+```
+
+### npm CLI (for CI pipelines)
+
+```bash
+npm install -g @esthernandez/vibe-test-cli
+vibe-test audit --cwd .
+vibe-test gate --ci
 ```
 
 ## The "Vibe" thesis
