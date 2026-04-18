@@ -10,6 +10,7 @@
     "schema_version": { "type": "integer", "const": 1 },
     "command": { "type": "string", "const": "coverage" },
     "plugin_version": { "type": "string" },
+    "last_updated": { "type": "string", "format": "date-time" },
     "measured_at": { "type": "string", "format": "date-time" },
     "framework": {
       "type": "string",

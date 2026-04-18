@@ -8,6 +8,8 @@ coverage/
 !packages/vibe-test/src/coverage/**
 !packages/vibe-test/tests/unit/coverage/
 !packages/vibe-test/tests/unit/coverage/**
+!packages/vibe-test/skills/coverage/
+!packages/vibe-test/skills/coverage/**
 .DS_Store
 *.log
 .env
