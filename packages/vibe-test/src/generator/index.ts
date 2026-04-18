@@ -69,3 +69,18 @@ export type {
   TestLevel as IdiomTestLevel,
   SubjectKind,
 } from './idiom-matchers/index.js';
+
+export {
+  getConsecutiveRejectCount,
+  shouldFireProbe,
+  markProbeFired,
+  recordFeedbackEvent,
+  ACCEPT_EVENT,
+  REJECT_EVENT,
+  PROBE_FIRED_EVENT,
+  DEFAULT_PROBE_THRESHOLD,
+} from './consecutive-reject-tracker.js';
+export type {
+  SessionEventLike,
+  FeedbackEventInput,
+} from './consecutive-reject-tracker.js';

@@ -80,3 +80,22 @@ export type { WinEntry, WinEvent } from './wins-log.js';
 
 export * as beacons from './beacons.js';
 export type { BeaconEntry } from './beacons.js';
+
+export {
+  cacheDryRun,
+  readDryRunCache,
+  clearDryRunCache,
+  dryRunCachePath,
+  formatExpiredCacheReason,
+  DEFAULT_DRY_RUN_TTL_SECONDS,
+  DRY_RUN_CACHE_SCHEMA_VERSION,
+} from './dry-run-cache.js';
+export type {
+  DryRunCache,
+  DryRunCachePayload,
+  DryRunPlannedWrite,
+  DryRunPlannedWriteAction,
+  CacheDryRunInput,
+  CacheExpired,
+  ReadDryRunCacheResult,
+} from './dry-run-cache.js';

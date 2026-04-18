@@ -32,7 +32,8 @@ export type SchemaName =
   | 'generate-state'
   | 'findings'
   | 'covered-surfaces'
-  | 'builder-profile';
+  | 'builder-profile'
+  | 'dry-run-cache';
 
 const SCHEMA_NAMES: readonly SchemaName[] = [
   'audit-state',
@@ -41,6 +42,7 @@ const SCHEMA_NAMES: readonly SchemaName[] = [
   'findings',
   'covered-surfaces',
   'builder-profile',
+  'dry-run-cache',
 ] as const;
 
 // Resolve the schemas directory relative to this source file. In dev we run
