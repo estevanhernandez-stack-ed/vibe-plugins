@@ -1,6 +1,6 @@
 {
   "name": "@esthernandez/vibe-test-cli",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "CLI wrapper for @esthernandez/vibe-test — headless audit/coverage/gate/posture for CI pipelines.",
   "author": "626Labs LLC",
   "license": "MIT",
@@ -16,9 +16,11 @@
   },
   "files": [
     "dist",
+    "scripts/postinstall.js",
     "README.md"
   ],
   "scripts": {
+    "postinstall": "node scripts/postinstall.js",
     "build": "tsup src/index.ts --format cjs --clean",
     "type-check": "tsc --noEmit",
     "test": "vitest run"
