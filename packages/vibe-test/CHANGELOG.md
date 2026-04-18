@@ -4,48 +4,51 @@ All notable changes to `@esthernandez/vibe-test` will be documented in this file
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased]
+## [0.2.0] — 2026-04-18 · First public release
 
-## [0.2.0] — 2026 first public release
+First shippable release of Vibe Test. Twelve `/checklist` items completed end-to-end, dogfooded against the real WeSeeYouAtTheMovies codebase.
 
-First public release of Vibe Test. Planned scope, tracked against `docs/checklist.md` item-by-item:
+### Added
 
-### Planned features (12 checklist items)
+- **Router + 7 subcommand SKILLs** — `/vibe-test` (identity + next-step), `/vibe-test:audit`, `/vibe-test:generate`, `/vibe-test:fix`, `/vibe-test:coverage`, `/vibe-test:gate`, `/vibe-test:posture`. An eighth SKILL, `/vibe-test:evolve`, ships for Pattern #10 agent-authored changelogs.
+- **Deterministic primitives** — `src/scanner/` (typescript-estree AST walk, framework detector for vitest/jest/playwright/cypress/mocha, route/component/model/integration inventories, harness-break detectors for the three WSYATM-class failure modes), `src/coverage/` (vitest + jest adapters with adaptation-prompt UX, c8 --all fallback, cherry-picked-denominator check, weighted-score pure function), `src/reporter/` (ReportObject + markdown/banner/JSON renderers with tier-adaptive language), `src/composition/` (Pattern #13 anchored registry + dynamic discovery capped at 1 suggestion).
+- **Audit SKILL + classifier** — 6 app types × 5 maturity tiers × 5 context modifiers, mixed-stack graceful degradation with confidence drop from 0.9 → 0.6, F2 harness-break finding types separated from test-logic breaks.
+- **Generate SKILL** — confidence-tiered routing (auto ≥0.90 / stage 0.70–0.89 / inline <0.70), env-var detection (`process.env.*`, `import.meta.env.*`, dotenv), HEAD-hash branch-switch check on pending accept, rejection-pattern probe at ≥3 consecutive rejects (captures to friction.jsonl or wins.jsonl), idiom matching (vitest / jest), scoped generation honoring prior audit scope, `--dry-run` + `--apply-last-dry-run` with 24h cache TTL.
+- **Fix / Coverage / Gate / Posture SKILLs** — F1 confidence-routed repair with deferral to `superpowers:systematic-debugging`, F2 harness-level break detection, F3 scoped fix, rollback hook to `.vibe-test/pending/`; honest-denominator coverage with Tessl deferral and CI sidecar; gate with exit 0/1/2 + GitHub Actions `::error::`/`::warning::` annotations under `GITHUB_ACTIONS=true`; posture read-only ambient summary (≤40 lines, <3s).
+- **Builder-sustainable handoff** — `docs/TESTING.md` (6 framework-agnostic sections), `docs/test-plan.md` (chronological decision log), opt-in `.github/workflows/vibe-test-gate.yml` stub with env-placeholder block, graduating-to-next-tier section, H7 ecosystem recommendations surfaced per repo.
+- **Runtime hooks** — `--with-runtime=dev-server` probe (free-port allocation, stdio-redirected spawn, readiness polling, route probing with schema-valid payloads, signal-handled shutdown), `--with-runtime=playwright` MCP bridge with graceful degradation to static-only.
+- **CLI package** — `@esthernandez/vibe-test-cli` ships `audit`/`coverage`/`gate`/`posture` deterministic commands; `generate`/`fix` exit `2` with plugin-only message pointing at Claude Code session. Commander-based entrypoint, GH Actions annotation auto-detection, exit-code contract.
+- **Self-Evolving Plugin Framework**
+  - **Pattern #4** — memory decay (preferred_framework 90d TTL, testing_experience 180d)
+  - **Pattern #6** — friction-logger SKILL with per-command trigger contracts
+  - **Pattern #7** — schema-versioned state with idempotent migrations + `.bak` writes
+  - **Pattern #8** — `/vibe-test:vitals` self-test SKILL
+  - **Pattern #10** — `/vibe-test:evolve` agent-authored proposals from friction.jsonl + wins.jsonl + 30d session logs
+  - **Pattern #11** — `data-contract.md` documenting ownership of every state file
+  - **Pattern #12** — beacons for cross-plugin coordination (vibe-sec handshake)
+  - **Pattern #13** — anchored "Plays well with" registry (7 complements) + dynamic discovery rule
+  - **Pattern #14** — `wins.jsonl` with three capture techniques (absence-of-friction, explicit success, external validation)
+  - **Pattern #15** — `.claude-plugin/active-path.json` + `RESOLVE.md`
+  - **Pattern #16** — blocking vs shaping prereqs declared in every SKILL
+- **WSYATM regression fixture** at `tests/fixtures/wseyatm-snapshot/` — reduced, anonymized snapshot reproducing the three known WSYATM findings (broken vitest forks-pool, missing jest binary, cherry-picked denominator).
+- **Dogfood report** at `docs/dogfood-wseyatm-v0.2.md` — first-patient validation run of all four CLI sub-tests against the real WeSeeYouAtTheMovies codebase.
 
-1. **Scaffolding + State layer** — monorepo package layout, `.claude-plugin/` manifest with Pattern #15 active-path resolution, JSON schemas (draft-07) for audit/coverage/generate/findings/covered-surfaces/builder-profile, atomic-write primitive, schema validator cache, migration dispatcher, typed state stubs.
-2. **Deterministic primitives** — scanner (AST walker, framework detector, route / component / model / integration inventory), coverage (vitest+jest adapters, c8 fallback, denominator honesty check, weighted-score formula), reporter (ReportObject + markdown/banner/json renderers + tier-adaptive language), composition (complement detection + anchored registry).
-3. **Shared SKILL scaffolding** — guide SKILL with persona/mode/experience adaptation, session-logger / friction-logger / wins-logger / decay / vitals SKILLs (ported with lineage notes from Vibe Cartographer).
-4. **Router SKILL** — `/vibe-test` bare entry with Pattern #15 resolution, Pattern #16 prereq branching, persona-adapted banner, complement announcement.
-5. **Audit SKILL + Classifier** — inventory → classify (6 app types × 5 tiers × modifiers) → weighted score → gap analysis → three-view render; mixed-stack graceful degradation; F2 harness-break detection.
-6. **Builder-Sustainable Handoff writers** — `TESTING.md` (6 sections), `test-plan.md`, CI stub (opt-in), graduating guide, ecosystem recommendations; all framework-agnostic (H6).
-7. **Generate SKILL — core flow** — confidence routing (auto ≥0.90 / stage 0.70–0.89 / inline <0.70), env-var detection, HEAD-hash branch check, idiom matching (vitest/jest), scoped generation.
-8. **Generate SKILL — safety features** — `--dry-run` with 24h cached `--apply-last-dry-run`, rejection-pattern probe at ≥3 consecutive rejects, L2 feedback capture via session-log + wins / friction logs.
-9. **Fix / Coverage / Gate / Posture SKILLs** — F1–F3 repair flow with systematic-debugging deferral, honest-denominator coverage with adaptation prompt, exit codes 0/1/2 gate with GitHub Actions annotations, <3s ambient posture.
-10. **Runtime hooks + CLI package** — `--with-runtime=dev-server` probe, `--with-runtime=playwright` MCP bridge, `@esthernandez/vibe-test-cli` deterministic commands (audit / coverage / gate / posture).
-11. **Evolve + Vitals SKILLs + WSYATM integration fixture** — Pattern #10 agent-authored changelog proposals, Pattern #8 self-test, reduced WSYATM regression fixture for dogfood.
-12. **Documentation & security verification + WSYATM dogfood** — README with "Works better with" section, root monorepo README refresh, security audit (`pnpm audit`, secrets scan), ship gate is the WeSeeYouAtTheMovies dogfood run reproducing the three known findings.
+### Security
 
-### Framework patterns implemented
-
-- **#4** — Memory decay and refresh (preferred_framework 90d, testing_experience 180d TTL)
-- **#6** — Friction log (per-command trigger contracts)
-- **#7** — Schema versioning (every state file + JSONL line)
-- **#8** — Plugin self-test (`/vibe-test:vitals`)
-- **#10** — Agent-authored changelog (`/vibe-test:evolve` proposes SKILL edits)
-- **#11** — Data contract (this changelog's sibling `data-contract.md`)
-- **#12** — Beacons for cross-plugin coordination
-- **#13** — Plays-well-with anchored registry + dynamic discovery (cap=1)
-- **#14** — Wins log with three capture techniques
-- **#15** — Canonical self-resolution (`active-path.json` + `RESOLVE.md`)
-- **#16** — Blocking vs shaping prereqs declared per-SKILL
+- `pnpm audit` at monorepo root reports 2 moderate CVEs in transitive dev dependencies (esbuild, vite — both via `@vitest/coverage-v8 → vitest`). Neither touches shipped runtime surface. See [`SECURITY.md`](./SECURITY.md) for status + deferral rationale.
+- Secrets scan across `packages/vibe-test/` + `packages/vibe-test-cli/` history: clean. All `api_key`/`password`/`token`/`secret` matches are detector patterns in source code, not committed credentials.
+- `.env.example` is an explicit non-deliverable — Vibe Test consumes no environment variables itself; env-var detection runs against the user's app.
+- `pnpm-lock.yaml` committed at monorepo root; deps pinned via caret ranges managed by pnpm's workspace resolution.
 
 ### Not in v0.2 (deferred)
 
-- Python test generation (paired with the Sanduhr "second patient" in v0.3)
-- Headless CLI generate/fix (requires `ANTHROPIC_API_KEY`; v0.3)
-- Team-concurrent merge semantics (v0.2 ships awareness-only warnings)
+- Python test generation — paired with the Sanduhr "second patient" in v0.3
+- Headless CLI `generate` / `fix` — requires `ANTHROPIC_API_KEY`; v0.3
+- Team-concurrent pending/ merge semantics — v0.2 ships awareness-only warnings
 - Docker / containerization for dev-server isolation
 - Flaky test detection
+- Visual regression test generation
+- Mutation testing — outside diagnostic-and-retrofit positioning
 
 ## [0.0.1] — reserved
 
