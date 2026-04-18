@@ -1,6 +1,6 @@
 {
   "name": "vibe-test",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Test analyzer and generator for vibe-coded apps. Classifies your app by type and maturity tier, audits existing coverage honestly (no cherry-picked denominators), and generates the tests that actually matter proportional to deployment risk.",
   "author": {
     "name": "626Labs LLC",
@@ -20,35 +20,5 @@
     "vibe-coding",
     "audit",
     "ci-gate"
-  ],
-  "commands": [
-    {
-      "name": "vibe-test",
-      "description": "Router — identity, state-awareness, next-step prompt"
-    },
-    {
-      "name": "vibe-test:audit",
-      "description": "Inventory + classify + score — diagnoses whole testing posture"
-    },
-    {
-      "name": "vibe-test:generate",
-      "description": "Confidence-tiered test generation (auto / stage / inline)"
-    },
-    {
-      "name": "vibe-test:fix",
-      "description": "Diagnose + repair broken tests or harnesses"
-    },
-    {
-      "name": "vibe-test:coverage",
-      "description": "Honest-denominator coverage measurement with tier interpretation"
-    },
-    {
-      "name": "vibe-test:gate",
-      "description": "CI-safe pass/fail against app tier threshold"
-    },
-    {
-      "name": "vibe-test:posture",
-      "description": "Read-only ambient summary of current testing posture"
-    }
   ]
 }

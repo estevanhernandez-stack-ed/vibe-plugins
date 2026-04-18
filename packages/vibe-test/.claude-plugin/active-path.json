@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "plugin": "vibe-test",
-  "version": "0.2.0",
-  "last_updated": "2026-04-17",
-  "active_path": "~/.claude/plugins/cache/vibe-plugins/vibe-test/0.2.0",
+  "version": "0.2.2",
+  "last_updated": "2026-04-18",
+  "active_path": "~/.claude/plugins/cache/vibe-plugins/vibe-test/0.2.2",
   "resolution_order": [
     "~/.claude/plugins/installed_plugins.json",
     ".claude-plugin/active-path.json"
