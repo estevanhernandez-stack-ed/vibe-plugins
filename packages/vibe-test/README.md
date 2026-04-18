@@ -14,20 +14,32 @@ Read the full thesis in [`framework.md`](./framework.md) — the 421-line argume
 
 ## Install
 
-**Claude Code marketplace (plugin — `/vibe-test:*` slash commands in-session):**
+**Claude Desktop / Cowork (UI):**
+
+Open **Personal plugins** → click **+** → **Add marketplace** → enter:
+
+```text
+estevanhernandez-stack-ed/vibe-plugins
+```
+
+Click **Sync**. The marketplace exposes all three Vibe plugins (vibe-cartographer, vibe-doc, vibe-test) — install Vibe Test from the picker. Slash commands `/vibe-test:*` become available in your sessions.
+
+**Claude Code CLI:**
 
 ```text
 /plugin marketplace add estevanhernandez-stack-ed/vibe-plugins
 /plugin install vibe-test@vibe-plugins
 ```
 
-**npm (CLI — CI-safe deterministic commands, no LLM):**
+**npm (CLI binary for terminal / CI — no LLM, deterministic):**
 
 ```bash
 npm install -g @esthernandez/vibe-test-cli
 ```
 
-The CLI ships `audit` / `coverage` / `gate` / `posture` — the deterministic operations that don't require Claude reasoning. `generate` and `fix` live in the plugin SKILL layer and require a Claude Code session (CLI exits `2` with a clear message pointing you at `/vibe-test:generate`).
+The CLI ships `audit` / `coverage` / `gate` / `posture` — the deterministic operations that don't require Claude reasoning. `generate` and `fix` live in the plugin SKILL layer and require a Claude Code or Claude Desktop session (CLI exits `2` with a clear message pointing you at `/vibe-test:generate`).
+
+> **Note on `.plugin` upload:** Cowork's "Upload plugin" path is currently unstable for our bundles — we recommend the marketplace install above. We're tracking the issue.
 
 ---
 
