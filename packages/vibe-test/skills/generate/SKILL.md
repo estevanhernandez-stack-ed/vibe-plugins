@@ -1,7 +1,7 @@
 ---
 name: generate
 description: "This skill should be used when the user says `/vibe-test:generate`. Generates tests for the gaps the most recent audit identified. Confidence-tiered routing — high-confidence tests auto-write, medium-confidence stage in `.vibe-test/pending/` for batch review, low-confidence show inline in chat for per-test accept/reject. Honors scoped audits, env-var detection, detected framework idioms, and prior team decisions. Playwright E2E generation defers to the `playwright` plugin via Pattern #13."
-argument-hint: "[--path <glob>] [--full] [--force]"
+argument-hint: "[--path <glob>] [--full] [--force] [--dry-run] [--apply-last-dry-run]"
 ---
 
 # generate — Confidence-Tiered Test Generation
@@ -272,10 +272,156 @@ When in doubt, don't log. False positives poison `/evolve`.
 - Not an auditor. Generate assumes the audit already happened and consumes its state.
 - Not a coverage command. `/vibe-test:coverage` is the standalone measurement command; generate invokes it only indirectly via the audit-state it reads.
 - Not a fixer. If a generated test fails, `/vibe-test:fix` owns that repair — including the rollback-to-pending path for auto-written tests that broke CI.
-- Not a dry-run previewer. `--dry-run` and `--apply-last-dry-run` are item #8.
-- Not a rejection-pattern coach. The 3-consecutive-reject probe is item #8.
+- Dry-run previewer behavior (`--dry-run` / `--apply-last-dry-run`) is defined in the "Safety Features > A. Dry-run mode (G9)" section above.
+- Rejection-pattern probe behavior (≥3 consecutive low-confidence rejects) is defined in "Safety Features > B. Rejection-pattern probe (G4)" above.
 - Not a Playwright author. E2E generation defers entirely to the `playwright` plugin via Pattern #13.
 - Not a TDD stand-in. If `superpowers:test-driven-development` is installed and the builder is authoring NEW features, defer.
+
+## Safety Features
+
+The base flow above is the happy path. Three safety features extend it: dry-run preview (G9), rejection-pattern probe (G4), and L2 feedback capture (feeds `/evolve`). These are *additive* — they do not change Steps 0–9 when the builder runs the command without `--dry-run` and without hitting a probe trigger.
+
+### A. Dry-run mode (G9) — `--dry-run` and `--apply-last-dry-run`
+
+**Trigger:** the builder passes `--dry-run` (preview) or `--apply-last-dry-run` (replay the cached preview within the 24h TTL).
+
+**Import surface (from `@esthernandez/vibe-test/state`):**
+
+- `cacheDryRun(repoRoot, {payload, plannedWrites, ttlSeconds?, pluginVersion?, scope?, headHashAtGeneration?, sessionUUID?})`
+- `readDryRunCache(repoRoot)` — returns `DryRunCache | CacheExpired | null`
+- `clearDryRunCache(repoRoot)`
+- `dryRunCachePath(repoRoot)` — `<repo>/.vibe-test/state/last-dry-run.json`
+- `formatExpiredCacheReason(expired)` — canonical "expired" prose
+
+#### `--dry-run` semantics
+
+1. Run the full generate flow described above **up to Step 3d** (compose candidate test, env-var annotation, confidence assignment).
+2. **Suppress every filesystem write** that Steps 3f, 4, 5, 6, 7, 8 would normally perform. That means:
+   - **No writes to `tests/`** (auto-write lane is a no-op; the candidate is held in memory for the cache).
+   - **No stages to `.vibe-test/pending/`** — do not call `stagePendingTest`; instead collect the intent into `plannedWrites`.
+   - **No writes to `docs/TESTING.md`, `docs/test-plan.md`, `docs/vibe-test/generate-<ISO>.md`, `.github/workflows/vibe-test-gate.yml`**.
+   - **No `project-state.ts writeProjectState` call; no `accepted.json` / `rejected.json` updates.**
+   - **No `beacons.append` call.** Beacons are post-action signals; dry-run took no action.
+3. **Session-log policy during dry-run.** The session-logger *sentinel* at Step 0 still fires (so the dry-run itself is discoverable in L2). All *other* session-log writes (accept/reject events, probe-fired marker, terminal entry) are deferred-with-tag: if the SKILL writes them at all, include `context.dry_run: true` so `/evolve` filters them out of L2 aggregation. Default policy: write only the sentinel + terminal entries (both tagged `dry_run: true`); skip per-test accept/reject events entirely — dry-run is a preview, not real feedback.
+4. **Render the three output views** (markdown body, banner, generate-state JSON) with `WOULD WRITE` annotations instead of post-action summaries:
+   - Banner header line: `Vibe Test · Generate · DRY-RUN PREVIEW — no files were written`.
+   - Banner footer line: `DRY-RUN ended — run /vibe-test:generate --apply-last-dry-run to commit this preview (TTL 24h).`
+   - Markdown artifact (held in memory, not written) uses the same heading + annotation.
+   - JSON sidecar sets `dry_run: true` and `dry_run_cached_at: <ISO>` (the existing `generate-state.schema.json` already supports these fields).
+5. **Cache the would-be output** via `cacheDryRun(repoRoot, {payload, plannedWrites, ...})`:
+   - `payload` — SKILL-authored bag with the three rendered views + any per-test artifacts the replay will need (markdown body, banner string, generate-state object, per-test content bodies keyed by target path).
+   - `plannedWrites[]` — ordered list `{path, action, content_summary, confidence?, lane?, audit_finding_id?, content?}`. Include full `content` for small writes (tests, test-plan entry, CI stub); omit for large markdown artifacts that can be re-composed at apply time.
+   - `ttlSeconds` — default `DEFAULT_DRY_RUN_TTL_SECONDS` (86400). Do not override unless the builder explicitly requested a shorter window.
+   - `headHashAtGeneration` — grab via `getCurrentHeadHash(repoRoot)` so apply-time can warn on branch switch.
+   - `sessionUUID` — the session's UUID, so provenance is traceable.
+6. **Surface the cache path in the banner footer**: `Dry-run cache: .vibe-test/state/last-dry-run.json (expires <ISO>).`
+
+#### `--apply-last-dry-run` semantics
+
+1. Call `readDryRunCache(repoRoot)`.
+2. Branch on the result:
+   - **`null`** (absent/unparseable) → halt: *"No dry-run cache found. Run `/vibe-test:generate --dry-run` first, then `--apply-last-dry-run` within 24h."*
+   - **`{expired: true, ...}`** → halt using `formatExpiredCacheReason(...)` verbatim: *"dry-run cache expired; re-run --dry-run for fresh output (cached Xh ago, TTL 86400s)"*.
+   - **`DryRunCache` (fresh)** → proceed.
+3. **Branch-switch check.** If the cache's `head_hash_at_generation` differs from `getCurrentHeadHash(repoRoot)`, warn verbatim: *"Dry-run was produced against `<recorded_hash>`; you're now on `<current_hash>`. Source may have changed — re-run `--dry-run` for fresh output, or pass `--force` to apply anyway."* Do not proceed without explicit `--force`.
+4. **Replay every `planned_writes` entry in order.** For each action:
+   - `write-test` → atomic write of `content` to `path`.
+   - `stage-pending` → `stagePendingTest({...})` rebuilt from `content` + `audit_finding_id` + `confidence`.
+   - `write-pending-index` → `writePendingIndex(repoRoot, listPending(repoRoot))` after all stage-pending entries complete.
+   - `append-test-plan` → `appendTestPlanSession` with the cached payload.
+   - `update-testing-md` → `writeTestingMd` with the cached payload.
+   - `write-ci-stub` → `writeCiStub` with the cached payload.
+   - `update-project-state` → `writeProjectState` with the cached state.
+   - `update-accepted-json` / `update-rejected-json` → atomic JSON writes.
+   - `write-generate-state` → atomic JSON write to `.vibe-test/state/generate.json` (or scoped sidecar).
+   - `write-markdown-artifact` → write the markdown body to `docs/vibe-test/generate-<ISO-date>.md`.
+5. After every planned write succeeds, `clearDryRunCache(repoRoot)`. The cache is single-use.
+6. Append a session-log terminal entry with `context.applied_dry_run_session_uuid: <session_uuid>` so provenance links the apply session to the originating dry-run session.
+7. Render the three output views in *post-action* shape (no WOULD-WRITE annotations) with a banner footer: `Applied from dry-run cached at <ISO>.`
+
+**If any replay step fails**, halt and surface the error. Do NOT clear the cache on failure — the builder may want to fix the environmental issue and retry.
+
+### B. Rejection-pattern probe (G4)
+
+**Trigger:** inside Step 5 (inline reconciliation) and Step 4 (pending-queue prompt) — after every reject, check the probe.
+
+**Import surface (from `@esthernandez/vibe-test/generator`):**
+
+- `recordFeedbackEvent({sessionUUID, event: 'test_rejected', ...})` — called per reject (Feature C below).
+- `shouldFireProbe(sessionUUID, threshold = 3)` — returns `true` iff ≥3 trailing consecutive rejects AND probe hasn't fired this session.
+- `markProbeFired(sessionUUID)` — appends a marker so the probe doesn't re-fire.
+
+**Flow:**
+
+1. After writing the reject feedback event (Feature C), call `shouldFireProbe(sessionUUID)`.
+2. If `true`:
+   1. **Pause the per-gap loop.** Do not generate the next candidate until the builder has answered.
+   2. Prompt verbatim (tier-adapted glosses allowed — see Tier-Adaptive Language):
+      > *"I'm generating tests you keep rejecting — something in my approach is off. Want to tell me what's wrong? Helps me do better now and on your next project."*
+   3. `markProbeFired(sessionUUID)` immediately — avoids a race where a re-prompt fires on the same sessionUUID before the builder answers.
+   4. Read the builder's response. Branch on **SKILL reasoning**:
+
+      | Response signal | Branch | Heuristic cue |
+      |---|---|---|
+      | **Friction-flavored** | `friction_log.append({friction_type: 'generation_pattern_mismatch', symptom: <full response>, confidence: 'medium', agent_guess_at_cause: '<one-line agent guess>'})` | Explicit critique of the generation approach: *"you're generating X that don't apply"*, *"the fixture pattern is wrong"*, *"tests reference an API that doesn't exist"*, *"you keep assuming vitest but this is jest"*. Anything that names a mistake the generator made. |
+      | **Wins-flavored** | `wins_log.append({event: 'high_quality_pruning', working_as_designed: true, symptom: <full response>, context: '3-consecutive-reject probe'})` (Pattern #14 explicit-success-marker) | Builder says the tests are fine, rejection is pruning: *"you're doing fine, I'm just selective"*, *"these are good but I only want smoke right now"*, *"approach is right, I'm curating hard"*, *"tests are fine, I don't need that many"*. Acceptance with stylistic/scope constraint. |
+
+      When in doubt between the two branches, prefer the friction branch. False-positive friction poisons `/evolve` less than false-positive wins (which would let a real problem sit unfixed).
+
+   5. Reset the internal consecutive-reject counter for the session — the probe marker already short-circuits `shouldFireProbe` on the next call, but the SKILL should also visually reset its own "counter" in its reasoning so it doesn't nag the builder a second time.
+   6. Thank the builder concisely and resume the per-gap loop with the next gap (not a re-generation of the rejected ones).
+
+3. If `false`, continue normally. No probe prompt, no extra logs.
+
+**Per-session fire-once:** the probe fires at most once per sessionUUID. A second wave of rejects later in the same session does NOT re-trigger. Rationale: if the builder is still rejecting after a probe, the guidance they gave either didn't stick in our reasoning or the problem is deeper than one conversational correction. Let `/evolve` aggregate the pattern across sessions instead of nagging in-flight.
+
+**Dry-run interaction:** during `--dry-run`, the probe does not fire (there are no real rejects — the SKILL doesn't prompt for inline accept/reject in preview mode). `--apply-last-dry-run` also skips the probe (the decisions were already cached).
+
+### C. L2 feedback capture during normal flow
+
+**Every accept and every reject writes a session-log entry.** This is *additive* to Steps 3f, 4, and 5 — the state writes in Step 8 still happen. The feedback entries feed `/evolve` at Level 2 (session memory); without them, `/evolve` can see counts but not individual decision context.
+
+**Import surface:**
+
+```ts
+import {
+  recordFeedbackEvent,
+  ACCEPT_EVENT,   // 'test_accepted'
+  REJECT_EVENT,   // 'test_rejected'
+} from '@esthernandez/vibe-test/generator';
+```
+
+**Trigger points:**
+
+| Flow step | Event | Required fields |
+|---|---|---|
+| Step 3f auto-write success | `test_accepted` (tier `high`) | `sessionUUID, event, confidenceTier: 'high', auditFindingId, framework` |
+| Step 3f inline accept | `test_accepted` (tier `low`) | `sessionUUID, event, confidenceTier: 'low', auditFindingId, framework` |
+| Step 3f inline reject | `test_rejected` (tier `low`) | `sessionUUID, event, confidenceTier: 'low', auditFindingId, framework, rejectionReason` (if supplied) |
+| Step 4 pending accept (no branch switch) | `test_accepted` (tier `medium`) | `sessionUUID, event, confidenceTier: 'medium', auditFindingId, framework` |
+| Step 4 pending reject with reason | `test_rejected` (tier `medium`) | `sessionUUID, event, confidenceTier: 'medium', auditFindingId, framework, rejectionReason` |
+| Step 4 force-accept past branch-switch | `test_accepted` (tier `medium`) + friction entry as in Step 4 | Same as pending accept |
+
+**Call pattern:**
+
+```ts
+await recordFeedbackEvent({
+  sessionUUID,
+  event: REJECT_EVENT,
+  auditFindingId: gap.id,
+  framework: inventory.test_frameworks[0] ?? 'vitest',
+  confidenceTier: 'medium',
+  rejectionReason: builderReason, // omit or null when no reason supplied
+});
+```
+
+**Dry-run guard:** during `--dry-run`, **do not** call `recordFeedbackEvent` — preview mode has no real decisions. If for some reason the SKILL decides to write during dry-run, pass `dryRun: true` to tag the entry; `/evolve` filters those out.
+
+**Relationship to Friction/Wins logs:** the feedback events are *raw signal*; they live in the session log. Friction/wins entries are *interpreted signal* — the SKILL creates them only when the rejection signal carries a reason that fits a `friction_type` (pattern mismatch, idiom mismatch, etc.) or when the probe response fires a wins entry. Do not log friction for every reject automatically; the reason has to *say something*.
+
+### Dry-run cache schema
+
+Schema file: `skills/guide/schemas/dry-run-cache.schema.json` (draft-07). Required fields: `schema_version`, `cached_at`, `ttl_seconds`, `payload`, `planned_writes`. Optional: `plugin_version`, `repo_root`, `scope`, `head_hash_at_generation`, `session_uuid`. Validation runs inside `cacheDryRun` — a schema miss throws with the ajv errors surfaced to the SKILL verbatim so the builder sees a clear error. Reads are permissive: `readDryRunCache` returns the raw cache even on schema drift so the apply path can decide.
 
 ## Why This SKILL Exists
 
