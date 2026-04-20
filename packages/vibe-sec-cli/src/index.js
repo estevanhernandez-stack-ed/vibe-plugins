@@ -113,7 +113,7 @@ const PATTERNS = [
 ];
 
 // ─── false-positive filters ──────────────────────────────────────────
-const PATH_SKIP_REGEX = /(^|[\\/])(node_modules|\.git|\.venv|venv|dist|build|coverage|\.next|\.nuxt|\.turbo|\.cache|\.pytest_cache|__pycache__)([\\/]|$)/i;
+const PATH_SKIP_REGEX = /(^|[\\/])(node_modules|\.git|\.venv|venv|dist|build|coverage|\.next|\.nuxt|\.turbo|\.cache|\.pytest_cache|__pycache__|\.vibe-sec)([\\/]|$)/i;
 const FILENAME_HINT_REGEX = /(example|sample|mock|fake|placeholder|dummy|template|fixture)/i;
 const BINARY_EXT = new Set([
   ".png", ".jpg", ".jpeg", ".gif", ".webp", ".ico", ".bmp",
@@ -184,16 +184,21 @@ function lineColumn(text, index) {
   return { line, col };
 }
 
+function maskMatch(s) {
+  if (s.length <= 8) return s[0] + "…" + s[s.length - 1];
+  return s.slice(0, 6) + "…" + s.slice(-4);
+}
+
 function previewAt(text, index, matchLen) {
   const before = Math.max(0, text.lastIndexOf("\n", index - 1) + 1);
   const after = text.indexOf("\n", index + matchLen);
   const end = after === -1 ? text.length : after;
-  return text.slice(before, end).trim().slice(0, 160);
-}
-
-function maskMatch(s) {
-  if (s.length <= 8) return s[0] + "…" + s[s.length - 1];
-  return s.slice(0, 6) + "…" + s.slice(-4);
+  const line = text.slice(before, end);
+  const full = text.slice(index, index + matchLen);
+  // Replace the matched secret inside the line with its masked form —
+  // the JSON report + terminal preview must never persist a raw secret.
+  const masked = line.split(full).join(maskMatch(full));
+  return masked.trim().slice(0, 160);
 }
 
 function scanText(text, filePath) {
