@@ -1,0 +1,41 @@
+{
+  "name": "@esthernandez/vibe-sec-cli",
+  "version": "0.1.0",
+  "description": "CLI secret-leak scanner for vibe-coded apps — detects API keys, tokens, and credentials leaked in source, with severity tiers and CI-safe exit codes. First shipped capability of Vibe Sec.",
+  "author": "626Labs LLC",
+  "license": "MIT",
+  "homepage": "https://626labs.dev#vibe-sec",
+  "bugs": "https://github.com/estevanhernandez-stack-ed/vibe-plugins/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/estevanhernandez-stack-ed/vibe-plugins.git",
+    "directory": "packages/vibe-sec-cli"
+  },
+  "bin": {
+    "vibe-sec": "./src/index.js"
+  },
+  "files": [
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node src/index.js --help"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "keywords": [
+    "claude-code",
+    "claude-code-plugin",
+    "security",
+    "secret-scanner",
+    "vibe-coding",
+    "api-keys",
+    "leak-detection",
+    "ci",
+    "626labs"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}
