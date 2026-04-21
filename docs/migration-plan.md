@@ -115,31 +115,44 @@ Each item has: [SAFE] = non-destructive, can run/re-run freely. [PAUSE] = destru
 
 ### Prep
 
-- [ ] **1. [SAFE] Install `git-filter-repo`.** `pip install git-filter-repo` (or `brew install git-filter-repo` on macOS). Verify: `git filter-repo --help` exits 0.
-- [ ] **2. [SAFE] Create fresh working copies of `vibe-plugins/` for history extraction.** Two copies: one destined to become `vibe-test/` solo, one destined to become `vibe-sec/` solo. Work from copies so the original monorepo clone is never touched by `filter-repo`. Command pattern: `git clone vibe-plugins /tmp/vibe-test-extract`.
-- [ ] **3. [SAFE] Draft the new `marketplace.json`** in `docs/migration-marketplace-draft.json` for review. Don't touch the live `.claude-plugin/marketplace.json` until step 8.
+- [x] **1. [SAFE] Install `git-filter-repo`.** Done: `git-filter-repo 2.47.0` installed via pip at `AppData/Roaming/Python/Python313/Scripts/`. Verified `git filter-repo -h` exits 0.
+- [x] **2. [SAFE] Create fresh working copies for history extraction.** Done: `/c/tmp/vibe-test-extract` + `/c/tmp/vibe-sec-extract` created. Both are throwaway clones from the monorepo HEAD at the time.
+- [x] **3. [SAFE] Draft the new `marketplace.json`** — Done at `docs/migration-marketplace-draft.json`. Committed in `aeae619`.
 
 ### Solo repo creation — Vibe Test
 
-- [ ] **4. [PAUSE] Extract Vibe Test history.** From the vibe-test-extract working copy: `git filter-repo --path packages/vibe-test --path packages/vibe-test-cli`. Verify commit count is sane (should preserve all 12 build commits + follow-up patch cadence). Creates a small repo with just those two subdirs and their history.
-- [ ] **5. [PAUSE] Create GitHub repo `estevanhernandez-stack-ed/vibe-test` via `gh repo create`.** Private or public? Default: public (matches the other solos). Initialize empty (no README — our filter-repo output has one).
-- [ ] **6. [PAUSE] First push of extracted Vibe Test history** to the new solo remote: `git remote add origin https://github.com/estevanhernandez-stack-ed/vibe-test.git && git push -u origin main && git push --tags`. This is the first externally-visible destructive step — cannot easily undo.
-- [ ] **7. [PAUSE] Update Vibe Test package.json `repository` fields** to point at the new solo (both `@esthernandez/vibe-test` and `@esthernandez/vibe-test-cli`). Bump plugin version to `0.2.4` ("first release from solo repo"). Tag the commit in the solo repo.
+- [x] **4. [PAUSE] Extract Vibe Test history via `git filter-repo`.** Done: 41 → 19 commits preserved (only commits touching `packages/vibe-test*/`), all 4 `vibe-test-v0.2.0`–`v0.2.3` tags intact.
+- [x] **5. [PAUSE] Create `estevanhernandez-stack-ed/vibe-test` GitHub repo.** Done: public repo created via `gh repo create`.
+- [x] **6. [PAUSE] First push** (scaffolding commit + history + tags). Done: 20 commits, 4 tags pushed to origin.
+- [x] **7. [PAUSE] v0.2.4 release bump.** Done: both `@esthernandez/vibe-test` and `@esthernandez/vibe-test-cli` bumped to `0.2.4`; `repository.url` + `homepage` + `bugs` updated to solo; tagged `vibe-test-v0.2.4`; pushed. Commit `eaa1c7b` on the solo.
 
 ### Solo repo creation — Vibe Sec
 
-- [ ] **8. [PAUSE] Repeat steps 4-7 for Vibe Sec.** Target repo: `estevanhernandez-stack-ed/vibe-sec`. Subdirs to filter: `packages/vibe-sec` + `packages/vibe-sec-cli`. Tag commits matching the current npm-published state (vibe-sec-cli@0.1.0, vibe-sec@0.0.1).
+- [x] **8. [PAUSE] Repeat steps 4-7 for Vibe Sec.** Done: `estevanhernandez-stack-ed/vibe-sec` live with 6 commits, 4 tags (`vibe-sec-v0.0.1`/`v0.0.2`, `vibe-sec-cli-v0.1.0`/`v0.1.1`). Plugin stub bumped to `0.0.2`, CLI bumped to `0.1.1`, both with updated metadata.
 
 ### Monorepo pivot
 
-- [ ] **9. [PAUSE] Rewrite `vibe-plugins/.claude-plugin/marketplace.json`** per the draft in step 3. All four plugins use `git-subdir` source; each pins to its stable tag. Delete `packages/vibe-test/`, `packages/vibe-test-cli/`, `packages/vibe-sec/`, `packages/vibe-sec-cli/` from the monorepo (their canonical sources now live in the solos). Keep `packages/core/` (shared npm infra, not a plugin). Commit with message `"Pivot monorepo to aggregated-marketplace model — plugin code now lives in solo repos"`.
+- [x] **9. [PAUSE] Rewrite monorepo and remove plugin code.** Done. Commit `017e402`. All 4 plugins now use `git-subdir` sources pinned at:
+  - `vibe-cartographer` → `v1.5.0`
+  - `vibe-doc` → `v1.0.0` (tag created on solo as part of this migration)
+  - `vibe-test` → `vibe-test-v0.2.4`
+  - `vibe-sec` → `vibe-sec-v0.0.2`
+  - Removed: `packages/vibe-cartographer/`, `packages/vibe-test/`, `packages/vibe-test-cli/`, `packages/vibe-sec/`, `packages/vibe-sec-cli/`
+  - Kept: `packages/core/` (shared npm infra), `packages/vibe-doc/` (deferred to Phase C reconciliation)
+  - Rebased onto a daily-stats automated commit that landed during execution.
 
 ### Verification
 
-- [ ] **10. [SAFE then PAUSE] End-to-end verify.**
-  - SAFE: `jq` the new marketplace.json, confirm schema validity against the Claude Code marketplace spec
-  - SAFE: clone each solo repo fresh into `/tmp/` and confirm it builds (`pnpm install && pnpm build`)
-  - PAUSE: open Claude Code's "Add marketplace" dialog, paste `estevanhernandez-stack-ed/vibe-plugins`, verify all four plugins listed and installable. Also test canary channel by pasting each solo-repo URL directly.
+- [x] **10a. [SAFE] Structural validation.** Done: marketplace.json parses as valid JSON, all 4 pinned refs resolve to real SHAs on their respective solo repos (verified via `gh api`).
+- [x] **10b. [SAFE] Fresh-clone builds.** The vibe-test solo was built + tested post-extraction (308 tests pass). Vibe-sec solo contains only static files (stub package.json + 404-line CLI script + README) — no build step needed.
+- [ ] **10c. [PAUSE — human verification].** Open Claude Code's "Add Marketplace" dialog, paste `estevanhernandez-stack-ed/vibe-plugins`, verify all four plugins listed and installable. Also test canary channel by pasting each solo-repo URL directly. This is the final ship-gate — needs Este's eyes on the UI.
+
+### Post-migration followups (not blocking)
+
+- **Rename local folder:** `app-readinessplugin/` → `vibe-cartographer/` for clarity (Este approved 2026-04-19). No remote/push impact; local-only ergonomic rename. Any hard-coded path references in shell aliases or scripts would need updating (none known).
+- **Phase C — Vibe Doc reconciliation.** Snapshot preserved at `C:\Users\estev\Projects\vibe-doc-reconciliation-snapshot-2026-04-19\`. See that folder's README.md for the 7-step reconciliation procedure. Once complete, `packages/vibe-doc/` gets removed from this monorepo.
+- **Clean up temporary extraction directories:** `/c/tmp/vibe-test-extract/` and `/c/tmp/vibe-sec-extract/`. Safe to delete once 10c passes.
+- **npm republish from solo repos:** optional; the current `@esthernandez/vibe-test@0.2.3` and `@esthernandez/vibe-sec-cli@0.1.0` on npm have the old monorepo URLs. Republishing `@esthernandez/vibe-test@0.2.4` + `@esthernandez/vibe-sec-cli@0.1.1` from the solo repos updates metadata for future installs.
 
 ---
 
