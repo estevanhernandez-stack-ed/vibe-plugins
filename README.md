@@ -1,50 +1,77 @@
 # Vibe Plugins
 
-**The 626Labs Vibe Plugins ecosystem — spec-driven development, documentation, security, and testing for vibe-coded apps.**
+**The 626Labs plugin marketplace — one place, four plugins, all the Vibe tooling for vibe-coded apps.**
 
-Each plugin is independently versioned and published to npm, but they share a common architecture: classification-driven scanning, tiered requirements proportional to deployment context, and the Self-Evolving Plugin Framework (persistent profile, session memory, reflective evolution).
+This repo is the **aggregated marketplace manifest** for 626Labs's four Claude Code plugins. It exists so a single `owner/repo` paste — `estevanhernandez-stack-ed/vibe-plugins` — gives Claude Code users access to the whole Vibe ecosystem. The actual plugin code lives in dedicated solo repos, linked here via the `git-subdir` source type in `.claude-plugin/marketplace.json`.
 
-## Plugins in this monorepo
+## The four plugins
 
-| Plugin | Status | Install | Purpose |
-|--------|--------|---------|---------|
-| [**vibe-test**](./packages/vibe-test/) | **0.2.0 — shipping** | `/plugin install vibe-test@vibe-plugins` · `npm install -g @esthernandez/vibe-test-cli` | Test audit + generation. Classifies app by maturity tier, measures honest-denominator coverage, generates retrofit tests. Catches the broken harnesses every other test tool assumes away. |
-| [**vibe-sec**](./packages/vibe-sec/) | 0.0.1 — coming soon | `/plugin install vibe-sec@vibe-plugins` (pending v0.2) | Security scanning and fix generation for the predictable gaps vibe-coded apps ship with |
-| **@626labs/plugin-core** | 0.0.1 — scaffold | n/a (internal) | Shared library — scanner, classifier, session logger, state management. Consolidates in Phase 3 once vibe-test + vibe-sec ship. |
+| Plugin | Solo repo | Stable ref pinned here | Purpose |
+|---|---|---|---|
+| **Vibe Cartographer** | [`vibe-cartographer`](https://github.com/estevanhernandez-stack-ed/vibe-cartographer) | `v1.5.0` | Plot your course from idea to shipped app. Vibe coding course correction — eight slash commands: onboard, scope, prd, spec, checklist, build, iterate, reflect. |
+| **Vibe Doc** | [`Vibe-Doc`](https://github.com/estevanhernandez-stack-ed/Vibe-Doc) | `v1.0.0` | AI-powered documentation gap analyzer. Scans, classifies, identifies missing technical documentation, generates professional docs from existing artifacts. |
+| **Vibe Test** | [`vibe-test`](https://github.com/estevanhernandez-stack-ed/vibe-test) | `vibe-test-v0.2.4` | Test analyzer + generator. Classifies by app type and maturity tier, measures coverage honestly (no cherry-picked denominators), generates tests proportional to deployment risk — catches the broken harnesses every other test tool assumes away. |
+| **Vibe Sec** | [`vibe-sec`](https://github.com/estevanhernandez-stack-ed/vibe-sec) | `vibe-sec-v0.0.2` | Security gap finder — leaked secrets, sketchy auth, missing input validation, stale dependencies. Full plugin in development; secret-leak scanner CLI shipping now. |
 
-## Plugins living in their own repos (for now)
+Each plugin is independently versioned. This marketplace pins to **stable tags** on each solo repo; updates are deliberate promotions, not bleeding-edge tracking.
 
-| Plugin | Repo | Status |
-|--------|------|--------|
-| [vibe-cartographer](https://github.com/estevanhernandez-stack-ed/vibe-cartographer) | Separate repo | 1.3.0 — shipped |
-| [vibe-doc](https://github.com/estevanhernandez-stack-ed/Vibe-Doc) | Separate repo | 0.4.0 — shipped |
+## Two release channels
 
-Both will eventually migrate into this monorepo once the shared core library is stable.
+### 🟢 Stable (this repo) — for most users
+
+Paste `estevanhernandez-stack-ed/vibe-plugins` into Claude Code's Add Marketplace dialog. You get the versions pinned above — tested, promoted, stable. New releases land when the `ref` field in `.claude-plugin/marketplace.json` gets bumped.
+
+### 🟠 Canary / Edge (solo repos) — for beta testers
+
+Paste any individual solo repo URL (`estevanhernandez-stack-ed/vibe-test`, `estevanhernandez-stack-ed/vibe-sec`, etc.) to track that plugin's `main` branch. You see edge work the moment it's pushed. Faster feedback, occasional breakage.
 
 ## Install
 
-### Claude Desktop — Add marketplace
+### Claude Desktop / Cowork (UI)
 
-1. Personal plugins → + → Add marketplace
+1. Personal plugins → **+** → **Add marketplace**
 2. Enter: `estevanhernandez-stack-ed/vibe-plugins`
-3. Click Sync
-4. Install whichever Vibe plugins you want individually
+3. Click **Sync**
+4. Install whichever plugins you want
 
 ### Claude Code CLI
 
 ```text
 /plugin marketplace add estevanhernandez-stack-ed/vibe-plugins
+/plugin install vibe-cartographer@vibe-plugins
+/plugin install vibe-doc@vibe-plugins
 /plugin install vibe-test@vibe-plugins
-# vibe-sec v0.2 shipping next — /plugin install vibe-sec@vibe-plugins
+/plugin install vibe-sec@vibe-plugins
 ```
 
-### npm CLI (for CI pipelines)
+### CLI packages on npm (for CI pipelines)
 
 ```bash
-npm install -g @esthernandez/vibe-test-cli
+npm install -g @esthernandez/vibe-test-cli @esthernandez/vibe-sec-cli
 vibe-test audit --cwd .
 vibe-test gate --ci
+vibe-sec scan .
 ```
+
+## What's actually in this repo
+
+- **`.claude-plugin/marketplace.json`** — the aggregation manifest. Load-bearing file.
+- **`packages/core/`** — `@626labs/plugin-core`, shared npm package for plugin infrastructure (scanner primitives, session logger schema, state helpers). Not a plugin; not listed in the marketplace; referenced as a workspace dependency by plugins that adopt it (Phase 3).
+- **`packages/vibe-doc/`** — transitional copy pending reconciliation with the solo repo (see `docs/migration-plan.md` Phase C). The marketplace.json already points at the solo; this directory will be removed once reconciliation completes.
+- **`docs/`** — ecosystem-level documentation, migration plan, the Self-Evolving Plugin Framework thesis.
+- **Stats snapshots** — daily npm download counts per plugin CLI.
+
+Plugin source code for vibe-cartographer / vibe-test / vibe-sec does **not** live here. Find it in the solo repos linked above.
+
+## Promotion from canary → stable
+
+A one-commit change on this repo:
+
+1. Work lands on a solo repo's `main` and gets tagged (`vX.Y.Z`)
+2. Edit `.claude-plugin/marketplace.json` — bump that plugin's `ref` field to the new tag
+3. Commit + push
+
+Stable-channel users pick up the new version on their next `/plugin marketplace sync`.
 
 ## The "Vibe" thesis
 
