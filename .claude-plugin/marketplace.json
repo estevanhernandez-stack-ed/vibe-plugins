@@ -10,7 +10,7 @@
       "description": "Plot your course from idea to shipped app. Vibe coding course correction delivered as eight slash commands: onboard, scope, prd, spec, checklist, build, iterate, reflect.",
       "source": {
         "source": "git-subdir",
-        "url": "github.com/estevanhernandez-stack-ed/vibe-cartographer",
+        "url": "https://github.com/estevanhernandez-stack-ed/vibe-cartographer",
         "path": "plugins/vibe-cartographer",
         "ref": "v1.5.0"
       }
@@ -20,7 +20,7 @@
       "description": "AI-powered documentation gap analyzer. Scans your codebase, classifies your project, identifies missing technical documentation, and generates professional docs from your existing artifacts.",
       "source": {
         "source": "git-subdir",
-        "url": "github.com/estevanhernandez-stack-ed/Vibe-Doc",
+        "url": "https://github.com/estevanhernandez-stack-ed/Vibe-Doc",
         "path": "packages/vibe-doc",
         "ref": "v1.0.0"
       }
@@ -30,7 +30,7 @@
       "description": "Test analyzer and generator for vibe-coded apps. Classifies by app type and maturity tier, measures coverage honestly (no cherry-picked denominators), generates tests proportional to deployment risk — and catches the broken harnesses every other test tool assumes away.",
       "source": {
         "source": "git-subdir",
-        "url": "github.com/estevanhernandez-stack-ed/vibe-test",
+        "url": "https://github.com/estevanhernandez-stack-ed/vibe-test",
         "path": "packages/vibe-test",
         "ref": "vibe-test-v0.2.4"
       }
@@ -40,7 +40,7 @@
       "description": "Security gap finder for vibe-coded apps — leaked secrets, sketchy auth, missing input validation, stale dependencies. Coming soon as a full Claude Code plugin; secret-leak scanner available now via @esthernandez/vibe-sec-cli.",
       "source": {
         "source": "git-subdir",
-        "url": "github.com/estevanhernandez-stack-ed/vibe-sec",
+        "url": "https://github.com/estevanhernandez-stack-ed/vibe-sec",
         "path": "packages/vibe-sec",
         "ref": "vibe-sec-v0.0.2"
       }
