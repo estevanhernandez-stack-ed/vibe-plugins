@@ -1,0 +1,36 @@
+{
+  "timestamp": "2026-04-26T14:16:43Z",
+  "day": "2026-04-26",
+  "packages": {
+    "@esthernandez/vibe-cartographer": {
+      "last_day": 9,
+      "last_week": 204,
+      "last_month": 1099
+    },
+    "@esthernandez/vibe-doc": {
+      "last_day": 1,
+      "last_week": 68,
+      "last_month": 1400
+    },
+    "@esthernandez/app-project-readiness": {
+      "last_day": 0,
+      "last_week": 13,
+      "last_month": 603
+    },
+    "@esthernandez/vibe-sec": {
+      "last_day": 0,
+      "last_week": 124,
+      "last_month": 124
+    },
+    "@esthernandez/vibe-test": {
+      "last_day": 0,
+      "last_week": 48,
+      "last_month": 369
+    },
+    "@626labs/plugin-core": {
+      "last_day": null,
+      "last_week": null,
+      "last_month": null
+    }
+  }
+}
