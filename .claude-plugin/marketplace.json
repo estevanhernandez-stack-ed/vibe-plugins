@@ -52,7 +52,7 @@
         "source": "git-subdir",
         "url": "https://github.com/estevanhernandez-stack-ed/Thesis-Engine",
         "path": "plugins/thesis-engine",
-        "ref": "v0.2.0"
+        "ref": "v0.2.1"
       }
     }
   ]
