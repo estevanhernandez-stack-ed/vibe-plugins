@@ -44,6 +44,16 @@
         "path": "packages/vibe-sec",
         "ref": "vibe-sec-v0.0.2"
       }
+    },
+    {
+      "name": "thesis-engine",
+      "description": "Research feeder for vibe-thesis projects. Discovers cutting-edge thesis topics, gathers primary sources / opposing positions / methodological precedents across five research axes, and emits research notes + a Pandoc-ready BibTeX bibliography in vibe-thesis-shaped subdirectories ready to drop into ThesisStudio. Optional Smart Brevity blog adapter for BlogStudio.",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/estevanhernandez-stack-ed/Thesis-Engine",
+        "path": "plugins/thesis-engine",
+        "ref": "v0.2.0"
+      }
     }
   ]
 }
