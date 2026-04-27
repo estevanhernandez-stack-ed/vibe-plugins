@@ -12,7 +12,7 @@
         "source": "git-subdir",
         "url": "https://github.com/estevanhernandez-stack-ed/vibe-cartographer",
         "path": "plugins/vibe-cartographer",
-        "ref": "v1.7.2"
+        "ref": "v1.7.3"
       }
     },
     {
