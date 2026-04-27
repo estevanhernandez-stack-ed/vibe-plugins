@@ -3,7 +3,7 @@
   "owner": {
     "name": "626Labs LLC"
   },
-  "description": "The Vibe Plugins ecosystem — vibe coding course correction, documentation, security, and testing for vibe-coded apps. Each plugin lives in its own solo repo; this marketplace aggregates the stable releases. For canary/edge releases, install each plugin's solo repo directly.",
+  "description": "The Vibe Plugins ecosystem — knowledge as the foundation, plus pillars for vibe coding course correction, documentation, security, testing, and long-form academic authoring. Each plugin lives in its own solo repo; this marketplace aggregates the stable releases. For canary/edge releases, install each plugin's solo repo directly.",
   "plugins": [
     {
       "name": "vibe-cartographer",
@@ -53,6 +53,16 @@
         "url": "https://github.com/estevanhernandez-stack-ed/Thesis-Engine",
         "path": "plugins/thesis-engine",
         "ref": "v0.2.1"
+      }
+    },
+    {
+      "name": "vibe-thesis",
+      "description": "Beta — scaffold and co-author thesis-shaped artifacts (academic dissertations, master's theses, long-form research articles, position essays) with Claude Code. Works standalone with bundled templates; pairs with thesis-engine (optional research feeder) and the ThesisStudio template (optional richer styling) but neither is required. Say 'scaffold a vibe thesis project,' get a styled PDF skeleton plus a working render pipeline in roughly 30 minutes.",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/estevanhernandez-stack-ed/Vibe-Thesis",
+        "path": "plugins/vibe-thesis",
+        "ref": "v0.1.2"
       }
     }
   ]
