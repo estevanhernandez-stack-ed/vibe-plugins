@@ -90,7 +90,7 @@ State that lives inside this repo and ships to users via Claude Code's plugin-ma
 
 ### `.claude-plugin/marketplace.json`
 
-The aggregated marketplace manifest. Load-bearing — defines the entire ecosystem's installable surface.
+The aggregated marketplace manifest. Load-bearing — defines the entire ecosystem's installable surface. **This file also serves as this repo's API specification** — it's the structural contract between the marketplace and its consumers. See [`docs/api-spec.md`](./api-spec.md) for the full consumer contract.
 
 | Field | Description |
 |---|---|

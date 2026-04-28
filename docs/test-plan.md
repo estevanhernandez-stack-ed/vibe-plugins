@@ -32,7 +32,9 @@ Out of scope (each tested in its own solo repo):
 ### 1. Marketplace manifest validation
 
 The single highest-leverage test in this repo. A malformed manifest
-breaks installs for every user. Validate on every PR that touches
+breaks installs for every user. **`marketplace.json` is also this repo's
+[API specification](./api-spec.md)** — these checks are the spec
+enforcement gate. Validate on every PR that touches
 `.claude-plugin/marketplace.json`:
 
 | Check | What | Why |
