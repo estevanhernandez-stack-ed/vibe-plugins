@@ -22,7 +22,7 @@
         "source": "git-subdir",
         "url": "https://github.com/estevanhernandez-stack-ed/Vibe-Doc",
         "path": "packages/vibe-doc",
-        "ref": "v1.0.0"
+        "ref": "v0.7.0"
       }
     },
     {
