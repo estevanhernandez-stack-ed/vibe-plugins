@@ -3,7 +3,7 @@
   "owner": {
     "name": "626Labs LLC"
   },
-  "description": "The Vibe Plugins ecosystem — knowledge as the foundation, plus pillars for vibe coding course correction, documentation, security, testing, and long-form academic authoring. Each plugin lives in its own solo repo; this marketplace aggregates the stable releases. For canary/edge releases, install each plugin's solo repo directly.",
+  "description": "The Vibe Plugins ecosystem — knowledge and structural foundations, plus pillars for vibe coding course correction, documentation, security, testing, and long-form academic authoring. Each plugin lives in its own solo repo; this marketplace aggregates the stable releases. For canary/edge releases, install each plugin's solo repo directly.",
   "plugins": [
     {
       "name": "vibe-cartographer",
@@ -63,6 +63,16 @@
         "url": "https://github.com/estevanhernandez-stack-ed/Vibe-Thesis",
         "path": "plugins/vibe-thesis",
         "ref": "v0.1.2"
+      }
+    },
+    {
+      "name": "vibe-keystone",
+      "description": "Bootstrap a 626Labs-pattern CLAUDE.md — the load-bearing structural file every agent decision in the repo rests on. Interviews the user for org, decision surface, voice rules, and persona before drafting, so the produced file reflects THEIR conventions, not 626Labs defaults baked in. Tenant-aware; adapts to repo type (code platform / marketing site / long-form writing / mixed). Use when starting a new repo or when an existing CLAUDE.md is stale.",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/estevanhernandez-stack-ed/vibe-Keystone",
+        "path": "plugins/vibe-keystone",
+        "ref": "v0.1.0"
       }
     }
   ]

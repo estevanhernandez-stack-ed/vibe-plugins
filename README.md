@@ -1,18 +1,19 @@
 # Vibe Plugins
 
-**The 626Labs plugin marketplace — one place, six plugins, the full Vibe ecosystem.**
+**The 626Labs plugin marketplace — one place, seven plugins, the full Vibe ecosystem.**
 
-This repo is the **aggregated marketplace manifest** for 626Labs's six Claude Code plugins. It exists so a single `owner/repo` paste — `estevanhernandez-stack-ed/vibe-plugins` — gives Claude Code users access to the whole Vibe ecosystem. The actual plugin code lives in dedicated solo repos, linked here via the `git-subdir` source type in `.claude-plugin/marketplace.json`.
+This repo is the **aggregated marketplace manifest** for 626Labs's seven Claude Code plugins. It exists so a single `owner/repo` paste — `estevanhernandez-stack-ed/vibe-plugins` — gives Claude Code users access to the whole Vibe ecosystem. The actual plugin code lives in dedicated solo repos, linked here via the `git-subdir` source type in `.claude-plugin/marketplace.json`.
 
-The architecture: **knowledge as the foundation, process pillars on top.** Foundation tools establish what you're working on; pillar tools shape how you work on it.
+The architecture: **foundations underneath, process pillars on top.** Foundation tools establish *what* you're working on (knowledge) and *the structural file every agent decision rests on* (CLAUDE.md). Pillar tools shape *how* you work on it.
 
 ## The plugins
 
-### Foundation — knowledge
+### Foundations
 
 | Plugin | Solo repo | Stable ref pinned here | Purpose |
 |---|---|---|---|
-| **Thesis Engine** | [`Thesis-Engine`](https://github.com/estevanhernandez-stack-ed/Thesis-Engine) | `v0.2.1` | Research feeder. Discovers cutting-edge thesis topics, gathers primary sources, opposing positions, and methodological precedents across five research axes. Emits research notes + a Pandoc-ready BibTeX bibliography. Today: academic-research-shaped output for vibe-thesis projects. Roadmap: software-project-shaped briefs for Cart's `/scope` and Sec's threat-model. |
+| **Thesis Engine** | [`Thesis-Engine`](https://github.com/estevanhernandez-stack-ed/Thesis-Engine) | `v0.2.1` | **Knowledge foundation.** Research feeder. Discovers cutting-edge thesis topics, gathers primary sources, opposing positions, and methodological precedents across five research axes. Emits research notes + a Pandoc-ready BibTeX bibliography. Today: academic-research-shaped output for vibe-thesis projects. Roadmap: software-project-shaped briefs for Cart's `/scope` and Sec's threat-model. |
+| **Vibe Keystone** | [`vibe-Keystone`](https://github.com/estevanhernandez-stack-ed/vibe-Keystone) | `v0.1.0` | **Structural foundation.** Bootstraps a 626Labs-pattern `CLAUDE.md` — the load-bearing file every agent decision rests on. Tenant-aware: interviews for org, decision surface, voice rules, and persona before drafting, so the produced file reflects YOUR conventions, not 626Labs defaults. Adapts to repo type (code platform / marketing site / long-form writing / mixed). Use when starting a new repo or when an existing CLAUDE.md is stale. |
 
 ### Pillars — process
 
@@ -52,6 +53,7 @@ Paste any individual solo repo URL (`estevanhernandez-stack-ed/vibe-cartographer
 /plugin install thesis-engine@vibe-plugins
 /plugin install vibe-cartographer@vibe-plugins
 /plugin install vibe-doc@vibe-plugins
+/plugin install vibe-keystone@vibe-plugins
 /plugin install vibe-sec@vibe-plugins
 /plugin install vibe-test@vibe-plugins
 /plugin install vibe-thesis@vibe-plugins
@@ -88,11 +90,12 @@ Stable-channel users pick up the new version on their next `/plugin marketplace 
 
 ## The "Vibe" thesis
 
-AI-assisted creation has predictable patterns of friction — in software (vibe-coded apps cut corners on docs, security, testing, scope discipline) and in long-form authoring (theses and articles drift without a strong opening stance, fade into self-praise, lack a research-grounded foundation). The Vibe ecosystem closes those gaps with **knowledge as the foundation and process pillars on top**:
+AI-assisted creation has predictable patterns of friction — in software (vibe-coded apps cut corners on docs, security, testing, scope discipline) and in long-form authoring (theses and articles drift without a strong opening stance, fade into self-praise, lack a research-grounded foundation). The Vibe ecosystem closes those gaps with **foundations underneath and process pillars on top**:
 
-- **Foundation — knowledge.** Establish what you're working on before deciding how.
-  - **Thesis Engine** — research feeder (topics, primary sources, opposing positions, methodology, prior art)
-- **Pillars — process.** Shape how you work once knowledge is in place.
+- **Foundations.** Establish what you're working on (knowledge) and the structural file every agent decision rests on (CLAUDE.md).
+  - **Thesis Engine** — knowledge foundation: research feeder (topics, primary sources, opposing positions, methodology, prior art)
+  - **Vibe Keystone** — structural foundation: bootstraps a tenant-aware `CLAUDE.md` so every other plugin operates on a consistent contract
+- **Pillars — process.** Shape how you work once foundations are in place.
   - **Vibe Cartographer** — plot the course from idea to shipped app (vibe coding course correction)
   - **Vibe Doc** — close the documentation vacuum (ADRs, runbooks, threat models, etc.)
   - **Vibe Sec** — close the security vacuum (secrets, auth, input validation, dependencies)
