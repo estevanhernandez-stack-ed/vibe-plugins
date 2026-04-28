@@ -134,7 +134,7 @@ Each item has: [SAFE] = non-destructive, can run/re-run freely. [PAUSE] = destru
 
 - [x] **9. [PAUSE] Rewrite monorepo and remove plugin code.** Done. Commit `017e402`. All 4 plugins now use `git-subdir` sources pinned at:
   - `vibe-cartographer` → `v1.5.0`
-  - `vibe-doc` → `v1.0.0` (tag created on solo as part of this migration)
+  - `vibe-doc` → `v1.0.0` (tag created on solo as part of this migration; later re-versioned to `v0.7.0` on 2026-04-28 during the evolution-pass cycle — current marketplace pin)
   - `vibe-test` → `vibe-test-v0.2.4`
   - `vibe-sec` → `vibe-sec-v0.0.2`
   - Removed: `packages/vibe-cartographer/`, `packages/vibe-test/`, `packages/vibe-test-cli/`, `packages/vibe-sec/`, `packages/vibe-sec-cli/`
