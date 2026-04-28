@@ -23,7 +23,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           persist-credentials: true
-          fetch-depth: 1
+          # Full history so `git pull --rebase` works in the push-with-retry loop below.
+          fetch-depth: 0
 
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
@@ -50,4 +51,23 @@ jobs:
 
           DAY="$(date -u +%Y-%m-%d)"
           git commit -m "stats: daily npm download snapshot ${DAY}"
-          git push
+
+          # Push with retry — pull-rebase between attempts handles concurrent
+          # pushes to main during the workflow's execution window. Without
+          # this, any push to main after checkout (e.g. a doc fix or a marketplace
+          # ref bump) causes a non-fast-forward rejection and the snapshot is lost.
+          push_with_retry() {
+            local attempt
+            for attempt in 1 2 3 4 5; do
+              if git push 2>&1; then
+                return 0
+              fi
+              echo "::notice::push attempt ${attempt} rejected — fetching + rebasing onto origin/main"
+              git fetch origin main || return 1
+              git rebase origin/main || return 1
+              sleep "$((attempt * 2))"
+            done
+            echo "::error::push failed after 5 attempts — concurrent activity on main is excessive" >&2
+            return 1
+          }
+          push_with_retry
