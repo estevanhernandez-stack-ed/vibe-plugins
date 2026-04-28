@@ -39,6 +39,8 @@ Paste any individual solo repo URL (`estevanhernandez-stack-ed/vibe-cartographer
 
 ## Install
 
+> **Full install guide with troubleshooting, per-platform notes, and a "which path do I want?" decision tree:** [INSTALL.md](./INSTALL.md). The quick paths below cover the most common cases.
+
 ### Claude Desktop / Cowork (UI)
 
 1. Personal plugins → **+** → **Add marketplace**
