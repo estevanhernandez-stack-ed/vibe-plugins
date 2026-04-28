@@ -1,17 +1,28 @@
 # Vibe Plugins
 
-**The 626Labs plugin marketplace — one place, four plugins, all the Vibe tooling for vibe-coded apps.**
+**The 626Labs plugin marketplace — one place, six plugins, the full Vibe ecosystem.**
 
-This repo is the **aggregated marketplace manifest** for 626Labs's four Claude Code plugins. It exists so a single `owner/repo` paste — `estevanhernandez-stack-ed/vibe-plugins` — gives Claude Code users access to the whole Vibe ecosystem. The actual plugin code lives in dedicated solo repos, linked here via the `git-subdir` source type in `.claude-plugin/marketplace.json`.
+This repo is the **aggregated marketplace manifest** for 626Labs's six Claude Code plugins. It exists so a single `owner/repo` paste — `estevanhernandez-stack-ed/vibe-plugins` — gives Claude Code users access to the whole Vibe ecosystem. The actual plugin code lives in dedicated solo repos, linked here via the `git-subdir` source type in `.claude-plugin/marketplace.json`.
 
-## The four plugins
+The architecture: **knowledge as the foundation, process pillars on top.** Foundation tools establish what you're working on; pillar tools shape how you work on it.
+
+## The plugins
+
+### Foundation — knowledge
 
 | Plugin | Solo repo | Stable ref pinned here | Purpose |
 |---|---|---|---|
-| **Vibe Cartographer** | [`vibe-cartographer`](https://github.com/estevanhernandez-stack-ed/vibe-cartographer) | `v1.5.0` | Plot your course from idea to shipped app. Vibe coding course correction — eight slash commands: onboard, scope, prd, spec, checklist, build, iterate, reflect. |
+| **Thesis Engine** | [`Thesis-Engine`](https://github.com/estevanhernandez-stack-ed/Thesis-Engine) | `v0.2.1` | Research feeder. Discovers cutting-edge thesis topics, gathers primary sources, opposing positions, and methodological precedents across five research axes. Emits research notes + a Pandoc-ready BibTeX bibliography. Today: academic-research-shaped output for vibe-thesis projects. Roadmap: software-project-shaped briefs for Cart's `/scope` and Sec's threat-model. |
+
+### Pillars — process
+
+| Plugin | Solo repo | Stable ref pinned here | Purpose |
+|---|---|---|---|
+| **Vibe Cartographer** | [`vibe-cartographer`](https://github.com/estevanhernandez-stack-ed/vibe-cartographer) | `v1.7.3` | Plot your course from idea to shipped app. Vibe coding course correction — eight slash commands: onboard, scope, prd, spec, checklist, build, iterate, reflect. Plus Level-3.5 self-evolution: `/evolve`, `/vitals`, `/friction`. |
 | **Vibe Doc** | [`Vibe-Doc`](https://github.com/estevanhernandez-stack-ed/Vibe-Doc) | `v1.0.0` | AI-powered documentation gap analyzer. Scans, classifies, identifies missing technical documentation, generates professional docs from existing artifacts. |
+| **Vibe Sec** | [`vibe-sec`](https://github.com/estevanhernandez-stack-ed/vibe-sec) | `vibe-sec-v0.0.2` | Security gap finder — leaked secrets, sketchy auth, missing input validation, stale dependencies. Full plugin in development; secret-leak scanner CLI shipping now via `@esthernandez/vibe-sec-cli`. |
 | **Vibe Test** | [`vibe-test`](https://github.com/estevanhernandez-stack-ed/vibe-test) | `vibe-test-v0.2.4` | Test analyzer + generator. Classifies by app type and maturity tier, measures coverage honestly (no cherry-picked denominators), generates tests proportional to deployment risk — catches the broken harnesses every other test tool assumes away. |
-| **Vibe Sec** | [`vibe-sec`](https://github.com/estevanhernandez-stack-ed/vibe-sec) | `vibe-sec-v0.0.2` | Security gap finder — leaked secrets, sketchy auth, missing input validation, stale dependencies. Full plugin in development; secret-leak scanner CLI shipping now. |
+| **Vibe Thesis** *(beta)* | [`Vibe-Thesis`](https://github.com/estevanhernandez-stack-ed/Vibe-Thesis) | `v0.1.2` | Long-form academic authoring — dissertations, master's theses, position essays. Scaffolds a styled PDF skeleton plus a working render pipeline in roughly 30 minutes. Standalone-friendly with bundled templates; pairs with Thesis Engine and the [ThesisStudio](https://github.com/estevanhernandez-stack-ed/ThesisStudio) template, but neither is required. |
 
 Each plugin is independently versioned. This marketplace pins to **stable tags** on each solo repo; updates are deliberate promotions, not bleeding-edge tracking.
 
@@ -23,7 +34,7 @@ Paste `estevanhernandez-stack-ed/vibe-plugins` into Claude Code's Add Marketplac
 
 ### 🟠 Canary / Edge (solo repos) — for beta testers
 
-Paste any individual solo repo URL (`estevanhernandez-stack-ed/vibe-test`, `estevanhernandez-stack-ed/vibe-sec`, etc.) to track that plugin's `main` branch. You see edge work the moment it's pushed. Faster feedback, occasional breakage.
+Paste any individual solo repo URL (`estevanhernandez-stack-ed/vibe-cartographer`, `estevanhernandez-stack-ed/Vibe-Thesis`, `estevanhernandez-stack-ed/Thesis-Engine`, etc.) to track that plugin's `main` branch. You see edge work the moment it's pushed. Faster feedback, occasional breakage.
 
 ## Install
 
@@ -38,10 +49,12 @@ Paste any individual solo repo URL (`estevanhernandez-stack-ed/vibe-test`, `este
 
 ```text
 /plugin marketplace add estevanhernandez-stack-ed/vibe-plugins
+/plugin install thesis-engine@vibe-plugins
 /plugin install vibe-cartographer@vibe-plugins
 /plugin install vibe-doc@vibe-plugins
-/plugin install vibe-test@vibe-plugins
 /plugin install vibe-sec@vibe-plugins
+/plugin install vibe-test@vibe-plugins
+/plugin install vibe-thesis@vibe-plugins
 ```
 
 ### CLI packages on npm (for CI pipelines)
@@ -61,7 +74,7 @@ vibe-sec scan .
 - **`docs/`** — ecosystem-level documentation, migration plan, the Self-Evolving Plugin Framework thesis.
 - **Stats snapshots** — daily npm download counts per plugin CLI.
 
-Plugin source code for vibe-cartographer / vibe-test / vibe-sec does **not** live here. Find it in the solo repos linked above.
+Plugin source code does **not** live here. Find it in the solo repos linked above.
 
 ## Promotion from canary → stable
 
@@ -75,18 +88,22 @@ Stable-channel users pick up the new version on their next `/plugin marketplace 
 
 ## The "Vibe" thesis
 
-Vibe-coded applications — apps prototyped primarily with AI assistance — have predictable, patterned weaknesses. Each Vibe plugin closes one category of those gaps:
+AI-assisted creation has predictable patterns of friction — in software (vibe-coded apps cut corners on docs, security, testing, scope discipline) and in long-form authoring (theses and articles drift without a strong opening stance, fade into self-praise, lack a research-grounded foundation). The Vibe ecosystem closes those gaps with **knowledge as the foundation and process pillars on top**:
 
-- **Vibe Cartographer** — plot the course from idea to shipped app (spec-driven workflow)
-- **Vibe Doc** — close the documentation vacuum (ADRs, runbooks, threat models, etc.)
-- **Vibe Sec** — close the security vacuum (secrets, auth, input validation, dependencies)
-- **Vibe Test** — close the testing vacuum (smoke → behavioral → edge → integration)
+- **Foundation — knowledge.** Establish what you're working on before deciding how.
+  - **Thesis Engine** — research feeder (topics, primary sources, opposing positions, methodology, prior art)
+- **Pillars — process.** Shape how you work once knowledge is in place.
+  - **Vibe Cartographer** — plot the course from idea to shipped app (vibe coding course correction)
+  - **Vibe Doc** — close the documentation vacuum (ADRs, runbooks, threat models, etc.)
+  - **Vibe Sec** — close the security vacuum (secrets, auth, input validation, dependencies)
+  - **Vibe Test** — close the testing vacuum (smoke → behavioral → edge → integration)
+  - **Vibe Thesis** — long-form academic authoring (dissertations, theses, position essays)
 
-Each plugin knows its scope. None pretends to replace specialist tools or professional review. Together they're the baseline hygiene kit for AI-assisted development in 2026.
+Each plugin knows its scope. None pretends to replace specialist tools or professional review. Together they're the baseline hygiene kit for AI-assisted creation in 2026.
 
 ## Architecture: classification-driven, tier-appropriate
 
-Every plugin in this ecosystem classifies the target app (type, deployment context, risk profile) and measures against a tier-appropriate bar — not an absolute bar. Prototypes get prototype-level scrutiny. Regulated apps get regulated-level scrutiny. The plugin tells you what's missing for *your situation*, not for a theoretical ideal.
+Every plugin in this ecosystem classifies the target work (project type, deployment context, risk profile, audience) and measures against a tier-appropriate bar — not an absolute bar. Prototypes get prototype-level scrutiny. Regulated apps get regulated-level scrutiny. Class papers get class-level review; dissertations get dissertation-level review. The plugin tells you what's missing for *your situation*, not for a theoretical ideal.
 
 ## Self-Evolving Plugin Framework
 
