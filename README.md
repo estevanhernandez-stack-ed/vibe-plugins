@@ -1,3 +1,7 @@
+<p align="center">
+  <img alt="Vibe Plugins — the 626Labs plugin marketplace for Claude Code" src="https://626labs.dev/assets/brand/vibe-plugins-banner-1500x500.png" />
+</p>
+
 # Vibe Plugins
 
 **The 626Labs plugin marketplace — one place, seven plugins, the full Vibe ecosystem.**
