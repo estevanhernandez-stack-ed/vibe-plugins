@@ -1,8 +1,0 @@
-{
-  "name": "vibe-doc",
-  "version": "0.5.0",
-  "description": "AI-powered documentation gap analyzer. Scans your codebase, classifies your project, identifies missing technical documentation, and generates professional docs from your existing artifacts.",
-  "author": {
-    "name": "626Labs LLC"
-  }
-}

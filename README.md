@@ -74,7 +74,6 @@ vibe-sec scan .
 
 - **`.claude-plugin/marketplace.json`** — the aggregation manifest. Load-bearing file.
 - **`packages/core/`** — `@626labs/plugin-core`, shared npm package for plugin infrastructure (scanner primitives, session logger schema, state helpers). Not a plugin; not listed in the marketplace; referenced as a workspace dependency by plugins that adopt it (Phase 3).
-- **`packages/vibe-doc/`** — transitional copy pending reconciliation with the solo repo (see `docs/migration-plan.md` Phase C). The marketplace.json already points at the solo; this directory will be removed once reconciliation completes.
 - **`docs/`** — ecosystem-level documentation, migration plan, the Self-Evolving Plugin Framework thesis.
 - **Stats snapshots** — daily npm download counts per plugin CLI.
 

@@ -138,7 +138,7 @@ Each item has: [SAFE] = non-destructive, can run/re-run freely. [PAUSE] = destru
   - `vibe-test` → `vibe-test-v0.2.4`
   - `vibe-sec` → `vibe-sec-v0.0.2`
   - Removed: `packages/vibe-cartographer/`, `packages/vibe-test/`, `packages/vibe-test-cli/`, `packages/vibe-sec/`, `packages/vibe-sec-cli/`
-  - Kept: `packages/core/` (shared npm infra), `packages/vibe-doc/` (deferred to Phase C reconciliation)
+  - Kept: `packages/core/` (shared npm infra), `packages/vibe-doc/` (deferred to Phase C reconciliation — completed 2026-04-28; see Phase C below)
   - Rebased onto a daily-stats automated commit that landed during execution.
 
 ### Verification
@@ -150,7 +150,7 @@ Each item has: [SAFE] = non-destructive, can run/re-run freely. [PAUSE] = destru
 ### Post-migration followups (not blocking)
 
 - **Rename local folder:** `app-readinessplugin/` → `vibe-cartographer/` for clarity (Este approved 2026-04-19). No remote/push impact; local-only ergonomic rename. Any hard-coded path references in shell aliases or scripts would need updating (none known).
-- **Phase C — Vibe Doc reconciliation.** Snapshot preserved at `C:\Users\estev\Projects\vibe-doc-reconciliation-snapshot-2026-04-19\`. See that folder's README.md for the 7-step reconciliation procedure. Once complete, `packages/vibe-doc/` gets removed from this monorepo.
+- [x] **Phase C — Vibe Doc reconciliation. Done 2026-04-28.** `packages/vibe-doc/` removed from this monorepo. The `Vibe-Doc` solo repo at `v0.7.0` is the canonical source — marketplace pulls from there via `git-subdir`. All seven plugins in the marketplace now follow the same solo-only distribution pattern; no transitional in-repo copies remain. Snapshot preserved at `C:\Users\estev\Projects\vibe-doc-reconciliation-snapshot-2026-04-19\` for historical reference.
 - **Clean up temporary extraction directories:** `/c/tmp/vibe-test-extract/` and `/c/tmp/vibe-sec-extract/`. Safe to delete once 10c passes.
 - **npm republish from solo repos:** optional; the current `@esthernandez/vibe-test@0.2.3` and `@esthernandez/vibe-sec-cli@0.1.0` on npm have the old monorepo URLs. Republishing `@esthernandez/vibe-test@0.2.4` + `@esthernandez/vibe-sec-cli@0.1.1` from the solo repos updates metadata for future installs.
 

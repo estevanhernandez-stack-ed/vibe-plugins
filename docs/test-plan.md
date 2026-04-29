@@ -13,9 +13,6 @@ What lives in this repo and is in scope for this test plan:
   each plugin to a stable tag.
 - **`packages/core/`** — `@626labs/plugin-core`, the shared TypeScript
   npm package (scanner primitives, session logger schema, state helpers).
-- **`packages/vibe-doc/`** — transitional copy pending reconciliation
-  with the solo repo (see `docs/migration-plan.md`). **Out of scope**
-  here; covered by the solo-repo test plan after reconciliation.
 - **`scripts/npm-stats.py`** + **`scripts/build-plugin.py`** — daily
   stats collector and plugin bundler.
 - **`.github/workflows/npm-stats.yml`** — daily cron that runs the
