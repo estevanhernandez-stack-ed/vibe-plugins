@@ -77,12 +77,12 @@
     },
     {
       "name": "vibe-iterate",
-      "description": "Iterate on a shipped product, one PR at a time. Reads your stack, your feedback (feedback.md), and your competitor set; recommends the right mode (feature-add, competitive, ux-polish, bug-bash) for the moment; ships with regression-aware, small-diff posture. Includes radar (digest what's new), rate (score an idea before committing to it), spy (single-URL competitor read), scan-releases (per-lib changes since last bump), upgrade (surgical lib bumps with codemods when available), and ship (hand-written brief, no ingestion).",
+      "description": "Iterate on a shipped product, one PR at a time. First-run bootstrap identifies the app type and interviews you for competitors + framework pins. Recommends the right mode (feature-add, competitive, ux-polish, bug-bash) for the moment; ships with regression-aware, small-diff posture. Includes radar (digest what's new), rate (score an idea before committing), spy (single-URL competitor read), scan-releases (per-lib changes since last bump), upgrade (surgical lib bumps with codemods when available), ship (hand-written brief, no ingestion). Composes with vibe-cartographer when installed (heavy-iteration delegation). Self-evolves via session + friction logging — :evolve proposes improvements based on your usage patterns. No telemetry.",
       "source": {
         "source": "git-subdir",
         "url": "https://github.com/estevanhernandez-stack-ed/vibe-iterate",
         "path": "plugins/vibe-iterate",
-        "ref": "v0.5.0"
+        "ref": "v1.0.0"
       }
     }
   ]
