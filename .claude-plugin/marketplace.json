@@ -84,6 +84,16 @@
         "path": "plugins/vibe-iterate",
         "ref": "v1.0.0"
       }
+    },
+    {
+      "name": "vibe-taker",
+      "description": "Take it with you. Capture a feature out of one repo as a portable bundle (architecture sketch, contract surface, AI prompts, verbatim source snapshot, gotchas); plant it into another with stack-aware adaptation. /vibe-taker:capture reads source autonomously and only fires the interview gate when WHY can't be derived from source alone. /vibe-taker:plant detects the target's stack and picks code-lift on high match, spec-driven re-implementation on low match, or declines on hard cross-language mismatch — always with a mandatory diff confirmation before any write. /vibe-taker:list surfaces what's on the cross-repo shelf with search and Jaccard near-duplicate hints. Local-only by default; ~/.vibe-taker/library/ is the single source of truth.",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/estevanhernandez-stack-ed/vibe-taker",
+        "path": "plugins/vibe-taker",
+        "ref": "v0.1.0"
+      }
     }
   ]
 }
