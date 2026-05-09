@@ -92,7 +92,7 @@
         "source": "git-subdir",
         "url": "https://github.com/estevanhernandez-stack-ed/vibe-taker",
         "path": "plugins/vibe-taker",
-        "ref": "v0.1.0"
+        "ref": "v0.1.1"
       }
     }
   ]
