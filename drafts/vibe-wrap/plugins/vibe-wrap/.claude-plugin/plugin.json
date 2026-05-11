@@ -1,0 +1,19 @@
+{
+  "name": "vibe-wrap",
+  "version": "0.1.0",
+  "description": "Session wrap-up that reads the breadcrumb trail your toolkit already left — not a cold reconstruction. Surfaces what shipped, what's uncommitted, and gates commit + push interactively.",
+  "author": {
+    "name": "626Labs LLC",
+    "url": "https://github.com/estevanhernandez-stack-ed"
+  },
+  "homepage": "https://github.com/estevanhernandez-stack-ed/vibe-wrap#readme",
+  "repository": "https://github.com/estevanhernandez-stack-ed/vibe-wrap",
+  "license": "MIT",
+  "keywords": [
+    "vibe-wrap",
+    "session-wrap",
+    "claude-code-plugin",
+    "vibe-coding",
+    "626labs"
+  ]
+}
