@@ -14,6 +14,25 @@ Two things to know up front:
 1. **You don't have to plant anything.** If your plugin already writes `~/.claude/plugins/data/<plugin>/sessions/<date>.jsonl` per Pattern #2, vibe-wrap reads that automatically. Planting is for richer attribution, not a hard requirement.
 2. **Planting is no-op-safe.** If vibe-wrap isn't installed, the call to `:plant` fails silently because the SKILL isn't registered in the user's environment. Your plugin doesn't break, doesn't error, doesn't block.
 
+## How siblings invoke
+
+The plant script is invoked from a sibling SKILL body (or any tool with shell access). The session UUID flows in via the `${CLAUDE_SESSION_ID}` template substitution at SKILL invocation time — Claude Code does not expose the session UUID to scripts via an environment variable, so the substitution-and-pass-as-CLI-arg pattern is the lockstep contract.
+
+**Canonical sibling invocation** (one line, dropped into the sibling's own SKILL body at command start):
+
+```
+python ~/.claude/plugins/cache/vibe-plugins/vibe-wrap/<ver>/skills/plant/scripts/plant.py \
+  --session-id ${CLAUDE_SESSION_ID} \
+  --source vibe-cartographer \
+  --command scope \
+  --phase start \
+  --outcome in_progress
+```
+
+The `${CLAUDE_SESSION_ID}` substitution resolves at SKILL invocation time inside the user's environment. If it comes through empty (env not set, hook payload absent, shell wonkiness), the script writes to `_orphan.jsonl` and exits 0. The wrap reader merges orphans into the active session by timestamp proximity at render time.
+
+**The contract is fire-and-forget.** Every failure path — vibe-wrap not installed, missing required arg, malformed payload, atomic-append failure, unhandled Python exception — exits 0 with a one-line stderr warning. Sibling plugin authors do not need to wrap the call in `try/except`. If you ever have to, the contract is broken — file an issue. See § The no-op-safe contract for the full failure-mode matrix.
+
 ## File location
 
 ```
@@ -90,7 +109,10 @@ This is load-bearing for sibling plugin authors. The contract:
 - **If vibe-wrap is not installed in the user's environment**, your call to the `:plant` SKILL fails because the SKILL isn't registered. Your plugin must not crash, raise, or block on this failure.
 - **If vibe-wrap is installed but the session UUID can't be resolved**, the plant script writes to `_orphan.jsonl` and exits 0. No exception propagates back to your caller.
 - **If vibe-wrap is installed but the breadcrumb file is unwritable** (disk full, permissions, anything), the plant script logs the failure to its own friction file and exits 0. Your caller never sees the error.
-- **If your payload contains unknown / malformed fields**, the script writes them verbatim. No schema validation that would reject your write. See § Forward compatibility.
+- **If your payload contains unknown extra fields**, the script writes them verbatim. No schema validation that would reject your write. See § Forward compatibility.
+- **If your payload is malformed JSON** (passed via `--payload` as a non-parseable string), the script logs a one-line stderr warning and exits 0. No line written. Your caller never sees the error.
+- **If a required arg is missing** (`--source`, `--command`, `--phase`), the script logs a one-line stderr warning and exits 0. No line written.
+- **If anything else fails inside the script** (atomic-append failure, unhandled Python exception, anything), the last-resort guard around `main()` catches it and exits 0.
 
 The bar: planting a breadcrumb is fire-and-forget. If you have to wrap your call in try/except to protect against vibe-wrap's failure modes, the contract is broken — file an issue.
 
