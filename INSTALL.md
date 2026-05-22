@@ -17,7 +17,7 @@ This file tells you exactly how to install the 626Labs Vibe Plugins ecosystem �
 | Solo-repo canary | A current Claude Code or Claude Desktop install. |
 | npm CLI packages | Node.js 18+ and npm or pnpm on `PATH`. |
 
-Vibe Cartographer is also available directly from **Anthropic's official marketplace** — no setup required beyond updating Claude Code. The other six plugins live in this marketplace and the per-plugin solo repos.
+Vibe Cartographer is also available directly from **Anthropic's official marketplace** — no setup required beyond updating Claude Code. The rest of the family lives in this marketplace and the per-plugin solo repos (see `.claude-plugin/marketplace.json` for the full roster).
 
 ## Which path do I want?
 

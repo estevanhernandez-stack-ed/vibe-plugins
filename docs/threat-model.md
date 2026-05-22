@@ -76,7 +76,7 @@ This document names real threats against the 626Labs Vibe Plugins ecosystem and 
 **Open gaps:**
 
 - ❌ **No domain / brand registration** beyond the GitHub repo name. Someone could register `vibe-plugins.com` and host alternate install instructions.
-- ❌ **Anthropic's marketplace doesn't list the other six plugins yet.** Users seeking Vibe Doc / Test / Sec / Thesis / Thesis Engine / Keystone find them only through the aggregated marketplace, increasing typo exposure.
+- ❌ **Anthropic's official catalog lists only Vibe Cartographer.** Users seeking the rest of the family (Doc, Test, Sec, Thesis, Thesis Engine, Keystone, Iterate, Taker, Walk) find them only through the aggregated marketplace, increasing typo exposure.
 
 ## Surface 4 — Compromised maintainer account
 
