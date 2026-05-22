@@ -94,6 +94,16 @@
         "path": "plugins/vibe-taker",
         "ref": "v0.1.1"
       }
+    },
+    {
+      "name": "vibe-walk",
+      "description": "Generate user onboarding for your app — but only when it earns one. Reads your UI surfaces, names the aha moment, and gives an honest verdict on whether a tour helps or hurts before building anything (don't-build is a first-class output). When warranted, generates a short, instrumented, replayable Driver.js spotlight tour with a human-gated data-tour anchor pass, a 6-event analytics adapter, and trigger wiring that reuses your app's existing first-run state. Walkthrough mode for consumer apps; training mode comes later. Self-evolves via session + friction logging. No telemetry.",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/estevanhernandez-stack-ed/Vibe-Walk",
+        "path": "plugins/vibe-walk",
+        "ref": "v0.1.0"
+      }
     }
   ]
 }
