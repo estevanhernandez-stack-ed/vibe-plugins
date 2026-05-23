@@ -7,12 +7,12 @@
   "plugins": [
     {
       "name": "vibe-cartographer",
-      "description": "Plot your course from idea to shipped app. Vibe coding course correction delivered as Claude Code slash commands: onboard, scope, prd, spec, checklist, build, iterate, reflect, evolve, vitals, friction, coder-voice.",
+      "description": "Plot your course from idea to shipped app. Vibe coding course correction delivered as Claude Code slash commands: onboard, scope, prd, spec, checklist, build, iterate, reflect, evolve-cart, tend, vitals, friction, coder-voice.",
       "source": {
         "source": "git-subdir",
         "url": "https://github.com/estevanhernandez-stack-ed/vibe-cartographer",
         "path": "plugins/vibe-cartographer",
-        "ref": "v1.8.0"
+        "ref": "v1.9.0"
       }
     },
     {
@@ -22,7 +22,7 @@
         "source": "git-subdir",
         "url": "https://github.com/estevanhernandez-stack-ed/Vibe-Doc",
         "path": "packages/vibe-doc",
-        "ref": "v0.7.1"
+        "ref": "v0.8.0"
       }
     },
     {
@@ -37,7 +37,7 @@
     },
     {
       "name": "vibe-sec",
-      "description": "Security gap finder for vibe-coded apps — leaked secrets, sketchy auth, missing input validation, stale dependencies. Coming soon as a full Claude Code plugin; secret-leak scanner available now via @esthernandez/vibe-sec-cli.",
+      "description": "Security gap finder for vibe-coded apps — the tier-aware security audit and orchestration layer that defers to gitleaks/OSV-Scanner/Semgrep when present and falls back to an in-house baseline when absent. The v0.2.0 foundation (secret scan + tier classification, with the full 10-concern audit, fix engine, and threat-model landing across upcoming releases) is in early access on the canary channel — install estevanhernandez-stack-ed/vibe-sec directly. The stable pin advances once the command surface is complete.",
       "source": {
         "source": "git-subdir",
         "url": "https://github.com/estevanhernandez-stack-ed/vibe-sec",
@@ -72,17 +72,17 @@
         "source": "git-subdir",
         "url": "https://github.com/estevanhernandez-stack-ed/vibe-Keystone",
         "path": "plugins/vibe-keystone",
-        "ref": "v0.1.1"
+        "ref": "v0.2.0"
       }
     },
     {
       "name": "vibe-iterate",
-      "description": "Iterate on a shipped product, one PR at a time. First-run bootstrap identifies the app type and interviews you for competitors + framework pins. Recommends the right mode (feature-add, competitive, ux-polish, bug-bash) for the moment; ships with regression-aware, small-diff posture. Includes radar (digest what's new), rate (score an idea before committing), spy (single-URL competitor read), scan-releases (per-lib changes since last bump), upgrade (surgical lib bumps with codemods when available), ship (hand-written brief, no ingestion). Composes with vibe-cartographer when installed (heavy-iteration delegation). Self-evolves via session + friction logging — :evolve proposes improvements based on your usage patterns. No telemetry.",
+      "description": "Iterate on a shipped product, one PR at a time. First-run bootstrap identifies the app type and interviews you for competitors + framework pins. Recommends the right mode (feature-add, competitive, ux-polish, bug-bash) for the moment; ships with regression-aware, small-diff posture. Includes radar (digest what's new), rate (score an idea before committing), spy (single-URL competitor read), scan-releases (per-lib changes since last bump), upgrade (surgical lib bumps with codemods when available), ship (hand-written brief, no ingestion). Composes with vibe-cartographer when installed (heavy-iteration delegation). Self-evolves via session + friction logging — :evolve-iterate proposes improvements based on your usage patterns. No telemetry.",
       "source": {
         "source": "git-subdir",
         "url": "https://github.com/estevanhernandez-stack-ed/vibe-iterate",
         "path": "plugins/vibe-iterate",
-        "ref": "v1.0.0"
+        "ref": "v1.1.0"
       }
     },
     {
