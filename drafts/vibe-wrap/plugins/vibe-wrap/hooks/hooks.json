@@ -1,0 +1,15 @@
+{
+  "description": "vibe-wrap SessionEnd nudge — emits one line suggesting /vibe-wrap when the session left a trail (breadcrumbs, uncommitted files, or commits ahead of remote). Non-blocking; never invokes /vibe-wrap.",
+  "hooks": {
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/hooks/session-end-nudge.py"
+          }
+        ]
+      }
+    ]
+  }
+}
