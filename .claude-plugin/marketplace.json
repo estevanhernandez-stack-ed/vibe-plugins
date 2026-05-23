@@ -37,12 +37,12 @@
     },
     {
       "name": "vibe-sec",
-      "description": "Security gap finder for vibe-coded apps — the tier-aware security audit and orchestration layer that defers to gitleaks/OSV-Scanner/Semgrep when present and falls back to an in-house baseline when absent. The v0.2.0 foundation (secret scan + tier classification, with the full 10-concern audit, fix engine, and threat-model landing across upcoming releases) is in early access on the canary channel — install estevanhernandez-stack-ed/vibe-sec directly. The stable pin advances once the command surface is complete.",
+      "description": "Security gap finder for vibe-coded apps — the tier-aware security audit and orchestration layer. Defers to gitleaks/OSV-Scanner/Semgrep/Trivy when present, falls back to an in-house baseline when absent, and owns the tier classification (mapped to OWASP ASVS), severity calibration, four-band report, confidence-routed fixes with destructive-action overrides, and threat-model synthesis. /vibe-sec:audit runs the full ten-concern audit (secrets, deps, supply-chain, config, crypto/PII, auth-model, OWASP survey, rate-limiting, threat-model, tier-scoring) — plus :scan, :deps, :gate (CI-safe), :posture, :fix, :threat-model, and :research. Validated on a real Firebase app.",
       "source": {
         "source": "git-subdir",
         "url": "https://github.com/estevanhernandez-stack-ed/vibe-sec",
         "path": "packages/vibe-sec",
-        "ref": "vibe-sec-v0.0.2"
+        "ref": "vibe-sec-v0.6.0"
       }
     },
     {
