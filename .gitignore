@@ -22,6 +22,8 @@ coverage/
 .vscode/
 *.swp
 *.swo
+__pycache__/
+*.pyc
 *.bak
 *.bak.*
 *.tmp.*
