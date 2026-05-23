@@ -17,6 +17,7 @@ coverage/
 .vibe-doc/
 .vibe-sec/
 .vibe-test/
+.vibe-wrap/
 .626labs/
 .idea/
 .vscode/
