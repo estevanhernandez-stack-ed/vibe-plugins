@@ -12,7 +12,7 @@
         "source": "git-subdir",
         "url": "https://github.com/estevanhernandez-stack-ed/vibe-cartographer",
         "path": "plugins/vibe-cartographer",
-        "ref": "v1.9.0"
+        "ref": "v1.9.1"
       }
     },
     {
@@ -72,7 +72,7 @@
         "source": "git-subdir",
         "url": "https://github.com/estevanhernandez-stack-ed/vibe-Keystone",
         "path": "plugins/vibe-keystone",
-        "ref": "v0.2.0"
+        "ref": "v0.2.1"
       }
     },
     {
@@ -92,7 +92,7 @@
         "source": "git-subdir",
         "url": "https://github.com/estevanhernandez-stack-ed/vibe-taker",
         "path": "plugins/vibe-taker",
-        "ref": "v0.1.1"
+        "ref": "v0.1.2"
       }
     },
     {
