@@ -104,6 +104,15 @@
         "path": "plugins/vibe-walk",
         "ref": "v0.1.0"
       }
+    },
+    {
+      "name": "vibe-insights",
+      "description": "Cross-machine, work-walled Claude Code session analytics — the verbose /insights over all your machines and history. Coverage, where-was-I recall, token/cost (incl. the cache reveal), trends, open-branch recall, decisions, languages, per-session friction/satisfaction/outcome, and a synthesized narrative read. Walls employer sessions local-only. Standalone engine; optional cc-logs extra keeps token numbers aligned with sibling tools. MCP-agnostic decisions overlay. No telemetry.",
+      "source": {
+        "source": "github",
+        "repo": "estevanhernandez-stack-ed/vibe-insights",
+        "ref": "v0.1.0"
+      }
     }
   ]
 }
