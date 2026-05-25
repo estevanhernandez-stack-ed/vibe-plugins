@@ -31,13 +31,16 @@ from pathlib import Path
 # Config
 # -----------------------------------------------------------------------------
 
+# The canonical CLIs (npm = standalone CLIs for CI; plugins install via the
+# marketplace). The bare/legacy names (@esthernandez/vibe-doc, vibe-sec, vibe-test,
+# app-project-readiness, vibe-cartographer) are deprecated -> marketplace; we keep
+# tracking @esthernandez/vibe-cartographer a while to watch the redirect land.
+# @626labs/plugin-core was never published (404) — dropped.
 PACKAGES: list[str] = [
+    "@esthernandez/vibe-doc-cli",
+    "@esthernandez/vibe-test-cli",
+    "@esthernandez/vibe-sec-cli",
     "@esthernandez/vibe-cartographer",
-    "@esthernandez/vibe-doc",
-    "@esthernandez/app-project-readiness",
-    "@esthernandez/vibe-sec",
-    "@esthernandez/vibe-test",
-    "@626labs/plugin-core",
 ]
 
 PERIODS: list[str] = ["last-day", "last-week", "last-month"]
