@@ -55,6 +55,14 @@ Every plugin README follows this structure, in this fixed order:
 | `## License` | MIT |
 
 Notes:
+- **Backbone + extras (refined after the Cart checkpoint).** The blocks above are
+  the required backbone, in this fixed order. Plugins **keep their own extra
+  sections** — credits, doc/CHANGELOG links, migration notes, plugin-specific
+  subsections (e.g. Cart's Personas / Architecture docs) — placed as subsections
+  under `## How it works` or as additional sections before `## License`. The
+  standard mandates the spine and order, not a ceiling: **never drop real content
+  to fit the template.** A lean plugin (vibe-insights) is the minimum; a rich one
+  (Cartographer) carries more under the same spine.
 - **Storefront exception:** the storefront README keeps its ecosystem-level sections
   (channels, install matrix, the "Vibe thesis" narrative, stats) but is brought
   current: **7 → 11 plugins**, the hard-coded version table replaced with a
