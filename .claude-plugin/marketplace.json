@@ -113,6 +113,16 @@
         "repo": "estevanhernandez-stack-ed/vibe-insights",
         "ref": "v0.2.2"
       }
+    },
+    {
+      "name": "vibe-wrap",
+      "description": "Session wrap-up that reads the breadcrumb trail your toolkit already left — not a cold reconstruction. Multi-repo aware: surfaces what shipped across every repo the session touched, what's uncommitted, and what's unpushed, then gates commit + push on the current repo only (read wide, mutate narrow). Six-section handoff written to docs/session-wraps/ and inline; every gate defaults to no-action with a second confirmation on secret-pattern matches. Pluggable decision log (Markdown / JSONL / 626Labs MCP / off). Self-evolving via session + friction logs. No telemetry.",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/estevanhernandez-stack-ed/vibe-wrap",
+        "path": "plugins/vibe-wrap",
+        "ref": "v0.2.1"
+      }
     }
   ]
 }

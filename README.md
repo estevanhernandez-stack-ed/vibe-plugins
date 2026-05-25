@@ -4,9 +4,9 @@
 
 # Vibe Plugins
 
-**The 626Labs plugin marketplace — one place, eleven plugins, the full Vibe ecosystem.**
+**The 626Labs plugin marketplace — one place, twelve plugins, the full Vibe ecosystem.**
 
-This repo is the **aggregated marketplace manifest** for 626Labs's eleven Claude Code plugins. It exists so a single `owner/repo` paste — `estevanhernandez-stack-ed/vibe-plugins` — gives Claude Code users access to the whole Vibe ecosystem. The actual plugin code lives in dedicated solo repos, linked here via the source entries in `.claude-plugin/marketplace.json`.
+This repo is the **aggregated marketplace manifest** for 626Labs's twelve Claude Code plugins. It exists so a single `owner/repo` paste — `estevanhernandez-stack-ed/vibe-plugins` — gives Claude Code users access to the whole Vibe ecosystem. The actual plugin code lives in dedicated solo repos, linked here via the source entries in `.claude-plugin/marketplace.json`.
 
 The architecture: **foundations underneath, pillars on top.** Foundation tools establish *what* you're working on (knowledge) and *the structural file every agent decision rests on* (CLAUDE.md). Pillar tools shape *how* you work — through the build, after the ship, and across repos.
 
@@ -33,6 +33,7 @@ The architecture: **foundations underneath, pillars on top.** Foundation tools e
 | **Vibe Taker** | [`vibe-taker`](https://github.com/estevanhernandez-stack-ed/vibe-taker) | [![](https://img.shields.io/github/v/tag/estevanhernandez-stack-ed/vibe-taker?label=&color=17d4fa)](https://github.com/estevanhernandez-stack-ed/vibe-taker/tags) | Take it with you. Capture a feature out of one repo as a portable bundle; plant it into another with stack-aware adaptation and a mandatory diff confirmation. |
 | **Vibe Walk** | [`Vibe-Walk`](https://github.com/estevanhernandez-stack-ed/Vibe-Walk) | [![](https://img.shields.io/github/v/tag/estevanhernandez-stack-ed/Vibe-Walk?label=&color=17d4fa)](https://github.com/estevanhernandez-stack-ed/Vibe-Walk/tags) | Generate user onboarding — but only when it earns one. Names the aha moment, gives an honest build/don't-build verdict, then ships an instrumented Driver.js tour when warranted. |
 | **Vibe Insights** | [`vibe-insights`](https://github.com/estevanhernandez-stack-ed/vibe-insights) | [![](https://img.shields.io/github/v/tag/estevanhernandez-stack-ed/vibe-insights?label=&color=17d4fa)](https://github.com/estevanhernandez-stack-ed/vibe-insights/tags) | Cross-machine, work-walled session analytics — the verbose `/insights` you wish you had, with a synthesized narrative read. Walls employer sessions local-only. |
+| **Vibe Wrap** | [`vibe-wrap`](https://github.com/estevanhernandez-stack-ed/vibe-wrap) | [![](https://img.shields.io/github/v/tag/estevanhernandez-stack-ed/vibe-wrap?label=&color=17d4fa)](https://github.com/estevanhernandez-stack-ed/vibe-wrap/tags) | Close the session cleanly — reads the breadcrumb trail your toolkit left, renders a what-shipped handoff, and gates commit/push/decision-log with no-action defaults. Pairs with Insights. |
 | **Vibe Thesis** *(beta)* | [`Vibe-Thesis`](https://github.com/estevanhernandez-stack-ed/Vibe-Thesis) | [![](https://img.shields.io/github/v/tag/estevanhernandez-stack-ed/Vibe-Thesis?label=&color=17d4fa)](https://github.com/estevanhernandez-stack-ed/Vibe-Thesis/tags) | Long-form academic authoring — dissertations, master's theses, position essays. Scaffolds a styled PDF skeleton + working render pipeline in roughly 30 minutes. |
 
 Each plugin is independently versioned. This marketplace pins to **stable tags** on each solo repo; updates are deliberate promotions, not bleeding-edge tracking.
@@ -72,6 +73,7 @@ Paste any individual solo repo URL (`estevanhernandez-stack-ed/vibe-cartographer
 /plugin install vibe-taker@vibe-plugins
 /plugin install vibe-walk@vibe-plugins
 /plugin install vibe-insights@vibe-plugins
+/plugin install vibe-wrap@vibe-plugins
 /plugin install vibe-thesis@vibe-plugins
 ```
 
@@ -123,6 +125,7 @@ AI-assisted creation has predictable patterns of friction — in software (vibe-
   - **Vibe Taker** — carry a proven feature from one repo into another, adapted to the destination stack
   - **Vibe Walk** — generate user onboarding, but only when the app earns one
   - **Vibe Insights** — see how you actually work across every machine and session
+  - **Vibe Wrap** — close the session cleanly: a what-shipped handoff from the trail your toolkit already left
   - **Vibe Thesis** — long-form academic authoring (dissertations, theses, position essays)
 
 Each plugin knows its scope. None pretends to replace specialist tools or professional review. Together they're the baseline hygiene kit for AI-assisted creation in 2026.
