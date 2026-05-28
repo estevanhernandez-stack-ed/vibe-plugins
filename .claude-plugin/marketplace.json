@@ -123,6 +123,16 @@
         "path": "plugins/vibe-wrap",
         "ref": "v0.2.1"
       }
+    },
+    {
+      "name": "vibe-prompt",
+      "description": "Audit, organize, and classify the LLM prompts shipped in your app. /vibe-prompt:scan inventories every prompt site (registry-tracked + inline); /vibe-prompt:audit fires structural findings across 7 smells (F1-F7) with file:line evidence and concrete fix recommendations; bare /vibe-prompt routes state-aware. Static only — no behavioral eval (that's vibe-eval, shipping next), no auto-mutation, no telemetry. TS/JS + Python coverage. Validated on Celestia3 (Next.js + Firebase + Gemini), where it caught three findings the manual audit missed: a hardcoded model count correction, a TarotSpread voice contradiction, and a synastry templating mismatch.",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/estevanhernandez-stack-ed/Vibe-Prompt",
+        "path": "plugins/vibe-prompt",
+        "ref": "v0.1.0"
+      }
     }
   ]
 }

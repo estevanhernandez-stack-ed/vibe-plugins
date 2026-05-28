@@ -43,7 +43,7 @@ That's the entire stable-channel ship process. Most commits to this repo are exa
 
 ### The plugins
 
-**`.claude-plugin/marketplace.json` is the source of truth for the live roster** — this table is a convenience mirror, so verify against the manifest before relying on it. As of 2026-05-22 the family is **ten plugins**:
+**`.claude-plugin/marketplace.json` is the source of truth for the live roster** — this table is a convenience mirror, so verify against the manifest before relying on it. As of 2026-05-28 the family is **fourteen plugins**:
 
 | Plugin | Solo repo | Path within solo |
 |---|---|---|
@@ -57,6 +57,7 @@ That's the entire stable-channel ship process. Most commits to this repo are exa
 | `vibe-iterate` | `vibe-iterate` | `plugins/vibe-iterate` |
 | `vibe-taker` | `vibe-taker` | `plugins/vibe-taker` |
 | `vibe-walk` | `Vibe-Walk` | `plugins/vibe-walk` |
+| `vibe-prompt` | `Vibe-Prompt` | `plugins/vibe-prompt` |
 
 **Validation norm:** every plugin in the family is proven against a real app before it ships — Cart is dogfooded across build cycles (it builds the others), Taker was proven on the bgremove + Sanduhr features, Doc scanned the 626 hub, Walk was dogfooded on Celestia3, etc. Real-app validation is the bar, not the exception.
 
