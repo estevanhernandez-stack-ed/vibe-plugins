@@ -126,12 +126,12 @@
     },
     {
       "name": "vibe-prompt",
-      "description": "Audit, organize, and classify the LLM prompts shipped in your app. /vibe-prompt:scan inventories every prompt site (registry-tracked + inline); /vibe-prompt:audit fires structural findings across 7 smells (F1-F7) with file:line evidence and concrete fix recommendations; bare /vibe-prompt routes state-aware. Static only — no behavioral eval (that's vibe-eval, shipping next), no auto-mutation, no telemetry. TS/JS + Python coverage. Validated on Celestia3 (Next.js + Firebase + Gemini), where it caught three findings the manual audit missed: a hardcoded model count correction, a TarotSpread voice contradiction, and a synastry templating mismatch.",
+      "description": "Audit, organize, classify, AND behaviorally test the LLM prompts shipped in your app. /vibe-prompt:scan inventories every prompt site (registry-tracked + inline); /vibe-prompt:audit fires structural findings across 7 smells (F1-F7) with file:line evidence; /vibe-prompt:eval runs prompts against the prod model + an in-session Claude baseline, surfacing semantic drift via mechanical comparator + LLM-judge with explicit cross-vendor evaluator-drift warnings (cost-gated); /vibe-prompt:radar tracks new models and pricing changes for your vendors; bare /vibe-prompt routes state-aware across all 5 branches. TS/JS + Python coverage. Env-var-only key handling (VIBE_PROMPT_GEMINI_API_KEY, namespaced to avoid Firebase tooling collisions); composes with vibe-sec. Validated on Celestia3 (Next.js + Firebase + Gemini) — caught both static and behavioral drift, including a live cross-vendor Pilgrim leak Gemini-2.5-flash produced despite the master directive prohibition.",
       "source": {
         "source": "git-subdir",
         "url": "https://github.com/estevanhernandez-stack-ed/Vibe-Prompt",
         "path": "plugins/vibe-prompt",
-        "ref": "v0.1.0"
+        "ref": "v0.2.0"
       }
     }
   ]
