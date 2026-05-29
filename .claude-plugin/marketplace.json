@@ -126,12 +126,12 @@
     },
     {
       "name": "vibe-prompt",
-      "description": "Audit, organize, classify, AND behaviorally test the LLM prompts shipped in your app. /vibe-prompt:scan inventories every prompt site (registry-tracked + inline); /vibe-prompt:audit fires structural findings across 7 smells (F1-F7) with file:line evidence; /vibe-prompt:eval runs prompts against the prod model + an in-session Claude baseline, surfacing semantic drift via mechanical comparator + LLM-judge with explicit cross-vendor evaluator-drift warnings (cost-gated); /vibe-prompt:radar tracks new models and pricing changes for your vendors; bare /vibe-prompt routes state-aware across all 5 branches. TS/JS + Python coverage. Env-var-only key handling (VIBE_PROMPT_GEMINI_API_KEY, namespaced to avoid Firebase tooling collisions); composes with vibe-sec. Validated on Celestia3 (Next.js + Firebase + Gemini) — caught both static and behavioral drift, including a live cross-vendor Pilgrim leak Gemini-2.5-flash produced despite the master directive prohibition.",
+      "description": "Audit, organize, classify, behaviorally test, grade, AND discover new prompts for your app's LLM features. /vibe-prompt:scan inventories every prompt site (registry-tracked + inline); /vibe-prompt:audit fires structural findings across 7 smells (F1-F7) with per-dimension scores (schema tightness, persona consistency, instruction clarity, token efficiency); /vibe-prompt:eval runs prompts against prod + in-session Claude baseline with SWRS calibration + Swap-and-Discard position-bias mitigation + verbosity penalty + cross-vendor evaluator-drift warnings (cost-gated); /vibe-prompt:grade synthesizes audit + eval into composite grades with monotonic baseline regression tracking (improvements advance the bar, regressions flag without resetting); /vibe-prompt:iterate dispatches a creative-divergent LLM call to surface 3-5 new prompts your app could add (with handoff hints to /vibe-cartographer:scope or /vibe-iterate:feature-add); /vibe-prompt:radar tracks model news; bare /vibe-prompt routes state-aware across 7 branches. TS/JS + Python coverage. Env-var-only key handling (VIBE_PROMPT_GEMINI_API_KEY). Validated on Celestia3 (Next.js + Firebase + Gemini) — caught the live cross-vendor Pilgrim leak that Gemini-2.5-flash produced despite the master directive prohibition.",
       "source": {
         "source": "git-subdir",
         "url": "https://github.com/estevanhernandez-stack-ed/Vibe-Prompt",
         "path": "plugins/vibe-prompt",
-        "ref": "v0.2.0"
+        "ref": "v0.3.0"
       }
     }
   ]
