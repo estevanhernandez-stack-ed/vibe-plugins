@@ -66,6 +66,7 @@ Paste any individual solo repo URL (`estevanhernandez-stack-ed/vibe-cartographer
 
 ### Claude Code CLI
 
+<!-- BEGIN GENERATED:install (scripts/gen-readme-plugins.mjs) -->
 ```text
 /plugin marketplace add estevanhernandez-stack-ed/vibe-plugins
 /plugin install thesis-engine@vibe-plugins
@@ -82,6 +83,7 @@ Paste any individual solo repo URL (`estevanhernandez-stack-ed/vibe-cartographer
 /plugin install vibe-wrap@vibe-plugins
 /plugin install vibe-thesis@vibe-plugins
 ```
+<!-- END GENERATED:install -->
 
 ### CLI packages on npm (for CI pipelines)
 
