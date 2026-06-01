@@ -88,6 +88,10 @@ if (!match) {
   const appended = manifestNames.filter((n) => !existingOrder.includes(n));
   const finalNames = [...kept, ...appended];
 
+  // Match the block's existing line-ending style so a CRLF checkout (Windows
+  // autocrlf) neither flags a spurious diff nor gets rewritten to mixed endings.
+  // The equality check below is newline-agnostic regardless.
+  const eol = current.includes('\r\n') ? '\r\n' : '\n';
   const rebuilt = [
     BEGIN,
     '```text',
@@ -95,9 +99,10 @@ if (!match) {
     ...finalNames.map((n) => `/plugin install ${n}@vibe-plugins`),
     '```',
     END,
-  ].join('\n');
+  ].join(eol);
 
-  if (rebuilt !== current) {
+  const norm = (s) => s.replace(/\r\n/g, '\n');
+  if (norm(rebuilt) !== norm(current)) {
     if (write) {
       readme = readme.replace(blockRe, rebuilt);
       writeFileSync(README, readme);
