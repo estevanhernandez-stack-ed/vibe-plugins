@@ -43,21 +43,34 @@ That's the entire stable-channel ship process. Most commits to this repo are exa
 
 ### The plugins
 
-**`.claude-plugin/marketplace.json` is the source of truth for the live roster** — this table is a convenience mirror, so verify against the manifest before relying on it. As of 2026-05-28 the family is **fourteen plugins**:
+**`.claude-plugin/marketplace.json` is the source of truth for the live roster.** Don't hand-count the family or trust a frozen number in this file — derive both from the manifest (Node ≥20 is already a repo dependency, so this runs anywhere):
+
+```bash
+# count
+node -e "console.log(require('./.claude-plugin/marketplace.json').plugins.length)"
+# roster: name | solo repo | path | pinned ref
+node -e "for(const p of require('./.claude-plugin/marketplace.json').plugins){const s=p.source;const r=(s.url||'https://github.com/'+s.repo).replace('https://github.com/','');console.log([p.name,r,s.path||'(root)',s.ref].join(' | '))}"
+```
+
+The table below is a convenience snapshot regenerated from that command — if it disagrees with the manifest, the manifest wins; re-run the roster one-liner to refresh it.
 
 | Plugin | Solo repo | Path within solo |
 |---|---|---|
-| `thesis-engine` | `Thesis-Engine` | `plugins/thesis-engine` |
 | `vibe-cartographer` | `vibe-cartographer` | `plugins/vibe-cartographer` |
 | `vibe-doc` | `Vibe-Doc` | `packages/vibe-doc` |
-| `vibe-sec` | `vibe-sec` | `packages/vibe-sec` |
 | `vibe-test` | `vibe-test` | `packages/vibe-test` |
+| `vibe-sec` | `vibe-sec` | `packages/vibe-sec` |
+| `thesis-engine` | `Thesis-Engine` | `plugins/thesis-engine` |
 | `vibe-thesis` | `Vibe-Thesis` | `plugins/vibe-thesis` |
 | `vibe-keystone` | `vibe-Keystone` | `plugins/vibe-keystone` |
 | `vibe-iterate` | `vibe-iterate` | `plugins/vibe-iterate` |
 | `vibe-taker` | `vibe-taker` | `plugins/vibe-taker` |
 | `vibe-walk` | `Vibe-Walk` | `plugins/vibe-walk` |
+| `vibe-insights` | `vibe-insights` | — (whole-repo) |
+| `vibe-wrap` | `vibe-wrap` | `plugins/vibe-wrap` |
 | `vibe-prompt` | `Vibe-Prompt` | `plugins/vibe-prompt` |
+
+`vibe-insights` uses the `github` source type (whole-repo, manifest at root, no subpath); the other 12 use `git-subdir` with a `path`. Account for both branches when scripting against the manifest — the one-liner above already does.
 
 **Validation norm:** every plugin in the family is proven against a real app before it ships — Cart is dogfooded across build cycles (it builds the others), Taker was proven on the bgremove + Sanduhr features, Doc scanned the 626 hub, Walk was dogfooded on Celestia3, etc. Real-app validation is the bar, not the exception.
 

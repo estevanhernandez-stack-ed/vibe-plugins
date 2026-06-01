@@ -4,9 +4,13 @@
 
 # Vibe Plugins
 
-**The 626Labs plugin marketplace — one place, twelve plugins, the full Vibe ecosystem.**
+**The 626Labs plugin marketplace — one place, the full Vibe ecosystem.**
 
-This repo is the **aggregated marketplace manifest** for 626Labs's twelve Claude Code plugins. It exists so a single `owner/repo` paste — `estevanhernandez-stack-ed/vibe-plugins` — gives Claude Code users access to the whole Vibe ecosystem. The actual plugin code lives in dedicated solo repos, linked here via the source entries in `.claude-plugin/marketplace.json`.
+<p align="center">
+  <a href="./.claude-plugin/marketplace.json"><img alt="plugins pinned in this marketplace" src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Festevanhernandez-stack-ed%2Fvibe-plugins%2Fmain%2F.claude-plugin%2Fmarketplace.json&query=%24.plugins.length&label=plugins&color=17d4fa" /></a>
+</p>
+
+This repo is the **aggregated marketplace manifest** for 626Labs's family of Claude Code plugins. It exists so a single `owner/repo` paste — `estevanhernandez-stack-ed/vibe-plugins` — gives Claude Code users access to the whole Vibe ecosystem. The actual plugin code lives in dedicated solo repos, linked here via the source entries in `.claude-plugin/marketplace.json`.
 
 The architecture: **foundations underneath, pillars on top.** Foundation tools establish *what* you're working on (knowledge) and *the structural file every agent decision rests on* (CLAUDE.md). Pillar tools shape *how* you work — through the build, after the ship, and across repos.
 
@@ -29,6 +33,7 @@ The architecture: **foundations underneath, pillars on top.** Foundation tools e
 | **Vibe Doc** | [`Vibe-Doc`](https://github.com/estevanhernandez-stack-ed/Vibe-Doc) | [![](https://img.shields.io/github/v/tag/estevanhernandez-stack-ed/Vibe-Doc?label=&color=17d4fa)](https://github.com/estevanhernandez-stack-ed/Vibe-Doc/tags) | Documentation gap analyzer. Scans, classifies, finds the missing technical docs, generates them from your existing artifacts. |
 | **Vibe Sec** | [`vibe-sec`](https://github.com/estevanhernandez-stack-ed/vibe-sec) | [![](https://img.shields.io/github/v/tag/estevanhernandez-stack-ed/vibe-sec?label=&color=17d4fa)](https://github.com/estevanhernandez-stack-ed/vibe-sec/tags) | Tier-aware security audit + orchestration. Ten-concern audit (secrets, deps, supply-chain, auth, OWASP survey, threat-model…); defers to gitleaks/OSV/Semgrep/Trivy when present. |
 | **Vibe Test** | [`vibe-test`](https://github.com/estevanhernandez-stack-ed/vibe-test) | [![](https://img.shields.io/github/v/tag/estevanhernandez-stack-ed/vibe-test?label=&color=17d4fa)](https://github.com/estevanhernandez-stack-ed/vibe-test/tags) | Test analyzer + generator. Classifies by app type and maturity tier, measures coverage honestly, generates tests proportional to deployment risk — catches the broken harnesses other tools assume away. |
+| **Vibe Prompt** | [`Vibe-Prompt`](https://github.com/estevanhernandez-stack-ed/Vibe-Prompt) | [![](https://img.shields.io/github/v/tag/estevanhernandez-stack-ed/Vibe-Prompt?label=&color=17d4fa)](https://github.com/estevanhernandez-stack-ed/Vibe-Prompt/tags) | Audit, classify, behaviorally test, grade, remediate, and discover your app's LLM prompts. Inventories every prompt site, fires 13 structural smells (including the prompt-injection family), scores 5 dimensions, and closes the audit-to-fix loop. |
 | **Vibe Iterate** | [`vibe-iterate`](https://github.com/estevanhernandez-stack-ed/vibe-iterate) | [![](https://img.shields.io/github/v/tag/estevanhernandez-stack-ed/vibe-iterate?label=&color=17d4fa)](https://github.com/estevanhernandez-stack-ed/vibe-iterate/tags) | Iterate on a shipped product, one PR at a time. Picks the right mode (feature-add, competitive, ux-polish, bug-bash) with a regression-aware, small-diff posture. |
 | **Vibe Taker** | [`vibe-taker`](https://github.com/estevanhernandez-stack-ed/vibe-taker) | [![](https://img.shields.io/github/v/tag/estevanhernandez-stack-ed/vibe-taker?label=&color=17d4fa)](https://github.com/estevanhernandez-stack-ed/vibe-taker/tags) | Take it with you. Capture a feature out of one repo as a portable bundle; plant it into another with stack-aware adaptation and a mandatory diff confirmation. |
 | **Vibe Walk** | [`Vibe-Walk`](https://github.com/estevanhernandez-stack-ed/Vibe-Walk) | [![](https://img.shields.io/github/v/tag/estevanhernandez-stack-ed/Vibe-Walk?label=&color=17d4fa)](https://github.com/estevanhernandez-stack-ed/Vibe-Walk/tags) | Generate user onboarding — but only when it earns one. Names the aha moment, gives an honest build/don't-build verdict, then ships an instrumented Driver.js tour when warranted. |
@@ -69,6 +74,7 @@ Paste any individual solo repo URL (`estevanhernandez-stack-ed/vibe-cartographer
 /plugin install vibe-doc@vibe-plugins
 /plugin install vibe-sec@vibe-plugins
 /plugin install vibe-test@vibe-plugins
+/plugin install vibe-prompt@vibe-plugins
 /plugin install vibe-iterate@vibe-plugins
 /plugin install vibe-taker@vibe-plugins
 /plugin install vibe-walk@vibe-plugins
@@ -121,6 +127,7 @@ AI-assisted creation has predictable patterns of friction — in software (vibe-
   - **Vibe Doc** — close the documentation vacuum (ADRs, runbooks, threat models)
   - **Vibe Sec** — close the security vacuum (secrets, auth, input validation, dependencies)
   - **Vibe Test** — close the testing vacuum (smoke → behavioral → edge → integration)
+  - **Vibe Prompt** — close the prompt vacuum for your app's LLM features (structural smells, injection resistance, behavioral drift)
   - **Vibe Iterate** — keep improving after the ship, one regression-aware PR at a time
   - **Vibe Taker** — carry a proven feature from one repo into another, adapted to the destination stack
   - **Vibe Walk** — generate user onboarding, but only when the app earns one
