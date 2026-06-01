@@ -107,11 +107,11 @@
     },
     {
       "name": "vibe-insights",
-      "description": "Cross-machine, work-walled Claude Code session analytics — the verbose /insights over all your machines and history. Coverage, where-was-I recall, token/cost (incl. the cache reveal), trends, how-you-work (tool mix, delegation, per-machine), ranked open-threads with prune candidates, decisions, languages, per-session friction/satisfaction/outcome, and a synthesized narrative read. Walls employer sessions local-only. Standalone engine; optional cc-logs extra keeps token numbers aligned with sibling tools. MCP-agnostic decisions overlay. No telemetry.",
+      "description": "The deep retrospective for your Claude Code work — the verbose /insights over your full history and every machine you code on. Coverage, where-was-I recall, token/cost (incl. the cache reveal), trends, how-you-work (tool mix, delegation, per-machine), ranked open-threads with prune candidates, decisions, languages, per-session friction/satisfaction/outcome, and a synthesized narrative read. Personal by default; optionally keep chosen sources or repos local-only (the privacy wall). Standalone engine; optional cc-logs extra keeps token numbers aligned with sibling tools. MCP-agnostic decisions overlay. No telemetry.",
       "source": {
         "source": "github",
         "repo": "estevanhernandez-stack-ed/vibe-insights",
-        "ref": "v0.2.2"
+        "ref": "v0.3.0"
       }
     },
     {
