@@ -1,0 +1,18 @@
+# Normalize line endings repo-wide. Text files are stored as LF in git and
+# checked out as LF on every platform, so Windows autocrlf can't flip working
+# trees to CRLF and produce phantom diffs (and the README<->manifest gate in
+# scripts/gen-readme-plugins.mjs compares content, not line endings).
+* text=auto eol=lf
+
+# Explicit binary types — never normalized.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.pdf binary
+*.woff binary
+*.woff2 binary
+*.zip binary
+*.plugin binary
