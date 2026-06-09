@@ -32,7 +32,7 @@
         "source": "git-subdir",
         "url": "https://github.com/estevanhernandez-stack-ed/vibe-test",
         "path": "packages/vibe-test",
-        "ref": "vibe-test-v0.2.4"
+        "ref": "vibe-test-v0.2.5"
       }
     },
     {
@@ -121,7 +121,7 @@
         "source": "git-subdir",
         "url": "https://github.com/estevanhernandez-stack-ed/vibe-wrap",
         "path": "plugins/vibe-wrap",
-        "ref": "v0.2.1"
+        "ref": "v0.3.0"
       }
     },
     {
