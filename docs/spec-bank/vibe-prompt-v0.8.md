@@ -16,6 +16,18 @@
 7. **Agent-step determinism hardening** — the 2026-06-01 probe run missed a ~90-prompt registry, skipped per-workspace inventory emission, and had a composite arithmetic inconsistency; the faithful 2026-06-09 run had none of these. Candidates: mandatory per-workspace emission checklist + composite-arithmetic echo line in grade output.
 8. **Codify two judgment calls as spec text** (Celestia3 leg): (a) grade excludes stale/low-coverage eval runs from blending (the run it excluded was 11 days old, 2/15 prompts, scored a since-edited prompt); (b) the monotonic baseline never advances on audit-only gains. Both were correct improvisations — write them into the grade SKILL so they're contract.
 
+## From the 626Labs leg (4/4, PASS 5/5, composite 8/10, nested-projects + model-routing — the app v0.7's features were built for)
+
+9. **Multi-registry support (upgrades #6 to top tier).** The platform carries BOTH a model-routing registry (`modelRegistry.ts`) and a prompt-content registry (`personalityDefinitions.ts` — THE_ARCHITECT + 10 persona systemPrompts) — the single `registry` slot records one, and **F1b false-fires "no prompt-content registry"** while one demonstrably exists. v0.7 fixed the model-routing F1 FP; two coexisting registry kinds is the next case. `registries[]` schema change.
+10. **Defense-recognition gap — the audit doesn't recognize its own remediation (headline).** galaxyCore was hardened by vibe-prompt's own earlier remediate cycles, yet F10/F11 still fire: F10's 200-char proximity window misses top-of-prompt role-lock with bottom-fenced data AND isn't API-parameter-aware (ChatController defends in `systemInstruction` while vars ride `message` — F12 learned this in v0.6, F10 didn't); F11's literal 6-phrase list counts 1 of 4+ real defenses. Fix shape: semantic-class defense detection (or at minimum, recognize Category-C remediation output verbatim) + API-param awareness for F10.
+11. **Static-only F12 precision.** Without composer.json (no :eval/:first-run-setup), F12 degrades to high even on API-separated-safe composers. A lightweight audit-time SDK-call/apiParameter sniff would carry v0.6's precision onto pure static runs.
+12. **F6-suspect needs a suppress path (minor).** The confidence ladder only elevates (context7 confirm-not-published → high); a confirm-published → suppress path would clear real-but-newer models without manual exceptions. Also: F9's trigger set is broader than documented — it fired on "when"/"current" (non-temporal) here, not just years.
+13. **Grade per-workspace null-guard (minor).** Per-workspace composites key off `finding.workspaceIdentifier`; when audit leaves it null, grade silently falls back to single-workspace on a monorepo inventory. Guard + warn.
+
+## Round-trip closure
+
+**4/4 apps PASS, 20/20 criteria (2026-06-09):** Celestia3, WeSeeYouAtTheMovies, QuizShow, 626Labs platform. Ecosystem-loop evidence on the platform leg: the 2026-06-01 remediate diffs appear applied in source and the repo sits on a `security/phase-1-criticals` branch — the audit→remediate→handoff loop demonstrably ran on the platform itself.
+
 ## Scoping note
 
-#2 + #6 are one schema work-package; #1 + #4 + #5 are detection-calibration; #3 + #8 are spec-text reconciliation; #7 is prose-hardening. A v0.8 could ship as "trustworthy state" (#1–#3 + contract tests) with the rest as fast-follow.
+#2 + #6 + #9 are one schema work-package (`registries[]` + emitter reconciliation + contract tests); #1 + #4 + #5 + #12 are detection-calibration; #10 + #11 are the injection-family precision package; #3 + #8 are spec-text reconciliation; #7 + #13 are hardening. A v0.8 could ship as "trustworthy state" (schema package + #1 + contract tests) with the injection-precision package as the v0.9 headline.
