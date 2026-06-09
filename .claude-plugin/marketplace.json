@@ -42,7 +42,7 @@
         "source": "git-subdir",
         "url": "https://github.com/estevanhernandez-stack-ed/vibe-sec",
         "path": "packages/vibe-sec",
-        "ref": "vibe-sec-v0.6.0"
+        "ref": "vibe-sec-v0.7.0"
       }
     },
     {
@@ -52,7 +52,7 @@
         "source": "git-subdir",
         "url": "https://github.com/estevanhernandez-stack-ed/Thesis-Engine",
         "path": "plugins/thesis-engine",
-        "ref": "v0.2.1"
+        "ref": "v0.2.2"
       }
     },
     {
@@ -62,7 +62,7 @@
         "source": "git-subdir",
         "url": "https://github.com/estevanhernandez-stack-ed/Vibe-Thesis",
         "path": "plugins/vibe-thesis",
-        "ref": "v0.1.2"
+        "ref": "v0.2.0"
       }
     },
     {
@@ -102,7 +102,7 @@
         "source": "git-subdir",
         "url": "https://github.com/estevanhernandez-stack-ed/Vibe-Walk",
         "path": "plugins/vibe-walk",
-        "ref": "v0.1.0"
+        "ref": "v0.2.0"
       }
     },
     {
