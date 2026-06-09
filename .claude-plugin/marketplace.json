@@ -7,12 +7,12 @@
   "plugins": [
     {
       "name": "vibe-cartographer",
-      "description": "Plot your course from idea to shipped app. Vibe coding course correction delivered as Claude Code slash commands: onboard, scope, prd, spec, checklist, build, iterate, reflect, evolve-cart, tend, vitals, friction, coder-voice.",
+      "description": "Plot your course from idea to shipped app. Vibe coding course correction delivered as Claude Code slash commands: onboard, scope, prd, spec, checklist, build, iterate, reflect, reconnect, evolve-cart, tend, vitals, friction, coder-voice.",
       "source": {
         "source": "git-subdir",
         "url": "https://github.com/estevanhernandez-stack-ed/vibe-cartographer",
         "path": "plugins/vibe-cartographer",
-        "ref": "v1.9.1"
+        "ref": "v1.10.0"
       }
     },
     {
