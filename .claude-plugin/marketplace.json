@@ -131,7 +131,7 @@
         "source": "git-subdir",
         "url": "https://github.com/estevanhernandez-stack-ed/Vibe-Prompt",
         "path": "plugins/vibe-prompt",
-        "ref": "v0.7.0"
+        "ref": "v0.7.1"
       }
     }
   ]
