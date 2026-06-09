@@ -70,7 +70,7 @@ The table below is a convenience snapshot regenerated from that command — if i
 | `vibe-wrap` | `vibe-wrap` | `plugins/vibe-wrap` |
 | `vibe-prompt` | `Vibe-Prompt` | `plugins/vibe-prompt` |
 
-`vibe-insights` uses the `github` source type (whole-repo, manifest at root, no subpath); the other 12 use `git-subdir` with a `path`. Account for both branches when scripting against the manifest — the one-liner above already does.
+`vibe-insights` uses the `url` source type (whole-repo over explicit HTTPS, manifest at root, no subpath — switched from `github` on 2026-06-09 because that type resolves SSH clone URLs and fails with publickey-denied for users without GitHub SSH keys); the other 12 use `git-subdir` with a `path`. Account for both branches when scripting against the manifest — the one-liner above already does. Don't reintroduce the `github` source type here.
 
 **Validation norm:** every plugin in the family is proven against a real app before it ships — Cart is dogfooded across build cycles (it builds the others), Taker was proven on the bgremove + Sanduhr features, Doc scanned the 626 hub, Walk was dogfooded on Celestia3, etc. Real-app validation is the bar, not the exception.
 
