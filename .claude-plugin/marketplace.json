@@ -12,7 +12,7 @@
         "source": "git-subdir",
         "url": "https://github.com/estevanhernandez-stack-ed/vibe-cartographer",
         "path": "plugins/vibe-cartographer",
-        "ref": "v1.10.0"
+        "ref": "v1.10.1"
       }
     },
     {
@@ -22,7 +22,7 @@
         "source": "git-subdir",
         "url": "https://github.com/estevanhernandez-stack-ed/Vibe-Doc",
         "path": "packages/vibe-doc",
-        "ref": "v0.8.0"
+        "ref": "v0.8.1"
       }
     },
     {
@@ -52,7 +52,7 @@
         "source": "git-subdir",
         "url": "https://github.com/estevanhernandez-stack-ed/Thesis-Engine",
         "path": "plugins/thesis-engine",
-        "ref": "v0.2.2"
+        "ref": "v0.2.3"
       }
     },
     {
