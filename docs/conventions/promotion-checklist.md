@@ -34,7 +34,7 @@ All username-path class, zero tenant-term hits, verified at the pinned tags. Eac
 | vibe-cartographer v1.10.1 | `skills/evolve-cart/SKILL.md:26` |
 | ~~vibe-test~~ | ~~8 findings~~ — **cleared in vibe-test-v0.3.0** (2026-06-09, same day): gate passes strict |
 | vibe-taker v0.1.2 | `skills/guide/references/error-contract.md:90` |
-| vibe-walk v0.2.0 | `scripts/build/emit_tour_module.py:493` (docstring example) |
+| ~~vibe-walk~~ | ~~1 finding~~ — **cleared in v0.3.0** (2026-06-09, same day) |
 | vibe-insights v0.3.0 | `tests/test_ingest.py:13` |
 | vibe-prompt v0.7.1 | `tests/schemas/test_back_compat_v06_artifacts.py:163,165,168` |
 
