@@ -1,0 +1,81 @@
+name: marketplace gate
+
+# Marketplace integrity gate — GAP-03 (install-smoke + ref-resolution CI) plus
+# the lint half of GAP-01 (promotion-time quality gate).
+# See docs/quality-net-gap-analysis-2026-06-09.md and scripts/marketplace_gate.py.
+#
+# Honesty cap (no-silent-caps rule): this job does NOT perform a real
+# `claude /plugin install` — there is no headless Claude Code in CI. It
+# simulates the loader contract instead: every pinned ref must resolve as a
+# tag, shallow-clone over HTTPS, and carry a parseable .claude-plugin/plugin.json
+# whose version matches the tag, plus leak + registry-existence lints over the
+# shipped subtree. A defect only a live loader would surface can still pass.
+
+on:
+  pull_request:
+    paths:
+      - ".claude-plugin/marketplace.json"
+  push:
+    branches: [main]
+    paths:
+      - ".claude-plugin/marketplace.json"
+  workflow_dispatch: {}
+  schedule:
+    # Weekly, Monday 06:00 UTC. Deliberately distinct from npm-stats' daily
+    # 14:00 UTC cron — this job never pushes, but keeping the schedule
+    # calendar disjoint costs nothing and avoids confusing overlapping runs.
+    - cron: "0 6 * * 1"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: marketplace-gate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gate:
+    name: Gate (${{ matrix.os }})
+    # Two-OS matrix per the critic's amendment on GAP-03: the motivating
+    # incident (vibe-insights' `github` source type resolving an SSH clone URL
+    # and failing publickey-denied for keyless users) was environment-specific.
+    # A single-OS smoke structurally misses that class, so the gate runs the
+    # same checks on ubuntu AND windows.
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # git, gh, and node/npm (needed for `npm view` in the registry-existence
+      # lint) are all preinstalled on GitHub-hosted runners — no extra setup.
+      - name: Run marketplace gate
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Tenant denylist for the leak lint. Injected from a repo secret so
+          # the employer name is never committed to this public repo —
+          # committing it would recreate the exact leak the lint exists to
+          # catch (the thesis-engine v0.2.2 incident). Repo owner: create the
+          # MARKETPLACE_GATE_DENYLIST secret (comma-separated terms). When the
+          # secret is unset this resolves to an empty string and the script
+          # runs with an empty denylist (path-shape leak lint still runs) —
+          # the workflow does not fail on a missing secret. The script also
+          # redacts denylist matches in its output, so terms never reach the
+          # public job log.
+          MARKETPLACE_GATE_DENYLIST: ${{ secrets.MARKETPLACE_GATE_DENYLIST }}
+        # --paths-severity warn: 15 personal-path findings shipped in pre-gate
+        # tags across 6 plugins (fixtures/docstrings/dogfood docs — zero
+        # tenant-term hits). Denylist terms still hard-fail. Each of those
+        # plugins scrubs its paths on its next release; the burn-down list
+        # lives in docs/conventions/promotion-checklist.md. FLIP THIS TO THE
+        # DEFAULT (fail) when the list is empty — a permanently-red gate
+        # trains everyone to ignore it.
+        run: python scripts/marketplace_gate.py --paths-severity warn
