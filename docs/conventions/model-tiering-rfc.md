@@ -7,13 +7,16 @@
 
 The family survey (2026-06-09) found dispatch instructions in vibe-doc (`:generate` fans out one subagent per doc type), vibe-cartographer (`:build` dispatches per checklist item; `:spec` self-review; `:evolve-cart`), vibe-prompt (`:eval` judge dispatches, `:iterate` creative call), and vibe-thesis (sub-skill dispatch). Exactly **one** site carries model guidance today (vibe-prompt `:iterate` → haiku, with a written rationale). Everywhere else, a session running on an expensive model spends it on bulk file-reading, and a session on a fast model spends it on judgment calls. The capability now exists to route per-dispatch (the Agent tool takes a model override; Workflow `agent()` takes `opts.model`); the skills just never say which tier a dispatch deserves.
 
-## The vocabulary — three tiers, no model names
+## The vocabulary — four tiers, no model names
 
 | Tier | What it marks | Routing guidance |
 |---|---|---|
 | `judgment` | Review gates, synthesis, adversarial verification, anything where the model's verdict IS the deliverable | The session's model. Never downgrade. |
 | `bulk` | Volume execution from a tight spec: reading many files, generating from a checklist item, grinding tests, mechanical migration | A strong-but-cheaper tier than the session model when one exists; the session model otherwise. |
 | `creative-divergent` | Brainstorm/ideation where breadth beats rigor | The cheap/fast tier. (The existing vibe-prompt `:iterate` haiku call is this tier, retroactively.) |
+| `instrument` | Calibrated comparators whose outputs feed longitudinal comparisons: LLM-judges with bias-mitigation machinery, baseline graders | The calibrated model CLASS, held consistent across sessions — cheap is fine, drift is not. Changing an instrument's class is a versioned event (it resets baselines), never a session routing choice. |
+
+**The instrument exception (added same-day, from the first application).** vibe-prompt's eval judge is deliberately cheap-class, made reliable by calibration machinery (Long CoT, SWRS, Swap-and-Discard) — and its scores feed a monotonic baseline. Tagging it `judgment` would have re-tiered the judge with every session: evaluator drift by convention, the exact disease eval's own footers warn about. Consistency-critical dispatches are their own tier.
 
 **Hard rule: tiers, never model IDs.** Model names drift (vibe-prompt's F6 finding class exists because apps pin IDs). A SKILL says `tier: bulk`; the *orchestrator/session* owns the tier→model mapping for its era. Skills MAY note a rationale, never a model string.
 
@@ -53,3 +56,5 @@ requirements.
 ## Ratification record
 
 2026-06-09, Este: (1) tier names confirmed as proposed — `judgment` / `bulk` / `creative-divergent`; blunt beats polite when the job is being unmistakable in SKILL prose. (2) The evolve-dispatch `judgment` default is declared family-wide (see the Family default rule above) rather than left to per-plugin cycles.
+
+Same-day amendment: `instrument` added as the fourth tier when the first reference implementation (vibe-prompt's eval judge) surfaced the calibrated-comparator case — applied at the review gate, flagged for veto.
