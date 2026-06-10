@@ -32,7 +32,7 @@ All username-path class, zero tenant-term hits, verified at the pinned tags. Eac
 | Plugin (pinned) | Findings |
 |---|---|
 | vibe-cartographer v1.10.1 | `skills/evolve-cart/SKILL.md:26` |
-| vibe-test vibe-test-v0.2.5 | `docs/dogfood-wseyatm-v0.2.md` ×6 · `SECURITY.md:11` · `skills/guide/SKILL.md:183` |
+| ~~vibe-test~~ | ~~8 findings~~ — **cleared in vibe-test-v0.3.0** (2026-06-09, same day): gate passes strict |
 | vibe-taker v0.1.2 | `skills/guide/references/error-contract.md:90` |
 | vibe-walk v0.2.0 | `scripts/build/emit_tour_module.py:493` (docstring example) |
 | vibe-insights v0.3.0 | `tests/test_ingest.py:13` |
