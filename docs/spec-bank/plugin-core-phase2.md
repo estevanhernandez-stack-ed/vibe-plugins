@@ -22,8 +22,19 @@ Phase 2 ships **core v0.1.0 with three working modules** — the ones the survey
 2. **Port `state`.** Sync read/write/mergeAndWrite with atomic temp→rename semantics matching `atomic-write-json.js` behavior (including Windows rename-over-existing handling). Acceptance: property test — concurrent-ish sequential writes never produce torn JSON; round-trip typed.
 3. **Port `session-logger`.** TS implementation of the atomic JSONL append + typed entry builder from the canonical schema. CRITICAL: UTF-8 explicit encoding everywhere (the family's recurring cp1252 mojibake class) and BOM-tolerant reads (PS 5.1 lesson). Acceptance: encoding round-trip tests (em-dash/CJK), BOM-prefixed-line read test, sentinel/terminal pairing helper.
 4. **Contract tests validate REAL emitted artifacts, not fixtures.** The v0.7.1 round-trip found vibe-prompt's emitters drifting from committed schemas while fixture-based tests stayed green. Core's test layer must include: for each module, at least one test that runs the module and validates its actual output file against the published schema. This is a standing rule for core, not a one-off.
-5. **Re-document `profile` + `composition`** in core's README as contract modules: publish `builder-profile.schema.json` (from cart's guide/references) and the complements-table schema as core-owned artifacts; export only a validation helper + the composition filter helper. Mark the executable ports explicitly out of scope with the reason (prose-driven by design).
+5. **Re-document `profile` + `composition`** in core's README as contract modules: publish `builder-profile.schema.json` (from cart's guide/references) and the complements-table schema as core-owned artifacts; export only a validation helper + the composition filter helper. Mark the executable ports explicitly out of scope with the reason (prose-driven by design). Cross-plugin seam schemas join this contract layer — see the Seam contracts amendment below.
 6. **Version + consumers.** Cut core `0.1.0`. First consumer migration: vibe-doc replaces its internal `src/scanner` + `src/state` imports with core (it authored them — lowest-risk proof). Do NOT migrate other plugins in this phase; they pin `^0.x` and wait for 0.2.0.
+
+## Seam contracts (amendment, 2026-06-09 — GAP-07)
+
+Added same-day after the quality-net gap analysis found the family's deepest handshake silently broken: vibe-sec ≤0.7.0 read a covered-surfaces shape (`classification.tier`, `covered_surfaces.endpoints_*`, `detected_stack`) that vibe-test's published schema forbids (`additionalProperties: false`) and never emitted. The reader green-lit real artifacts while extracting nothing. Each side's own tests stayed green the whole time — the drift lived in the seam, where neither suite looked. Fixed interim as vibe-sec-v0.7.1 (reader consumes schema v1 verbatim; non-v1 degrades loudly as `unsupported-schema`; `handshakeStatusLine()` makes silent fallback a documented defect).
+
+What Phase 2 must do so the port can't re-create the gap:
+
+1. **Seam schemas become core-owned contract artifacts**, peers of `builder-profile.schema.json` in step 5: `covered-surfaces.schema.json` (today: vibe-test `skills/guide/schemas/`, schema_version 1) and the `findings.jsonl` entry schema (vibe-sec). Core publishes them; the emitting plugin's repo keeps a pointer, not a fork.
+2. **Cross-repo contract tests on BOTH ends of each seam.** Extending step 4's real-artifact rule across the seam: vibe-test's emitter output must validate against the core-owned schema, AND vibe-sec's reader must extract non-empty signal from a schema-valid artifact. One schema, two repos pinned to it — the v0.7.1 regression-tripwire test (vibe-sec `src/composition/vibe-test.test.ts`) is the seed for the consumer side.
+3. **The tier-inheritance gap is a versioned contract decision, not a patch.** Artifact v1 carries no classification block, so vibe-sec's spec §9.1 tier inheritance is structurally impossible today — every audit self-classifies (and says so). If inheritance is still wanted, it ships as schema_version 2 with a classification block: a deliberate, core-owned contract rev with both plugins migrating against it. Do not bolt tier fields onto v1.
+4. **Do not regress the v0.7.1 behavior in any port:** unknown `schema_version` degrades loudly, never green; the handshake status line is mandatory audit output.
 
 ## Constraints
 
@@ -33,4 +44,4 @@ Phase 2 ships **core v0.1.0 with three working modules** — the ones the survey
 
 ## Done means
 
-`pnpm --filter @626labs/plugin-core build && test` green with the three modules real; vibe-doc consuming scanner+state from core on its main; core README truthful about what's stub vs real; contract-test rule documented and enforced in CI.
+`pnpm --filter @626labs/plugin-core build && test` green with the three modules real; vibe-doc consuming scanner+state from core on its main; core README truthful about what's stub vs real; contract-test rule documented and enforced in CI; seam schemas (covered-surfaces, findings) published as core-owned artifacts with both-end contract tests per the GAP-07 amendment.
