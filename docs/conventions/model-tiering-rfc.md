@@ -1,6 +1,6 @@
-# RFC: model-tiering annotations for dispatch sites
+# Family convention: model-tiering annotations for dispatch sites
 
-**Status:** PROPOSED — 2026-06-09, written inside the Fable 5 window. Ratification + three reference implementations turn this into a STANDARD.
+**Status:** STANDARD v1 — ratified 2026-06-09 (tier names confirmed as proposed; evolve-dispatch default declared). Reference implementations land at vibe-doc `:generate`, vibe-cartographer `:build`, vibe-prompt `:eval`/`:iterate`.
 **The idea:** skills that instruct spawning subagents should declare *what kind of work* each dispatch is, so the orchestrating session can route bulk work to cheaper/faster models and keep judgment on the strongest available — without any skill ever pinning a model ID.
 
 ## Why now
@@ -16,6 +16,8 @@ The family survey (2026-06-09) found dispatch instructions in vibe-doc (`:genera
 | `creative-divergent` | Brainstorm/ideation where breadth beats rigor | The cheap/fast tier. (The existing vibe-prompt `:iterate` haiku call is this tier, retroactively.) |
 
 **Hard rule: tiers, never model IDs.** Model names drift (vibe-prompt's F6 finding class exists because apps pin IDs). A SKILL says `tier: bulk`; the *orchestrator/session* owns the tier→model mapping for its era. Skills MAY note a rationale, never a model string.
+
+**Family default — evolve dispatches are `judgment`.** Every `:evolve-*` L3 reflection dispatch is judgment-tier by construction (weighing friction into proposals IS the verdict). Declared here once; no per-site annotation needed in evolve SKILLs, and no plugin re-derives it.
 
 ## The annotation format
 
@@ -48,7 +50,6 @@ requirements.
 - No cost accounting in SKILLs (sessions own spend; cost lines belong to external API hits only).
 - No mandatory routing: a session without multi-model access ignores the annotations at zero cost.
 
-## Open questions for ratification
+## Ratification record
 
-1. Tier names final? (`bulk` reads slightly pejorative; alternatives: `execute` / `review` / `diverge`.)
-2. Should the evolve skills' L3 reflection dispatches default to `judgment` family-wide (proposals are verdicts), or stay unannotated until each plugin's next evolve cycle decides?
+2026-06-09, Este: (1) tier names confirmed as proposed — `judgment` / `bulk` / `creative-divergent`; blunt beats polite when the job is being unmistakable in SKILL prose. (2) The evolve-dispatch `judgment` default is declared family-wide (see the Family default rule above) rather than left to per-plugin cycles.
