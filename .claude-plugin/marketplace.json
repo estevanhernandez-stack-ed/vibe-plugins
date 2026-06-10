@@ -37,12 +37,12 @@
     },
     {
       "name": "vibe-sec",
-      "description": "Security gap finder for vibe-coded apps — the tier-aware security audit and orchestration layer. Defers to gitleaks/OSV-Scanner/Semgrep/Trivy when present, falls back to an in-house baseline when absent, and owns the tier classification (mapped to OWASP ASVS), severity calibration, four-band report, confidence-routed fixes with destructive-action overrides, and threat-model synthesis. /vibe-sec:audit runs the full ten-concern audit (secrets, deps, supply-chain, config, crypto/PII, auth-model, OWASP survey, rate-limiting, threat-model, tier-scoring) — plus :scan, :deps, :gate (CI-safe), :posture, :fix, :threat-model, and :research. Validated on a real Firebase app.",
+      "description": "Security gap finder for vibe-coded apps — the tier-aware security audit and orchestration layer. Defers to gitleaks/OSV-Scanner/Semgrep/Trivy when present, falls back to an in-house baseline when absent, and owns the tier classification (mapped to OWASP ASVS), severity calibration, four-band report, confidence-routed fixes with destructive-action overrides, and threat-model synthesis. /vibe-sec:audit runs the full eleven-concern audit (secrets, deps, supply-chain, config, crypto/PII, auth-model, OWASP survey, rate-limiting, license-compliance, threat-model, tier-scoring) — plus :scan, :deps, :gate (CI-safe), :posture, :fix, :threat-model, and :research. License compliance is distribution-model aware: GPL in a shipped binary flags high, the dual-license OR-trap doesn't flag at all. Validated on real Firebase apps.",
       "source": {
         "source": "git-subdir",
         "url": "https://github.com/estevanhernandez-stack-ed/vibe-sec",
         "path": "packages/vibe-sec",
-        "ref": "vibe-sec-v0.7.1"
+        "ref": "vibe-sec-v0.8.0"
       }
     },
     {
