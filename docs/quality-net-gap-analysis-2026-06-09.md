@@ -135,6 +135,8 @@ The four "today" items shipped within hours of the analysis:
 - **vibe-doc v0.8.1** (`aa7e3c0`, promoted): all 36 `npx vibe-doc` call sites across the shipped README, command files, and SKILL bodies now use `npx @esthernandez/vibe-doc-cli`; global-install line and taxonomy mention updated. The bare-name 404/squat exposure is closed at the instruction layer (defensively publishing the bare name remains an option).
 - **GAP-11 (walk tour a11y)**: landed on vibe-walk canary only — promotion gated on the Celestia3 dogfood per the family validation norm.
 
+Status correction (same day, GAP-26): Celestia3's Android build is **in process, not shipped** — Play ID verification cleared and the SDK is installed, but no APK/AAB has been distributed. The GPL finding is therefore a pre-flight gate on the first Play upload, not a live conveyance violation. (The web app delivering the WASM to browsers remains a strict-reading gray zone; a commercial license moots both surfaces.)
+
 Marketplace refs bumped for all three scrubs; full-manifest validation passed (13/13 tags resolve, version-tag match across the board). Residual exposure accepted for now: v0.2.2 and prior content remains reachable via git history; erasing it would take history rewriting on a public repo, disproportionate to an employer-name mention plus local paths — Este's call if he wants the nuclear option.
 
 ## Run artifacts
