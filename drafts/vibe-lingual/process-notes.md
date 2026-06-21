@@ -49,6 +49,10 @@ Extract → wire framework → translate → wire-to-locale → guard. Lessons f
 - **RTL surface.** The app layout assumes LTR. Flag before adding Arabic, Hebrew, or Urdu. No RTL work done in this hand-pass.
 - **Anonymous SSR viewers** (share links) have no pref cookie → default to source locale. The AVAILABLE-list guard covers this case — `en` catalog is always generated first.
 
+- **next-intl requires a `timeZone`** (global in the request config OR per-call) or it logs `ENVIRONMENT_FALLBACK` and falls back to the runtime zone. For client-rendered LOCAL dates, pass the browser-resolved zone per-call (`Intl.DateTimeFormat().resolvedOptions().timeZone`) to keep viewer-local behavior without the warning; only SSR-rendered dates want an explicit fixed zone. The plugin should emit a timeZone decision by default.
+- **ESLint flat-config globs treat Next.js dynamic-route dirs as character classes:** a `files` entry like `src/app/s/[shareId]/page.tsx` SILENTLY never matches (the `[...]` is a minimatch char class). Use `src/app/s/*/page.tsx`. The plugin's guard emitter must glob dynamic-route segments with `*`, not the literal `[param]`, and should verify each guarded file actually resolves the rule (`eslint --print-config`).
+- **`<html lang="en">` in the root layout should become `lang={locale}`** (async layout + next-intl `getLocale()`) in the plugin's Phase-3 full pass — currently hardcoded English even when rendering es/ja.
+
 ## What the hand-pass deliberately left to the plugin
 
 ~600-800 strings across ~65 components, all 10 locales, the full 6-block scan emission. The hand-pass proved the shape on a 4-surface slice (settings language block, the `/s/[shareId]` SSR route, a `common` namespace, one TransitFeed date); the plugin does the volume (Phases 2-4 of the arc).
