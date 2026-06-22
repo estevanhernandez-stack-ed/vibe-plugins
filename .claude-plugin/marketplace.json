@@ -133,6 +133,16 @@
         "path": "plugins/vibe-prompt",
         "ref": "v0.7.1"
       }
+    },
+    {
+      "name": "vibe-lingual",
+      "description": "Localize your app's UI without corrupting its logic. Scans every user-facing string by kind — JSX text, placeholder, aria-label, title, alt, toast, locale-sensitive date — and emits a six-block readiness brief; audits the stack for the gotchas that bite i18n retrofits (firebase-admin in SSR, structural-vs-presentational Intl, the timeZone decision, RTL surfaces, dynamic-route guard globs); then runs a confidence-routed extract -> wire -> translate -> guard loop that mutates only with per-file backups and idempotent re-runs. Per-site routing means a heavy mixed component extracts its clean strings while genuinely-ambiguous sites stay inline. Deep on next-intl + App Router — cookie-driven locale, catalog parity guard, jsx-no-literals ratchet, ESM jest patch — with a real adapter seam that reports an honest not-yet-implemented for the rest instead of mishandling them. Dogfooded end-to-end on Celestia3: ~67 components / 720 UI strings localized with the app's own test suite staying green.",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/estevanhernandez-stack-ed/Vibe-Lingual",
+        "path": "plugins/vibe-lingual",
+        "ref": "v0.1.0"
+      }
     }
   ]
 }
