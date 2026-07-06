@@ -1,0 +1,73 @@
+name: version truth
+
+on:
+  schedule:
+    # 08:00 UTC = 03:00 America/Chicago (CDT). Shifts to 02:00 local in
+    # winter (CST) — fine for a nightly.
+    - cron: "0 8 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: version-truth
+  cancel-in-progress: false
+
+jobs:
+  snapshot:
+    name: Snapshot shipped versions across the family
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          # Full history so `git pull --rebase` works in the push-with-retry loop.
+          fetch-depth: 0
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run live-versions collector
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python scripts/live-versions.py
+
+      - name: Commit snapshot (only when a version changed)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add data/live-versions.json
+
+          if git diff --cached --quiet; then
+            echo "no version drift — skipping commit"
+            exit 0
+          fi
+
+          DAY="$(date -u +%Y-%m-%d)"
+          # Name the drift in the commit body so the log reads as a changelog.
+          DRIFT="$(git diff --cached -U0 data/live-versions.json | grep -E '^[+-]\s+\"version\"' || true)"
+          git commit -m "versions: live snapshot ${DAY}" -m "${DRIFT}"
+
+          push_with_retry() {
+            local attempt
+            for attempt in 1 2 3 4 5; do
+              if git push 2>&1; then
+                return 0
+              fi
+              echo "::notice::push attempt ${attempt} rejected — fetching + rebasing onto origin/main"
+              git fetch origin main || return 1
+              git rebase origin/main || return 1
+              sleep "$((attempt * 2))"
+            done
+            echo "::error::push failed after 5 attempts" >&2
+            return 1
+          }
+          push_with_retry

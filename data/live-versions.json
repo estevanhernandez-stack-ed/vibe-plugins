@@ -1,0 +1,119 @@
+{
+  "$comment": "Shipped versions only (no pre-releases). No timestamps by design: the commit date is the snapshot date.",
+  "products": {
+    "626-mod-launcher": {
+      "repo": "estevanhernandez-stack-ed/626-mod-launcher",
+      "version": "v0.9.0",
+      "source": "release"
+    },
+    "Celestia3": {
+      "repo": "estevanhernandez-stack-ed/Celestia3",
+      "version": null,
+      "source": null
+    },
+    "ROROROblox": {
+      "repo": "estevanhernandez-stack-ed/ROROROblox",
+      "version": "v1.8.0.0",
+      "source": "release",
+      "latest_tag": "v1.9.0.0"
+    },
+    "Sanduhr_f-r_Claude": {
+      "repo": "estevanhernandez-stack-ed/Sanduhr_f-r_Claude",
+      "version": "v2.3.0-windows",
+      "source": "release",
+      "latest_tag": "v3.1.0.0"
+    },
+    "SnipSnap": {
+      "repo": "estevanhernandez-stack-ed/SnipSnap",
+      "version": "v0.1.0",
+      "source": "tag"
+    },
+    "Ur-OCR": {
+      "repo": "estevanhernandez-stack-ed/Ur-OCR",
+      "version": "v0.4.0",
+      "source": "release"
+    },
+    "rororo-ur-afk": {
+      "repo": "estevanhernandez-stack-ed/rororo-ur-afk",
+      "version": "v0.4.0",
+      "source": "release"
+    },
+    "rororo-ur-task": {
+      "repo": "estevanhernandez-stack-ed/rororo-ur-task",
+      "version": "v0.5.0",
+      "source": "release"
+    },
+    "thesis-engine": {
+      "repo": "estevanhernandez-stack-ed/Thesis-Engine",
+      "version": "v0.2.3",
+      "source": "release"
+    },
+    "vibe-cartographer": {
+      "repo": "estevanhernandez-stack-ed/vibe-cartographer",
+      "version": "v1.10.1",
+      "source": "release",
+      "latest_tag": "v1.11.0"
+    },
+    "vibe-doc": {
+      "repo": "estevanhernandez-stack-ed/Vibe-Doc",
+      "version": "v0.8.2",
+      "source": "release"
+    },
+    "vibe-insights": {
+      "repo": "estevanhernandez-stack-ed/vibe-insights",
+      "version": "v0.4.0",
+      "source": "release"
+    },
+    "vibe-iterate": {
+      "repo": "estevanhernandez-stack-ed/vibe-iterate",
+      "version": "v1.4.0",
+      "source": "release"
+    },
+    "vibe-keystone": {
+      "repo": "estevanhernandez-stack-ed/vibe-Keystone",
+      "version": "v0.2.1",
+      "source": "release"
+    },
+    "vibe-lingual": {
+      "repo": "estevanhernandez-stack-ed/Vibe-Lingual",
+      "version": "v0.1.0",
+      "source": "release"
+    },
+    "vibe-prompt": {
+      "repo": "estevanhernandez-stack-ed/Vibe-Prompt",
+      "version": "v0.7.1",
+      "source": "release"
+    },
+    "vibe-sec": {
+      "repo": "estevanhernandez-stack-ed/vibe-sec",
+      "version": "vibe-sec-v0.10.0",
+      "source": "release"
+    },
+    "vibe-taker": {
+      "repo": "estevanhernandez-stack-ed/vibe-taker",
+      "version": "v0.1.2",
+      "source": "release",
+      "latest_tag": "v0.2.0"
+    },
+    "vibe-test": {
+      "repo": "estevanhernandez-stack-ed/vibe-test",
+      "version": "vibe-test-v0.4.0",
+      "source": "release"
+    },
+    "vibe-thesis": {
+      "repo": "estevanhernandez-stack-ed/Vibe-Thesis",
+      "version": "v0.2.0",
+      "source": "release"
+    },
+    "vibe-walk": {
+      "repo": "estevanhernandez-stack-ed/Vibe-Walk",
+      "version": "v0.3.0",
+      "source": "release"
+    },
+    "vibe-wrap": {
+      "repo": "estevanhernandez-stack-ed/vibe-wrap",
+      "version": "v0.4.0",
+      "source": "release"
+    }
+  }
+}
