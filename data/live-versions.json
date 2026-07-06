@@ -25,8 +25,8 @@
     },
     "SnipSnap": {
       "repo": "estevanhernandez-stack-ed/SnipSnap",
-      "version": "v0.1.0",
-      "source": "tag"
+      "version": null,
+      "source": null
     },
     "Ur-OCR": {
       "repo": "estevanhernandez-stack-ed/Ur-OCR",
@@ -35,7 +35,7 @@
     },
     "rororo-ur-afk": {
       "repo": "estevanhernandez-stack-ed/rororo-ur-afk",
-      "version": "v0.4.0",
+      "version": "v0.4.1",
       "source": "release"
     },
     "rororo-ur-task": {
