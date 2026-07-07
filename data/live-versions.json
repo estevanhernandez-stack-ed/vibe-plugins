@@ -15,13 +15,12 @@
       "repo": "estevanhernandez-stack-ed/ROROROblox",
       "version": "v1.8.0.0",
       "source": "release",
-      "latest_tag": "v1.9.0.0"
+      "latest_tag": "v1.9.1.0"
     },
     "Sanduhr_f-r_Claude": {
       "repo": "estevanhernandez-stack-ed/Sanduhr_f-r_Claude",
-      "version": "v2.3.0-windows",
-      "source": "release",
-      "latest_tag": "v3.1.0.0"
+      "version": "v3.1.0.0",
+      "source": "release"
     },
     "SnipSnap": {
       "repo": "estevanhernandez-stack-ed/SnipSnap",
@@ -35,7 +34,7 @@
     },
     "rororo-ur-afk": {
       "repo": "estevanhernandez-stack-ed/rororo-ur-afk",
-      "version": "v0.4.1",
+      "version": "v0.5.2",
       "source": "release"
     },
     "rororo-ur-task": {
@@ -50,9 +49,8 @@
     },
     "vibe-cartographer": {
       "repo": "estevanhernandez-stack-ed/vibe-cartographer",
-      "version": "v1.10.1",
-      "source": "release",
-      "latest_tag": "v1.11.0"
+      "version": "v1.11.0",
+      "source": "release"
     },
     "vibe-doc": {
       "repo": "estevanhernandez-stack-ed/Vibe-Doc",
@@ -91,9 +89,8 @@
     },
     "vibe-taker": {
       "repo": "estevanhernandez-stack-ed/vibe-taker",
-      "version": "v0.1.2",
-      "source": "release",
-      "latest_tag": "v0.2.0"
+      "version": "v0.2.0",
+      "source": "release"
     },
     "vibe-test": {
       "repo": "estevanhernandez-stack-ed/vibe-test",
