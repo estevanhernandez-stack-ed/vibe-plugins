@@ -93,7 +93,7 @@ v0.1 ships **one real adapter**: the stack of the dogfood app. The agnostic path
 
 - Unit tests: manifest schema validation, inventory parsing, adapter seam contract, tier-gating refusal rules, backup/rollback.
 - Reference extraction: derive the manifest schema from the 626 dashboard layer; sanity-check by hand-writing that app's manifest against the schema.
-- Dogfood: run the full scan → map → scaffold → verify arc on an app that has **no** layer yet — **QuizShow** (default; swap to WeSeeYouAtTheMovies at build time if QuizShow's state has moved on) — so the plugin proves it can birth a layer from nothing. Real-app validation is the family bar; structural-green != works (vibe-lingual caught real bugs at every scale because it dogfooded).
+- Dogfood: run the full scan → map → scaffold → verify arc on an app that has **no** layer yet — **WeSeeYouAtTheMovies** (chosen 2026-07-09; its stack becomes the v0.1 adapter) — so the plugin proves it can birth a layer from nothing. Real-app validation is the family bar; structural-green != works (vibe-lingual caught real bugs at every scale because it dogfooded).
 
 ## Name
 
