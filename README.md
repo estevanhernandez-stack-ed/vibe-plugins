@@ -40,6 +40,8 @@ The architecture: **foundations underneath, pillars on top.** Foundation tools e
 | **Vibe Insights** | [`vibe-insights`](https://github.com/estevanhernandez-stack-ed/vibe-insights) | [![](https://img.shields.io/github/v/tag/estevanhernandez-stack-ed/vibe-insights?label=&color=17d4fa)](https://github.com/estevanhernandez-stack-ed/vibe-insights/tags) | The deep retrospective for your Claude Code work — coverage, recall, token/cost with the cache reveal, how-you-work, open threads, and a synthesized narrative read across your full history and every machine. Personal by default; optionally keep chosen sources or repos local-only. |
 | **Vibe Wrap** | [`vibe-wrap`](https://github.com/estevanhernandez-stack-ed/vibe-wrap) | [![](https://img.shields.io/github/v/tag/estevanhernandez-stack-ed/vibe-wrap?label=&color=17d4fa)](https://github.com/estevanhernandez-stack-ed/vibe-wrap/tags) | Close the session cleanly — reads the breadcrumb trail your toolkit left, renders a what-shipped handoff, and gates commit/push/decision-log with no-action defaults. Pairs with Insights. |
 | **Vibe Thesis** *(beta)* | [`Vibe-Thesis`](https://github.com/estevanhernandez-stack-ed/Vibe-Thesis) | [![](https://img.shields.io/github/v/tag/estevanhernandez-stack-ed/Vibe-Thesis?label=&color=17d4fa)](https://github.com/estevanhernandez-stack-ed/Vibe-Thesis/tags) | Long-form academic authoring — dissertations, master's theses, position essays. Scaffolds a styled PDF skeleton + working render pipeline in roughly 30 minutes. |
+| **Vibe Lingual** | [`Vibe-Lingual`](https://github.com/estevanhernandez-stack-ed/Vibe-Lingual) | [![](https://img.shields.io/github/v/tag/estevanhernandez-stack-ed/Vibe-Lingual?label=&color=17d4fa)](https://github.com/estevanhernandez-stack-ed/Vibe-Lingual/tags) | Localize your app's UI without corrupting its logic. Scans every user-facing string by kind, audits the i18n-retrofit gotchas, then runs a confidence-routed extract → wire → translate → guard loop with per-file backups. Deep on next-intl + App Router. |
+| **Vibe Access** | [`vibe-access`](https://github.com/estevanhernandez-stack-ed/vibe-access) | [![](https://img.shields.io/github/v/tag/estevanhernandez-stack-ed/vibe-access?label=&color=17d4fa)](https://github.com/estevanhernandez-stack-ed/vibe-access/tags) | Give agents pipelines into your app. Maps every callable surface into an agent-access.json manifest with dev/prod-safe tiers, scaffolds missing affordances behind hard env gates, and proves the layer with a cold-agent verify. The manifest is the embryo of your eventual MCP server. |
 
 Each plugin is independently versioned. This marketplace pins to **stable tags** on each solo repo; updates are deliberate promotions, not bleeding-edge tracking.
 
@@ -82,6 +84,8 @@ Paste any individual solo repo URL (`estevanhernandez-stack-ed/vibe-cartographer
 /plugin install vibe-insights@vibe-plugins
 /plugin install vibe-wrap@vibe-plugins
 /plugin install vibe-thesis@vibe-plugins
+/plugin install vibe-lingual@vibe-plugins
+/plugin install vibe-access@vibe-plugins
 ```
 <!-- END GENERATED:install -->
 
