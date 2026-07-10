@@ -47,6 +47,11 @@
       "version": "v0.2.3",
       "source": "release"
     },
+    "vibe-access": {
+      "repo": "estevanhernandez-stack-ed/vibe-access",
+      "version": "v0.1.0",
+      "source": "release"
+    },
     "vibe-cartographer": {
       "repo": "estevanhernandez-stack-ed/vibe-cartographer",
       "version": "v1.11.0",
