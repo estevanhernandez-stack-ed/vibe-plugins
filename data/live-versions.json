@@ -38,7 +38,7 @@
     },
     "rororo-ur-task": {
       "repo": "estevanhernandez-stack-ed/rororo-ur-task",
-      "version": "v0.5.0",
+      "version": "v0.6.0",
       "source": "release"
     },
     "thesis-engine": {
@@ -48,7 +48,7 @@
     },
     "vibe-access": {
       "repo": "estevanhernandez-stack-ed/vibe-access",
-      "version": "v0.1.0",
+      "version": "v0.2.0",
       "source": "release"
     },
     "vibe-cartographer": {
