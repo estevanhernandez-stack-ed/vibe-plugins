@@ -146,12 +146,12 @@
     },
     {
       "name": "vibe-access",
-      "description": "Give agents pipelines into your app. Scans your routes and auth model, maps every callable surface into a schema-versioned agent-access.json manifest with dev and prod-safe tiers, scaffolds the affordances your app is missing (seed, reset, read-state, capture, discovery) behind hard env gates, and proves the layer with a cold-agent verify that exercises every affordance before anything counts as done. seed/reset/capture can never be tagged prod-safe — a refusal, not a warning. Deep on Firebase Cloud Functions (hosting-rewrite route detection, ID-token auth mapping), with a real adapter seam that reports an honest not-yet-implemented for the rest. The manifest is the embryo of your eventual MCP server. Validated against WeSeeYouAtTheMovies — the dogfood run surfaced 7 real parser bugs, all fixed same session with regression tests.",
+      "description": "Give agents pipelines into your app — then see the surface an agent actually sees. Scans your routes and auth model, maps every callable surface into a schema-versioned agent-access.json manifest with dev and prod-safe tiers, mines the input shape a caller must send, scaffolds the affordances your app is missing behind hard env gates, and proves the layer with a cold-agent verify. /vibe-access:visualize renders the whole surface — or a live MCP server's tools/list — into one self-contained HTML page you can read, search, and print to PDF: every tool, the literal call you can make, and a real explanation for each one. /vibe-access:describe authors those explanations by reading your handlers (on a real 85-route app it took UNDOCUMENTED from 84/85 to 0/85). Verification math never lies: 'pass' means either the call ran or the auth gate correctly rejected it, and the sheet always says which. seed/reset/capture can never be tagged prod-safe — a refusal, not a warning. Deep on Firebase Cloud Functions, with an honest not-yet-implemented seam for the rest. The manifest is the embryo of your eventual MCP server. Validated against a Firebase web app, a WPF gRPC desktop app, and a real MCP tool surface.",
       "source": {
         "source": "git-subdir",
         "url": "https://github.com/estevanhernandez-stack-ed/vibe-access",
         "path": "plugins/vibe-access",
-        "ref": "v0.1.0"
+        "ref": "v0.2.0"
       }
     }
   ]
