@@ -39,7 +39,8 @@
     "rororo-ur-task": {
       "repo": "estevanhernandez-stack-ed/rororo-ur-task",
       "version": "v0.6.0",
-      "source": "release"
+      "source": "release",
+      "latest_tag": "v0.7.0-rc1"
     },
     "thesis-engine": {
       "repo": "estevanhernandez-stack-ed/Thesis-Engine",
