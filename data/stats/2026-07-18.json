@@ -1,0 +1,26 @@
+{
+  "timestamp": "2026-07-18T14:25:10Z",
+  "day": "2026-07-18",
+  "packages": {
+    "@esthernandez/vibe-doc-cli": {
+      "last_day": 1,
+      "last_week": 5,
+      "last_month": 31
+    },
+    "@esthernandez/vibe-test-cli": {
+      "last_day": 4,
+      "last_week": 8,
+      "last_month": 62
+    },
+    "@esthernandez/vibe-sec-cli": {
+      "last_day": 2,
+      "last_week": 11,
+      "last_month": 44
+    },
+    "@esthernandez/vibe-cartographer": {
+      "last_day": 19,
+      "last_week": 26,
+      "last_month": 153
+    }
+  }
+}
