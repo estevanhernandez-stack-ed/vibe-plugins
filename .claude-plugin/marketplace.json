@@ -67,12 +67,12 @@
     },
     {
       "name": "vibe-keystone",
-      "description": "Bootstrap a 626Labs-pattern CLAUDE.md — the load-bearing structural file every agent decision in the repo rests on. Interviews the user for org, decision surface, voice rules, and persona before drafting, so the produced file reflects THEIR conventions, not 626Labs defaults baked in. Tenant-aware; adapts to repo type (code platform / marketing site / long-form writing / mixed). Use when starting a new repo or when an existing CLAUDE.md is stale.",
+      "description": "Write a repo's CLAUDE.md so it earns every line. Cuts what a session can derive from ls, the manifest, or --help; keeps the gotchas, rationale, and non-standard conventions it cannot. Protects persona, voice, and taste from the trim. Proposes nested keystones for multi-surface repos, warns before a shape change, and declines to write one at all when a repo has nothing non-obvious to say yet.",
       "source": {
         "source": "git-subdir",
         "url": "https://github.com/estevanhernandez-stack-ed/vibe-Keystone",
         "path": "plugins/vibe-keystone",
-        "ref": "v0.2.1"
+        "ref": "v0.3.0"
       }
     },
     {
