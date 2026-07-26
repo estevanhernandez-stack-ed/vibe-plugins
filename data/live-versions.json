@@ -75,7 +75,8 @@
     "vibe-keystone": {
       "repo": "estevanhernandez-stack-ed/vibe-Keystone",
       "version": "v0.2.1",
-      "source": "release"
+      "source": "release",
+      "latest_tag": "v0.3.0"
     },
     "vibe-lingual": {
       "repo": "estevanhernandez-stack-ed/Vibe-Lingual",
