@@ -156,12 +156,12 @@
     },
     {
       "name": "vibe-glow",
-      "description": "Repeatable multi-stage UI beautification campaigns. Four gated stages as slash commands — identity (invent the design language, stress-tested against user theming), audit (five Opus review lenses plus a skeptic pass), wave (findings-driven fix batches re-reviewed until clean), reveal (the flagship release). Evidence adapters for WinUI (PowerShell window capture) and web (Playwright).",
+      "description": "Repeatable multi-stage UI beautification campaigns — app-wide or scoped to one area with a goal in your own words. Concierge entry: one call runs the whole campaign, consent-gated stage by stage. Four gated stages (identity, audit with five Opus lenses plus a skeptic pass, findings-driven waves re-reviewed until clean, reveal or goal-check close-out). Evidence adapters for Windows-native apps (WinUI/WPF/Win32 — UIA-driven capture with route maps, UIA tree dumps, pixel sampling) and web (Playwright).",
       "source": {
         "source": "git-subdir",
         "url": "https://github.com/estevanhernandez-stack-ed/vibe-glow",
         "path": "plugins/vibe-glow",
-        "ref": "v0.1.0"
+        "ref": "v0.2.0"
       }
     }
   ]
