@@ -14,7 +14,8 @@
     "ROROROblox": {
       "repo": "estevanhernandez-stack-ed/ROROROblox",
       "version": "v1.16.0.0",
-      "source": "release"
+      "source": "release",
+      "latest_tag": "v1.17.0.0"
     },
     "Sanduhr_f-r_Claude": {
       "repo": "estevanhernandez-stack-ed/Sanduhr_f-r_Claude",
