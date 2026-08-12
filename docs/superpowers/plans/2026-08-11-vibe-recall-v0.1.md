@@ -634,6 +634,22 @@ test('an empty repo does not divide by zero', () => {
   expect(classifyProvenance(
     { totalCommits: 0, ownCommits: 0, fileCount: 0 }, T)).toBe('own');
 });
+
+// Fail open. An unconfigured author list must never silently hide the estate:
+// with no identities to match, ownCommits is 0 for EVERY repo, and a naive
+// ratio test would classify all 86 as foreign and return nothing, forever,
+// with no error. Not classifiable is not the same as foreign.
+test('no configured authors means classification is skipped, not failed', () => {
+  expect(classifyProvenance(
+    { totalCommits: 57, ownCommits: 0, fileCount: 400, authorsConfigured: false }, T))
+    .toBe('own');
+});
+
+test('configured authors with zero matches is still foreign', () => {
+  expect(classifyProvenance(
+    { totalCommits: 57, ownCommits: 0, fileCount: 400, authorsConfigured: true }, T))
+    .toBe('foreign');
+});
 ```
 
 - [ ] **Step 2: Run it and watch it fail**
@@ -649,8 +665,14 @@ Append to `engine/corpus.mjs`:
 export const DEFAULT_PROVENANCE = { minAuthorshipRatio: 0.5, minCommitsPerFile: 0.01 };
 
 export function classifyProvenance(stats, t = DEFAULT_PROVENANCE) {
-  const { totalCommits = 0, ownCommits = 0, fileCount = 0 } = stats;
+  const {
+    totalCommits = 0, ownCommits = 0, fileCount = 0, authorsConfigured = true
+  } = stats;
   if (totalCommits === 0) return 'own';
+  // Fail open: without identities to match against, ownCommits is 0 for every
+  // repo and a ratio test would classify the whole estate foreign, returning
+  // nothing forever with no error. Not classifiable is not foreign.
+  if (!authorsConfigured) return 'own';
   if (ownCommits / totalCommits < t.minAuthorshipRatio) return 'foreign';
   if (fileCount > 0 && totalCommits / fileCount < t.minCommitsPerFile) return 'foreign';
   return 'own';
@@ -673,7 +695,7 @@ export function repoStats(dir, authors = [], run = null) {
     }
   } catch {}
   try { fileCount = exec(['ls-files']).split('\n').filter(Boolean).length; } catch {}
-  return { totalCommits, ownCommits, fileCount };
+  return { totalCommits, ownCommits, fileCount, authorsConfigured: authors.length > 0 };
 }
 ```
 
