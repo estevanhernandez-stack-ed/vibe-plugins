@@ -103,6 +103,8 @@ Deterministic, documented score. **The first two rules below were inverted or mi
 - Canonical bonus; non-canonical sibling penalty; `foreign` excluded unless opted in.
 - **The current repo is excluded by default.** Working inside RTClickPng, RTClickPng ranked in its own results on three separate probes. `--include-self` opts back in for the case where you are looking for your own earlier attempt at the same thing.
 
+**Every rule here must be wired at the call site, not merely implemented.** This build shipped four separate capabilities that were implemented, unit-tested in isolation, and connected to nothing: the tenant wall enforced by no producer, divergence detection over a `head` field nobody populated, canonical selection by a `lastCommit` that was always undefined, and both self-exclusion and stack affinity reading a context object the CLI passed as `{}`. Every one passed its unit tests, because those call the function directly with a populated argument. **The composition is the product; the unit is not.** A rule in this section is not done until a test exercises it through the path a user actually runs.
+
 Every hit carries an **evidence split**: how many matches came from code versus prose. A hit backed only by documentation is a lead, not prior art, and the brief must say which it found.
 
 **Zero hits is a first-class output.** "No prior art in your estate" is a real answer and gets said plainly, following vibe-walk's don't-build precedent. A recall tool that always finds something is a recall tool that is lying.
