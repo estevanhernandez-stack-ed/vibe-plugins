@@ -440,7 +440,10 @@ export function makeEstate(spec = DEFAULT_SPEC) {
 }
 
 export function cleanEstate(root) {
-  if (root) fs.rmSync(root, { recursive: true, force: true });
+  // retries: on Windows a handle held in a just-created .git directory
+  // (git teardown, antivirus) can defeat a single rmSync attempt, which
+  // would leave a temp estate containing real nested repos lying around
+  if (root) fs.rmSync(root, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 });
 }
 ```
 
@@ -505,16 +508,32 @@ import { execFileSync } from 'node:child_process';
 
 const MAX_DEPTH = 3;
 
+// Case-insensitive by design. NTFS is case-insensitive by default, so on the
+// primary development platform a directory named `marcus` is a different
+// string from `Marcus` and an exact-match wall lets it straight through.
+// Over-refusing is safe; under-refusing is a tenant leak.
 export function isWalled(absPath, estateRoot, walls) {
-  const rel = path.relative(estateRoot, absPath).split(path.sep);
-  return walls.some(w => rel.includes(w));
+  const rel = path.relative(estateRoot, absPath)
+    .split(path.sep).map(s => s.toLowerCase());
+  return walls.some(w => rel.includes(String(w).toLowerCase()));
 }
 
+// Returns { remote, readFailed }. Collapsing "no remote configured" and
+// "remote could not be read" into a bare null is silent data loss: Task 5's
+// duplicate collapse keys on this field, so a repo whose read merely failed
+// would be treated as genuinely remote-less and could never be deduplicated
+// against its twin, with nothing surfaced anywhere.
 function readRemote(dir) {
   try {
-    return execFileSync('git', ['-C', dir, 'config', '--get', 'remote.origin.url'],
-      { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim() || null;
-  } catch { return null; }
+    const out = execFileSync('git', ['-C', dir, 'config', '--get', 'remote.origin.url'],
+      { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
+    return { remote: out || null, readFailed: false };
+  } catch (e) {
+    // exit code 1 from `git config --get` means the key is simply unset,
+    // which is a legitimate no-remote answer rather than a failure
+    const unset = e && e.status === 1;
+    return { remote: null, readFailed: !unset };
+  }
 }
 
 export function enumerateLocal(config, depth = MAX_DEPTH) {
@@ -532,7 +551,8 @@ export function enumerateLocal(config, depth = MAX_DEPTH) {
       const abs = path.join(dir, e.name);
       if (isWalled(abs, estateRoot, walls)) continue;
       if (fs.existsSync(path.join(abs, '.git'))) {
-        out.push({ name: e.name, path: abs, origin: 'local', remote: readRemote(abs) });
+        const { remote, readFailed } = readRemote(abs);
+        out.push({ name: e.name, path: abs, origin: 'local', remote, remoteReadFailed: readFailed });
         continue;
       }
       walk(abs, left - 1);
