@@ -1827,7 +1827,20 @@ Expected: PASS, 4 tests.
 }
 ```
 
-Verify the environment variable name against the current Claude Code hooks reference before shipping; if the prompt is delivered on stdin rather than as an argument, adapt `cli.mjs` to read stdin when no argument is present. Do not guess: check the docs and record what you found in the commit body.
+**Resolved 2026-08-12. The `$CLAUDE_USER_PROMPT` in the original draft was fabricated — no such environment variable exists.** The payload arrives as JSON on stdin:
+
+```json
+{
+  "session_id": "...", "prompt_id": "...", "transcript_path": "...",
+  "cwd": "...", "permission_mode": "default",
+  "hook_event_name": "UserPromptSubmit",
+  "user_input": "the prompt text"
+}
+```
+
+The field is `user_input`. Corroborated against shipped production code rather than one source: `vibe-wrap` ships a working `SessionEnd` hook in this same family whose handler reads `hook_event_name`, `cwd` and `transcript_path` from stdin JSON — same mechanism, same snake_case convention. `${CLAUDE_PLUGIN_ROOT}` does resolve in a plugin's `hooks.json`; vibe-wrap uses it in production.
+
+**The hook must never exit 2.** On `UserPromptSubmit`, exit 2 blocks the prompt and *erases the user's typed text*. Any other non-zero code is a non-blocking error. Guarantee exit 0 on every path including the catch-all — an advisory that destroys someone's prompt because their index was corrupt is far worse than one that never fires. Plain stdout on exit 0 is added to context directly; no JSON wrapper is needed.
 
 - [ ] **Step 6: Commit**
 
