@@ -1093,8 +1093,21 @@ export const SECRET_PATTERNS = [
   /\bAKIA[0-9A-Z]{16}\b/,
   /-----BEGIN [A-Z ]*PRIVATE KEY-----/,
   /\b(api[_-]?key|secret|token|password)\s*[:=]\s*['"][^'"]{12,}['"]/i,
-  /\b(API[_-]?KEY|SECRET|TOKEN|PASSWORD)[A-Z_]*=\S{12,}/
+  // Identifier ENDING in a credential word, not starting with one. The original
+  // required \b immediately before the keyword, but in a namespaced variable the
+  // preceding character is an underscore — a word character — so no boundary
+  // exists and the pattern could never fire. Measured against every .env in the
+  // real estate it caught 1 of 34 credential-bearing lines: VITE_FIREBASE_API_KEY,
+  // VITE_GEMINI_API_KEY, VITE_GOOGLE_MAPS_API_KEY and JWT_SECRET_KEY all slipped.
+  /[A-Za-z0-9_]*(api[_-]?key|secret|token|password|credential)[A-Za-z0-9_]*\s*[:=]\s*\S{12,}/i,
+  // Google and Firebase keys: 39 chars, AIza-prefixed. Most of the estate's misses.
+  /\bAIza[A-Za-z0-9_-]{35}\b/
 ];
+
+// Precision matters as much as recall. A URL or hostname must NOT flag —
+// ALLOWED_ORIGINS, AUTH_DOMAIN, REDIRECT_URI and the like are not credentials,
+// and a file skipped as secret-bearing contributes no symbols at all, silently
+// degrading the recall this plugin exists to provide.
 
 const SKIP_FILES = new Set(['.env', '.env.local', '.env.production', 'id_rsa']);
 const CODE_EXT = new Set(['.ts', '.tsx', '.js', '.jsx', '.mjs', '.py', '.go', '.cs']);
