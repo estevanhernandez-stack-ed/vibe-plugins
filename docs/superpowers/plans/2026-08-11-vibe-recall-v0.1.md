@@ -174,6 +174,16 @@ export default {
 };
 ```
 
+Write `plugins/vibe-recall/.gitignore` **before** installing:
+
+```gitignore
+node_modules/
+coverage/
+*.log
+```
+
+This ordering is load-bearing, not tidiness. Step 8 commits with `git add -A`; without the ignore file in place first, `npm install` puts the entire dependency tree into the first commit. On the original run that produced a 472,754-line diff that no reviewer could read. `package-lock.json` stays tracked — it pins the tree and later tasks depend on reproducible installs.
+
 Then `cd plugins/vibe-recall && npm install`.
 
 - [ ] **Step 4: Write the failing data-home test**
