@@ -21,6 +21,7 @@
 - **Zero changes to vibe-taker.** The handoff is a printed repo path plus a paste-ready `/vibe-taker:capture <path>` argument. Do not add flags to vibe-taker.
 - **No emoji** in code, commits, SKILL bodies, or command output.
 - **Conventional commits.**
+- **A test that cannot fail is not a test.** This build produced the same defect twice in different costumes: `expect(DEFAULT_WALLS).toContain('Marcus')` proved a constant contained a string while the wall itself did nothing, and a fixture estate committed as gitlinks made the wall assertion pass against an empty enumeration on any fresh clone. Both went green. For every assertion about an absence — nothing leaked, nothing matched, no secret appears — **first assert the thing being searched is non-empty.** An absence proven over no data is not evidence.
 - Engine files use `.mjs`, `"type": "module"`. Tests are `tests/*.test.mjs`.
 - Never name an engine file `index.mjs` — it collides with Node directory resolution and with this project's domain vocabulary. The indexer is `cards.mjs`.
 
@@ -391,33 +392,77 @@ git add -A && git commit -m "feat: config schema, validation, and Marcus-seeded 
 
 **Files:**
 - Create: `engine/corpus.mjs`
-- Create: `tests/fixtures/estate/` (synthetic)
+- Create: `tests/fixture-estate.mjs` (programmatic, temp-dir; NOT committed fixtures)
 - Create: `tests/corpus-walls.test.mjs`
 
 **Interfaces:**
 - Consumes: config shape from Task 3.
 - Produces: `enumerateLocal(config)` returns `Array<{ name, path, origin: 'local', remote: string | null }>`. Applies walls and archive exclusion. Does not dedup (Task 5).
 
-- [ ] **Step 1: Build the fixture estate**
+- [ ] **Step 1: Build the fixture estate programmatically, in a temp directory**
 
-```bash
-cd tests/fixtures && mkdir -p estate/{GoodApp,OtherApp,Marcus/SecretWork,_scratch/Junk}
-for d in estate/GoodApp estate/OtherApp estate/Marcus/SecretWork estate/_scratch/Junk; do
-  (cd "$d" && git init -q && git commit -q --allow-empty -m init)
-done
-echo "walled" > estate/Marcus/SecretWork/README.md
+**Never commit fixture git repos.** The original run committed them and git stored four mode-`160000` gitlinks with no `.gitmodules`. A fresh clone received four empty directories and zero files, at which point `enumerateLocal` returned `[]` and the wall assertion `expect(all).not.toMatch(/Marcus/)` passed against nothing. The most important test in the plugin went green while exercising no data.
+
+Write `tests/fixture-estate.mjs` instead, exporting `makeEstate(spec)` which builds the estate under a fresh `fs.mkdtempSync` root and returns that root, and `cleanEstate(root)`. Tasks 7 and 12 reuse it, so accept per-repo files rather than hard-coding one shape.
+
+```javascript
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { execFileSync } from 'node:child_process';
+
+const DEFAULT_SPEC = {
+  'GoodApp': {},
+  'OtherApp': {},
+  'Marcus/SecretWork': { 'README.md': 'walled\n' },
+  '_scratch/Junk': {}
+};
+
+export function makeEstate(spec = DEFAULT_SPEC) {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'vibe-recall-estate-'));
+  for (const [rel, files] of Object.entries(spec)) {
+    const dir = path.join(root, rel);
+    fs.mkdirSync(dir, { recursive: true });
+    for (const [name, body] of Object.entries(files)) {
+      const p = path.join(dir, name);
+      fs.mkdirSync(path.dirname(p), { recursive: true });
+      fs.writeFileSync(p, body);
+    }
+    const git = (...a) => execFileSync('git', ['-C', dir, ...a],
+      { stdio: ['ignore', 'ignore', 'ignore'] });
+    git('init', '-q');
+    git('config', 'user.email', 'fixture@example.invalid');
+    git('config', 'user.name', 'Fixture Author');
+    git('add', '-A');
+    git('commit', '-q', '--allow-empty', '-m', 'init');
+  }
+  return root;
+}
+
+export function cleanEstate(root) {
+  if (root) fs.rmSync(root, { recursive: true, force: true });
+}
 ```
+
+Note the explicit `user.email` / `user.name`: fixture repos must not depend on the machine's global git identity, and Task 5b classifies provenance by authorship, so the fixtures need a known author.
 
 - [ ] **Step 2: Write the failing wall test**
 
 `tests/corpus-walls.test.mjs`:
 
 ```javascript
-import path from 'node:path';
 import { enumerateLocal } from '../engine/corpus.mjs';
+import { makeEstate, cleanEstate } from './fixture-estate.mjs';
 
-const estateRoot = path.join(process.cwd(), 'tests/fixtures/estate');
-const config = { estateRoot, walls: ['Marcus'], exclude: [] };
+let estateRoot;
+let config;
+
+beforeAll(() => {
+  estateRoot = makeEstate();
+  config = { estateRoot, walls: ['Marcus'], exclude: [] };
+});
+
+afterAll(() => cleanEstate(estateRoot));
 
 test('finds the ordinary repos', () => {
   const names = enumerateLocal(config).map(r => r.name).sort();
@@ -425,13 +470,22 @@ test('finds the ordinary repos', () => {
 });
 
 test('a walled repo never appears, at any depth', () => {
-  const all = JSON.stringify(enumerateLocal(config));
+  const found = enumerateLocal(config);
+  // Guard first. Without this, an empty enumeration satisfies every
+  // assertion below and the wall test passes while testing nothing —
+  // which is exactly how the committed-gitlink fixtures failed silently.
+  expect(found.length).toBeGreaterThan(0);
+  expect(found.map(r => r.name)).toContain('GoodApp');
+
+  const all = JSON.stringify(found);
   expect(all).not.toMatch(/Marcus/);
   expect(all).not.toMatch(/SecretWork/);
 });
 
 test('underscore-prefixed directories are excluded', () => {
-  expect(enumerateLocal(config).some(r => r.name === 'Junk')).toBe(false);
+  const found = enumerateLocal(config);
+  expect(found.length).toBeGreaterThan(0);
+  expect(found.some(r => r.name === 'Junk')).toBe(false);
 });
 ```
 
@@ -855,32 +909,48 @@ git add -A && git commit -m "feat: enumerate remote-only GitHub repos, degrade t
 - Create: `schemas/card.schema.json`
 - Create: `engine/cards.mjs`
 - Create: `tests/cards.test.mjs`
-- Create: `tests/fixtures/estate/GoodApp/` contents
+- Reuse: `tests/fixture-estate.mjs` from Task 4, with a richer per-repo spec
 
 **Interfaces:**
 - Consumes: repo records from Tasks 4 to 6.
 - Produces: `buildShallowCard(repo)` returns a card object matching `card.schema.json`. `SECRET_PATTERNS` is exported for reuse. `looksSecret(line)` returns boolean.
 
-- [ ] **Step 1: Enrich the fixture repo**
+- [ ] **Step 1: Enrich the fixture repo through the Task 4 helper**
 
-```bash
-cd tests/fixtures/estate/GoodApp
-cat > package.json <<'JSON'
-{ "name": "goodapp", "dependencies": { "next": "^15.0.0", "stripe": "^14.0.0" } }
-JSON
-cat > README.md <<'MD'
-# GoodApp
-Stripe checkout and magic-link auth for the storefront.
-MD
-mkdir -p src/lib
-cat > src/lib/checkout.ts <<'TS'
-export function createCheckoutSession(items, uid) { return { url: '', id: '' }; }
-TS
-printf 'STRIPE_SECRET_KEY=%s_%s_%s\n' 'sk' 'live' "$(printf 'a%.0s' {1..26})" > .env
-git add -A && git commit -q -m fixture
+`makeEstate(spec)` from `tests/fixture-estate.mjs` accepts per-repo files, so this task passes a richer spec rather than mutating anything on disk. **Nothing here is committed** — see Task 4 Step 1 for why committed fixture repos silently disabled the wall test.
+
+```javascript
+import { makeEstate, cleanEstate, RICH_SPEC } from './fixture-estate.mjs';
+
+// RICH_SPEC lives in the helper; reproduced here so this task is readable
+// standalone. Assembled, never literal. A literal sk_live_<26 chars> in a tracked file
+// trips GitHub push protection and every other scanner, because a scanner
+// cannot distinguish a plausible fake from a live key, and should not try.
+// This plan was itself blocked on first push for exactly this.
+const FAKE_STRIPE = ['sk', 'live', 'a'.repeat(26)].join('_');
+
+// Exported from tests/fixture-estate.mjs so Task 12's acceptance test uses the
+// same estate rather than a second, drifting copy of it.
+export const RICH_SPEC = {
+  'GoodApp': {
+    'package.json': JSON.stringify(
+      { name: 'goodapp', dependencies: { next: '^15.0.0', stripe: '^14.0.0' } }),
+    'README.md': '# GoodApp\nStripe checkout and magic-link auth for the storefront.\n',
+    'src/lib/checkout.ts':
+      'export function createCheckoutSession(items, uid) { return { url: "", id: "" }; }\n',
+    '.env': `STRIPE_SECRET_KEY=${FAKE_STRIPE}\n`
+  },
+  'OtherApp': {},
+  'Marcus/SecretWork': { 'README.md': 'walled\n' },
+  '_scratch/Junk': {}
+};
+
+let estateRoot;
+beforeAll(() => { estateRoot = makeEstate(RICH_SPEC); });
+afterAll(() => cleanEstate(estateRoot));
 ```
 
-**Assemble the fake credential, never write it literally.** A literal `sk_live_<26 chars>` in a tracked file trips GitHub push protection and every other secret scanner, because a scanner cannot distinguish a plausible fake from a live key. It should not try to. This plan was itself blocked on first push for exactly this, which is a fair test of the rule it is asking the plugin to enforce. Build secret-shaped test data at setup time; keep the shape out of version control.
+Build the repo record passed to `buildShallowCard` from `estateRoot`, not from `process.cwd()`.
 
 - [ ] **Step 2: Write the failing test**
 
@@ -890,15 +960,15 @@ git add -A && git commit -q -m fixture
 import path from 'node:path';
 import { buildShallowCard, looksSecret } from '../engine/cards.mjs';
 
-const repo = {
+const repo = () => ({
   name: 'GoodApp',
-  path: path.join(process.cwd(), 'tests/fixtures/estate/GoodApp'),
+  path: path.join(estateRoot, 'GoodApp'),
   origin: 'local',
   remote: null, canonical: true, siblings: [], diverged: false
-};
+});
 
 test('card carries stack, deps, symbols and claims', () => {
-  const c = buildShallowCard(repo);
+  const c = buildShallowCard(repo());
   expect(c.depth).toBe('shallow');
   expect(c.deps).toEqual(expect.arrayContaining(['next', 'stripe']));
   expect(c.symbols).toEqual(expect.arrayContaining(['createCheckoutSession']));
@@ -907,7 +977,7 @@ test('card carries stack, deps, symbols and claims', () => {
 });
 
 test('no secret value ever reaches the card', () => {
-  const serialized = JSON.stringify(buildShallowCard(repo));
+  const serialized = JSON.stringify(buildShallowCard(repo()));
   // matches the assembled fixture credential from Step 1, never written literally
   expect(serialized).not.toMatch(new RegExp(['sk', 'live'].join('_')));
   expect(serialized).not.toMatch(/STRIPE_SECRET_KEY/);
@@ -915,7 +985,7 @@ test('no secret value ever reaches the card', () => {
 });
 
 test('no file bodies reach the card', () => {
-  const c = buildShallowCard(repo);
+  const c = buildShallowCard(repo());
   expect(JSON.stringify(c)).not.toMatch(/export function/);
 });
 
@@ -1815,20 +1885,34 @@ git add -A && git commit -m "feat: skills and commands layer with contract tests
 `tests/acceptance.test.mjs`:
 
 ```javascript
-import path from 'node:path';
 import { enumerateLocal, collapseDuplicates } from '../engine/corpus.mjs';
+import { makeEstate, cleanEstate, RICH_SPEC } from './fixture-estate.mjs';
 import { buildShallowCard } from '../engine/cards.mjs';
 import { rank } from '../engine/match.mjs';
 
+// RICH_SPEC is the Task 7 spec, exported from the helper so the acceptance
+// test and the card tests describe the same estate instead of drifting apart.
+let estateRoot;
+beforeAll(() => { estateRoot = makeEstate(RICH_SPEC); });
+afterAll(() => cleanEstate(estateRoot));
+
 test('end to end on the fixture estate: index then recall finds the right repo', () => {
-  const cfg = {
-    estateRoot: path.join(process.cwd(), 'tests/fixtures/estate'),
-    walls: ['Marcus'], exclude: []
-  };
+  const cfg = { estateRoot, walls: ['Marcus'], exclude: [] };
   const cards = collapseDuplicates(enumerateLocal(cfg)).map(r => buildShallowCard(r));
+
+  // Guard before every absence assertion below. An empty card set satisfies
+  // "does not match Marcus" trivially, which is how the committed-gitlink
+  // fixtures made the wall test pass while exercising nothing.
+  expect(cards.length).toBeGreaterThan(0);
+  expect(cards.map(c => c.repo)).toContain('GoodApp');
+
   const hits = rank(cards, 'stripe checkout', {});
+  expect(hits.length).toBeGreaterThan(0);
   expect(hits[0].card.repo).toBe('GoodApp');
-  expect(JSON.stringify(cards)).not.toMatch(/Marcus|sk_live_/);
+
+  const serialized = JSON.stringify(cards);
+  expect(serialized).not.toMatch(/Marcus/);
+  expect(serialized).not.toMatch(new RegExp(['sk', 'live'].join('_')));
 });
 ```
 
