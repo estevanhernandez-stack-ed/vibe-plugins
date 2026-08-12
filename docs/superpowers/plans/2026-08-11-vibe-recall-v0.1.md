@@ -1355,9 +1355,17 @@ export function terms(query) {
   return String(query).toLowerCase().split(/[^a-z0-9]+/).filter(t => t.length > 2);
 }
 
-// inverse document frequency across the card set: a term in every card
-// carries no information, a term in two carries a lot
-export function idf(cards) {
+// Inverse document frequency: a term in every card carries no information, a
+// term in two carries a lot.
+//
+// Count df the SAME WAY scoreCard matches — by substring containment over the
+// same fields — and only for the query's terms. Tokenizing the corpus while
+// matching by substring runs the two over different populations: measured on
+// ten real cards, `auth` matched 5 of 10 by substring yet scored 2.30 (near
+// maximum rarity) because no card contains the standalone token `auth`, only
+// `authenticate` and `getAuthToken`. Restricting to query terms is also far
+// cheaper than building a frequency map over every token in 86 repos.
+export function idf(cards, queryTerms) {
   const df = new Map();
   for (const card of cards) {
     const hay = [...Object.keys(WEIGHTS)]
