@@ -397,7 +397,9 @@ git add -A && git commit -m "feat: config schema, validation, and Marcus-seeded 
 
 **Interfaces:**
 - Consumes: config shape from Task 3.
-- Produces: `enumerateLocal(config)` returns `Array<{ name, path, origin: 'local', remote: string | null }>`. Applies walls and archive exclusion. Does not dedup (Task 5).
+- Produces: `enumerateLocal(config)` returns `Array<{ name, path, origin: 'local', remote: string | null, remoteReadFailed, provenance, provenanceKnown, head, lastCommit }>`. Applies walls and archive exclusion. Does not dedup (Task 5).
+
+  **`head` and `lastCommit` are not optional.** `collapseDuplicates` computes divergence as `rest.some(r => r.head !== winner.head)`, so a producer that omits `head` makes that comparison `undefined !== undefined` — always false — and the "diverged pairs flag rather than silently pick" invariant dies quietly. It shipped that way on the first run and passed every unit test, because those hand-construct records that already carry `head`; only a composition test over two genuinely diverged clones caught it. Fold the head and last-commit reads into the same per-repo pass that already fetches the remote and the provenance stats rather than adding a fourth round trip. A repo with no commits yields `head: null`, and two such repos must not read as diverged merely for both being null.
 
 - [ ] **Step 1: Build the fixture estate programmatically, in a temp directory**
 
