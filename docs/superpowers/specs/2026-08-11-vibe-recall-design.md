@@ -1,7 +1,8 @@
 # vibe-recall (codename BT4) — design
 
 **Date:** 2026-08-11
-**Status:** design approved, plan pending
+**Status:** design approved; amended 2026-08-11 by the cowpath run
+**Cowpath evidence:** [`../cowpath-vibe-recall-2026-08-11.md`](../cowpath-vibe-recall-2026-08-11.md) — seven findings from hand-walking two real specs across the estate. Findings 1 (forks) and 2 (term rarity) each would have shipped a wrong product; neither was visible from the design alone. Sections below carry the amendments inline.
 **Tagline:** You already built this.
 **Codename origin:** BT4, "the hook brings you back." Internal only; the shipped name is `vibe-recall`.
 
@@ -32,11 +33,18 @@ Decides what is in scope. Two sources:
 - **Local**: git repos under the configured estate root.
 - **Remote-only**: repos under the configured GitHub account(s) whose remote matches no local clone, enumerated via `gh repo list`.
 
-Three filters, applied in order:
+Four filters, applied in order:
 
 1. **Tenant walls (hard).** A configurable list of path prefixes that are never indexed and never surfaced. `Marcus\` is seeded from the estate keystone and is not a preference: a walled path is a refusal, not a warning. Asserted by test.
 2. **Archive exclusion.** Underscore-prefixed directories (`_old-*`, `_scratch`, `_gitnexus-runner`) plus a configurable `exclude[]`.
-3. **Duplicate-clone collapse.** Group by normalized remote URL. Where two local directories share a remote, pick the canonical by most recent commit date and record the sibling on the card. **Where the pair has diverged, flag it rather than silently picking** — the estate documents at least one diverged pair (`Sanduhr` / `Sanduhr_f-r_Claude`) and a silent pick would launder that ambiguity into a recommendation.
+3. **Fork and vendored-checkout filter.** *Added after the 2026-08-11 cowpath run, which this filter's absence would have sunk.* A repo whose history the user barely authored is somebody else's code sitting inside the estate boundary, and surfacing it as "you already built this" is the product being wrong about its one claim. Two cheap signals from `git shortlog -sn` and `git rev-list --count`:
+   - **Authorship ratio.** Commits by the configured author identities over total commits. Below a threshold (default 0.5), classify as `foreign`.
+   - **Commit density.** Total commits against tracked file count. A checkout with thousands of files and a handful of commits was cloned, not written.
+
+   A `foreign` repo is excluded from ranking by default rather than deleted from the index, and `--include-foreign` surfaces it clearly labeled. Excluding beats deleting: a fork you have genuinely modified still holds your work, and the label keeps the distinction visible instead of guessing on your behalf.
+
+   The cowpath case: `PowerToys-snipsnap` is a fork of Microsoft's PowerToys, 2 commits over roughly 5,000 files, top author a Microsoft engineer, and it ranked first on six of seven hand-run probes by an order of magnitude. Note also that its name defeats name-based heuristics: the estate's genuine `SnipSnap` (57 commits, entirely the user's) differs only by a prefix.
+4. **Duplicate-clone collapse.** Group by normalized remote URL. Where two local directories share a remote, pick the canonical by most recent commit date and record the sibling on the card. **Where the pair has diverged, flag it rather than silently picking** — the estate documents at least one diverged pair (`Sanduhr` / `Sanduhr_f-r_Claude`) and a silent pick would launder that ambiguity into a recommendation. Confirmed load-bearing by the cowpath: `Project-626Labs-1` and `Project-626Labs-gnx` scored within 8% of each other on every probe that touched them, so without collapse two of three banner slots go to the same content.
 
 Output: a repo list carrying `origin: local | remote`, `canonical: bool`, `siblings[]`.
 
@@ -80,19 +88,25 @@ Remote-only repos index from `gh api`: README, language breakdown, top-level tre
 
 Query (a phrase, or a whole spec file) to ranked hits. Reads cards only. Never touches source, never hits the network.
 
-Deterministic, documented score:
+Deterministic, documented score. **The first two rules below were inverted or missing in the pre-cowpath design and are the difference between a working tool and a plausible one.**
 
-- Term hits, field-weighted: `claims` > `symbols` > `deps` > tree.
+- **Term rarity (IDF) multiplies every field weight.** A term appearing in forty cards carries far less information than one appearing in two, and weighting only by field ignored that entirely. The cowpath's cleanest signal was the rare phrase `theme-feed`, which hit exactly the two repos that mattered and zero others, while every generic technical term drowned in a vendored monorepo. IDF also dampens the fork problem independently: a checkout that matches everything discriminates nothing.
+- **Code-derived fields outrank prose-derived fields:** `symbols` and `entrypoints` above `claims` and `gotchas`. The original ordering put README `claims` highest, which meant a README describing an unbuilt feature beat a repo with the function actually in source. For a tool that exists to find reusable code, that was backwards. Prose still earns its place for discovery; it stops beating implementation.
 - Stack affinity to the current repo (a Next+Firebase hit ranks above a WPF hit when you are in a Next app).
 - Card depth: deep outranks shallow at equal term score.
 - Recency of last commit.
-- Canonical bonus; non-canonical sibling penalty.
+- Canonical bonus; non-canonical sibling penalty; `foreign` excluded unless opted in.
+- **The current repo is excluded by default.** Working inside RTClickPng, RTClickPng ranked in its own results on three separate probes. `--include-self` opts back in for the case where you are looking for your own earlier attempt at the same thing.
+
+Every hit carries an **evidence split**: how many matches came from code versus prose. A hit backed only by documentation is a lead, not prior art, and the brief must say which it found.
 
 **Zero hits is a first-class output.** "No prior art in your estate" is a real answer and gets said plainly, following vibe-walk's don't-build precedent. A recall tool that always finds something is a recall tool that is lying.
 
 ### Verifier and briefer
 
 The rule that makes the whole thing trustworthy: **the index can suggest, only a live read can claim.**
+
+**The sweep's own input can be stale too, so check home before pointing away.** RTClickPng's spec reads as pre-build, with open issues that "block `/build` start"; its `src/` holds 2,156 files including every decoder, every encoder, and the `ClipboardWriter.cpp` the spec describes as upcoming. A sweep run inside a repo therefore checks that repo's own code for the capability first and says "you have already built this here" before naming anywhere else. Recall that sends you across the estate for something sitting in the working directory is worse than no recall.
 
 On a confirmed hit, re-read that repo at current HEAD and produce the brief:
 
@@ -201,6 +215,11 @@ Fixture-based, hermetic, following the family's validate-real-artifacts rule.
 5. **Secret hygiene**: fixture with a `.env` and a hardcoded key; assert neither value appears anywhere in the card.
 6. **Hook budget**: assert the hook path performs zero file reads, zero network calls, zero git invocations.
 7. **Zero-hit**: a query with no prior art returns the honest empty answer, not a stretched match.
+8. **Fork filter**: a fixture with many files and few commits, authored mostly by someone else, is classified `foreign` and never ranks by default. The regression this prevents is the whole reason the filter exists.
+9. **IDF**: a term present in every card scores below a term present in two, holding field weights equal.
+10. **Code beats prose**: a card whose match is a symbol outranks a card whose match is a README claim, all else equal.
+11. **Path separators**: repo aggregation is correct given Windows-style paths. The cowpath's first pass silently returned the wrong shape and errored nowhere.
+12. **Self-exclusion**: a sweep run inside a repo does not return that repo unless `--include-self` is passed.
 
 ## Not in v0.1
 

@@ -62,12 +62,16 @@ Vibe-Recall/                                  <- new solo repo
 
 ---
 
-### Task 1: Cowpath run and process notes
+### Task 1: Cowpath run and process notes — DONE 2026-08-11
+
+**Completed before the rest of the plan was executed. Notes:** [`../cowpath-vibe-recall-2026-08-11.md`](../cowpath-vibe-recall-2026-08-11.md), committed in the vibe-plugins repo alongside this plan. Task 2 copies it to `docs/cowpath-notes.md` in the new solo repo.
+
+Two specs were hand-walked, RTClickPng (cross-family) and ROROROblox (sibling-cluster). Seven findings against a gate of three. **Findings 1 and 2 each would have shipped a wrong product**, and both are now folded into the design and into Tasks 5b, 7 and 8 below. The steps are retained for the record and for anyone re-running this on a different estate.
 
 The repo's ship bar is real-app validation, and the family's best plugins (Vibe-Walk, vibe-lingual) were born by doing one real job by hand first. **Do not scaffold anything before this task's gate passes.** The notes are the spec's ground truth; every later task may be revised by what this finds.
 
 **Files:**
-- Create: `docs/cowpath-notes.md` (write to a scratch path now, committed in Task 2)
+- Create: `docs/cowpath-notes.md` (copied from the vibe-plugins notes in Task 2)
 
 - [ ] **Step 1: Pick one real, in-flight spec**
 
@@ -583,6 +587,120 @@ git add -A && git commit -m "feat: collapse duplicate clones, flag diverged pair
 
 ---
 
+### Task 5b: Fork and vendored-checkout filter
+
+**Added by the 2026-08-11 cowpath run.** Without this, a fork of Microsoft's PowerToys ranks first on six of seven real queries and the product confidently returns someone else's code as the user's own prior art. This is the single highest-value task in the plan.
+
+**Files:**
+- Modify: `engine/corpus.mjs`
+- Create: `tests/corpus-provenance.test.mjs`
+
+**Interfaces:**
+- Produces: `classifyProvenance(stats, thresholds)` returns `'own' | 'foreign'`. `repoStats(dir, authors, runner)` returns `{ totalCommits, ownCommits, fileCount }`. Cards gain a `provenance` field, consumed by `scoreCard` in Task 8.
+
+- [ ] **Step 1: Write the failing test**
+
+`tests/corpus-provenance.test.mjs`:
+
+```javascript
+import { classifyProvenance } from '../engine/corpus.mjs';
+
+const T = { minAuthorshipRatio: 0.5, minCommitsPerFile: 0.01 };
+
+test('a real repo the user wrote is their own', () => {
+  // SnipSnap: 57 commits, all the user's, ~400 files
+  expect(classifyProvenance(
+    { totalCommits: 57, ownCommits: 57, fileCount: 400 }, T)).toBe('own');
+});
+
+test('a fork with thousands of files and two commits is foreign', () => {
+  // PowerToys-snipsnap: 2 commits, 1 the user's, ~5000 files
+  expect(classifyProvenance(
+    { totalCommits: 2, ownCommits: 1, fileCount: 5000 }, T)).toBe('foreign');
+});
+
+test('low authorship alone is enough to mark foreign', () => {
+  expect(classifyProvenance(
+    { totalCommits: 900, ownCommits: 40, fileCount: 300 }, T)).toBe('foreign');
+});
+
+test('a large repo the user genuinely wrote stays their own', () => {
+  // 626-mod-launcher: 1052 commits, all under the user's two identities
+  expect(classifyProvenance(
+    { totalCommits: 1052, ownCommits: 1052, fileCount: 900 }, T)).toBe('own');
+});
+
+test('an empty repo does not divide by zero', () => {
+  expect(classifyProvenance(
+    { totalCommits: 0, ownCommits: 0, fileCount: 0 }, T)).toBe('own');
+});
+```
+
+- [ ] **Step 2: Run it and watch it fail**
+
+Run: `npm test -- corpus-provenance`
+Expected: FAIL, `classifyProvenance is not a function`.
+
+- [ ] **Step 3: Implement**
+
+Append to `engine/corpus.mjs`:
+
+```javascript
+export const DEFAULT_PROVENANCE = { minAuthorshipRatio: 0.5, minCommitsPerFile: 0.01 };
+
+export function classifyProvenance(stats, t = DEFAULT_PROVENANCE) {
+  const { totalCommits = 0, ownCommits = 0, fileCount = 0 } = stats;
+  if (totalCommits === 0) return 'own';
+  if (ownCommits / totalCommits < t.minAuthorshipRatio) return 'foreign';
+  if (fileCount > 0 && totalCommits / fileCount < t.minCommitsPerFile) return 'foreign';
+  return 'own';
+}
+
+export function repoStats(dir, authors = [], run = null) {
+  const exec = run || ((args) =>
+    execFileSync('git', ['-C', dir, ...args],
+      { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }));
+  let totalCommits = 0, ownCommits = 0, fileCount = 0;
+  try { totalCommits = Number(exec(['rev-list', '--count', 'HEAD']).trim()) || 0; } catch {}
+  try {
+    for (const line of exec(['shortlog', '-sn', '--all']).split('\n')) {
+      const m = line.match(/^\s*(\d+)\s+(.*)$/);
+      if (!m) continue;
+      const [, n, who] = m;
+      if (authors.some(a => who.toLowerCase().includes(a.toLowerCase()))) {
+        ownCommits += Number(n);
+      }
+    }
+  } catch {}
+  try { fileCount = exec(['ls-files']).split('\n').filter(Boolean).length; } catch {}
+  return { totalCommits, ownCommits, fileCount };
+}
+```
+
+Add `authors` and `provenance` (threshold overrides) to `config.schema.json` as optional properties, defaulting `authors` to the git `user.name` and `user.email` of the estate root. Wire `provenance: classifyProvenance(repoStats(...))` into the record `enumerateLocal` returns, and carry it onto the card in Task 7.
+
+- [ ] **Step 4: Run it and watch it pass**
+
+Run: `npm test -- corpus-provenance`
+Expected: PASS, 5 tests.
+
+- [ ] **Step 5: Verify against the real offender**
+
+```bash
+node -e "import('./engine/corpus.mjs').then(m=>console.log(
+  m.classifyProvenance(m.repoStats('C:/Users/estev/Projects/PowerToys-snipsnap',['Estevan','estevanhernandez']))))"
+```
+
+Expected output: `foreign`. Run the same against `SnipSnap` and expect `own`. If the fork does not classify `foreign`, tune the thresholds and record the new values in the commit body. **This check is the task's gate.**
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add -A && git commit -m "feat: classify forks and vendored checkouts as foreign provenance"
+```
+
+---
+
 ### Task 6: Remote-only repos via gh, degrading cleanly when absent
 
 **Files:**
@@ -785,6 +903,7 @@ Expected: FAIL, cannot find module.
     "canonical": { "type": "boolean" },
     "siblings": { "type": "array", "items": { "type": "string" } },
     "diverged": { "type": "boolean" },
+    "provenance": { "enum": ["own", "foreign"] },
     "head": { "type": ["string", "null"] },
     "lastCommit": { "type": ["integer", "null"] },
     "indexedAt": { "type": "string" },
@@ -905,11 +1024,14 @@ export function buildShallowCard(repo, now = new Date()) {
     schemaVersion: 1,
     repo: repo.name,
     origin: repo.origin,
-    path: repo.path,
+    // forward slashes everywhere: the cowpath's first pass silently returned the
+    // wrong shape because Windows separators broke path splitting, and nothing errored
+    path: repo.path ? repo.path.split(path.sep).join('/') : null,
     remote: repo.remote ?? null,
     canonical: repo.canonical ?? true,
     siblings: repo.siblings ?? [],
     diverged: repo.diverged ?? false,
+    provenance: repo.provenance ?? 'own',
     head: git(repo.path, ['rev-parse', '--short', 'HEAD']),
     lastCommit: lastCommit ? Number(lastCommit) : null,
     indexedAt: now.toISOString(),
@@ -961,7 +1083,8 @@ import { rank, scoreCard } from '../engine/match.mjs';
 
 const card = (over = {}) => ({
   repo: 'A', depth: 'shallow', canonical: true, lastCommit: 1000,
-  claims: [], symbols: [], deps: [], entrypoints: [], stack: { services: [] }, ...over
+  provenance: 'own', claims: [], gotchas: [], symbols: [], deps: [],
+  entrypoints: [], stack: { services: [] }, ...over
 });
 
 test('a claim hit outranks a dependency hit', () => {
@@ -998,6 +1121,46 @@ test('every returned hit explains itself', () => {
   const out = rank([card({ claims: ['stripe checkout'] })], 'stripe', {});
   expect(out[0].why.length).toBeGreaterThan(0);
 });
+
+// --- the four rules the cowpath run added ---
+
+test('code evidence outranks prose evidence', () => {
+  const inCode = card({ repo: 'Built', symbols: ['createCheckoutSession'] });
+  const inProse = card({ repo: 'Planned', claims: ['createCheckoutSession someday'] });
+  const out = rank([inProse, inCode], 'createCheckoutSession', {});
+  expect(out[0].card.repo).toBe('Built');
+  expect(out[0].codeHits).toBeGreaterThan(0);
+  expect(out[0].docHits).toBe(0);
+});
+
+test('a documentation-only hit says so', () => {
+  const out = rank([card({ claims: ['stripe checkout'] })], 'stripe', {});
+  expect(out[0].why.join(' ')).toMatch(/documentation only/);
+});
+
+test('a rare term beats a term present in every card', () => {
+  const cards = [
+    card({ repo: 'Rare', symbols: ['themefeed', 'common'] }),
+    ...Array.from({ length: 9 }, (_, i) => card({ repo: `C${i}`, symbols: ['common'] }))
+  ];
+  const rare = rank(cards, 'themefeed', {})[0];
+  const commonTop = rank(cards, 'common', {})[0];
+  expect(rare.card.repo).toBe('Rare');
+  expect(rare.score).toBeGreaterThan(commonTop.score);
+});
+
+test('a foreign repo never ranks unless opted in', () => {
+  const fork = card({ repo: 'PowerToys-fork', provenance: 'foreign', symbols: ['WinUI'] });
+  expect(rank([fork], 'WinUI', {})).toEqual([]);
+  expect(rank([fork], 'WinUI', { includeForeign: true })).toHaveLength(1);
+});
+
+test('the current repo is excluded from its own recall', () => {
+  const self = card({ repo: 'RTClickPng', symbols: ['ClipboardWriter'] });
+  expect(rank([self], 'ClipboardWriter', { selfRepo: 'RTClickPng' })).toEqual([]);
+  expect(rank([self], 'ClipboardWriter',
+    { selfRepo: 'RTClickPng', includeSelf: true })).toHaveLength(1);
+});
 ```
 
 - [ ] **Step 2: Run it and watch it fail**
@@ -1009,28 +1172,59 @@ Expected: FAIL, cannot find module.
 
 `engine/match.mjs`:
 
+**Weights corrected by the 2026-08-11 cowpath run.** The pre-cowpath ordering put README `claims` highest at 10, above `symbols` at 6, so a README describing an unbuilt feature outranked a repo with the function actually in source. Code-derived fields now lead. And every field weight is multiplied by term rarity: the run's cleanest signal was a rare phrase that hit exactly two repos, while every common technical term drowned in a vendored monorepo.
+
 ```javascript
-const WEIGHTS = { claims: 10, gotchas: 8, symbols: 6, entrypoints: 3, deps: 2 };
+// code-derived fields lead; prose is for discovery, not proof
+const WEIGHTS = { symbols: 10, entrypoints: 8, gotchas: 5, claims: 4, deps: 3 };
+const CODE_FIELDS = new Set(['symbols', 'entrypoints']);
 const DEPTH_BONUS = { deep: 5, shallow: 0, 'shallow-remote': -2 };
 
 export function terms(query) {
   return String(query).toLowerCase().split(/[^a-z0-9]+/).filter(t => t.length > 2);
 }
 
-export function scoreCard(card, ts, ctx = {}) {
+// inverse document frequency across the card set: a term in every card
+// carries no information, a term in two carries a lot
+export function idf(cards) {
+  const df = new Map();
+  for (const card of cards) {
+    const hay = [...Object.keys(WEIGHTS)]
+      .flatMap(f => card[f] || []).join(' ').toLowerCase();
+    for (const t of new Set(hay.split(/[^a-z0-9]+/).filter(x => x.length > 2))) {
+      df.set(t, (df.get(t) || 0) + 1);
+    }
+  }
+  const n = Math.max(1, cards.length);
+  return (term) => Math.log((n + 1) / ((df.get(term) || 0) + 1)) + 1;
+}
+
+export function scoreCard(card, ts, ctx = {}, weightOf = () => 1) {
   let score = 0;
+  let codeHits = 0;
+  let docHits = 0;
   const why = [];
 
   for (const [field, weight] of Object.entries(WEIGHTS)) {
     const hay = (card[field] || []).join(' ').toLowerCase();
     const hits = ts.filter(t => hay.includes(t));
     if (hits.length) {
-      score += weight * hits.length;
+      for (const t of hits) score += weight * weightOf(t);
+      if (CODE_FIELDS.has(field)) codeHits += hits.length; else docHits += hits.length;
       why.push(`${field}: ${hits.join(', ')}`);
     }
   }
 
-  if (score === 0) return { score: 0, why };
+  if (score === 0) return { score: 0, why, codeHits, docHits };
+
+  // somebody else's code is not your prior art
+  if (card.provenance === 'foreign' && !ctx.includeForeign) {
+    return { score: 0, why: ['excluded: foreign provenance'], codeHits, docHits };
+  }
+  if (ctx.selfRepo && card.repo === ctx.selfRepo && !ctx.includeSelf) {
+    return { score: 0, why: ['excluded: current repo'], codeHits, docHits };
+  }
+  if (docHits > 0 && codeHits === 0) why.push('documentation only, no code evidence');
 
   score += DEPTH_BONUS[card.depth] ?? 0;
   if (card.depth === 'deep') why.push('deep card');
@@ -1047,13 +1241,14 @@ export function scoreCard(card, ts, ctx = {}) {
     : 3650;
   score += Math.max(0, 3 - ageDays / 365);
 
-  return { score, why };
+  return { score, why, codeHits, docHits };
 }
 
 export function rank(cards, query, ctx = {}) {
   const ts = terms(query);
+  const weightOf = idf(cards);
   return cards
-    .map(card => ({ card, ...scoreCard(card, ts, ctx) }))
+    .map(card => ({ card, ...scoreCard(card, ts, ctx, weightOf) }))
     .filter(r => r.score > 0)
     .sort((a, b) => b.score - a.score);
 }
