@@ -332,11 +332,21 @@ const schema = JSON.parse(
 );
 const validate = new Ajv({ allErrors: true, useDefaults: true }).compile(schema);
 
+// Validates a CLONE and returns the defaults-filled result as `value`.
+// ajv runs with useDefaults, which writes into the object it validates; doing
+// that to the caller's object makes a function that reads as a pure check
+// silently rewrite its argument. Callers wanting the filled config read `value`.
 export function validateConfig(obj) {
-  const valid = validate(obj);
+  const value = structuredClone(obj);
+  const valid = validate(value);
   return {
     valid,
-    errors: (validate.errors || []).map(e => `${e.instancePath || '/'} ${e.message}`)
+    value,
+    errors: (validate.errors || []).map(e => {
+      const extra = e.params?.additionalProperty
+        ? ` (${e.params.additionalProperty})` : '';
+      return `${e.instancePath || '/'} ${e.message}${extra}`;
+    })
   };
 }
 
@@ -347,12 +357,22 @@ export function configPath(env = process.env) {
 export function loadConfig(env = process.env) {
   const p = configPath(env);
   if (!fs.existsSync(p)) return null;
-  const obj = JSON.parse(fs.readFileSync(p, 'utf8'));
-  const { valid, errors } = validateConfig(obj);
+  let obj;
+  try {
+    obj = JSON.parse(fs.readFileSync(p, 'utf8'));
+  } catch (e) {
+    throw new Error(`vibe-recall: unreadable config at ${p}: ${e.message}`);
+  }
+  const { valid, errors, value } = validateConfig(obj);
   if (!valid) throw new Error(`vibe-recall: invalid config at ${p}: ${errors.join('; ')}`);
-  return obj;
+  // DEFAULT_WALLS is a floor, not a suggestion. A user may ADD walls; they may
+  // never subtract a default one. Applying the union at this single choke point
+  // means no downstream consumer has to remember to re-apply it.
+  return { ...value, walls: [...new Set([...DEFAULT_WALLS, ...(value.walls || [])])] };
 }
 ```
+
+**The wall floor is the load-bearing line in this file.** On the original run, `DEFAULT_WALLS` was exported, asserted by a test, and enforced by nothing: `loadConfig` returned user config verbatim, the schema permitted `walls: []`, and Task 4 read `config.walls` directly. A config that simply omitted `Marcus` would have indexed the walled employer tenant. Note what the original test did — `expect(DEFAULT_WALLS).toContain('Marcus')` — it passes forever while the wall does nothing, because it only proves a constant contains a string. Test the guarantee, never the constant.
 
 - [ ] **Step 5: Run it and watch it pass**
 

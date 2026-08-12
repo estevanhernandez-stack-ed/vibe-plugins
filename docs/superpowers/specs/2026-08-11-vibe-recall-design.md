@@ -36,6 +36,8 @@ Decides what is in scope. Two sources:
 Four filters, applied in order:
 
 1. **Tenant walls (hard).** A configurable list of path prefixes that are never indexed and never surfaced. `Marcus\` is seeded from the estate keystone and is not a preference: a walled path is a refusal, not a warning. Asserted by test.
+
+   **The default walls are a floor, not a starting value.** A user may add walls; they may never subtract a default one. The union is applied once at config load, so no downstream consumer has to remember to re-apply it. This is stated because the first implementation got it wrong in the most instructive way: `DEFAULT_WALLS` was exported, covered by a passing test, and enforced by nothing, because the loader returned user config verbatim and the schema permitted `walls: []`. The test read `expect(DEFAULT_WALLS).toContain('Marcus')`, which proves a constant contains a string and would have passed forever while the employer tenant was indexed. **Test the guarantee, never the constant.**
 2. **Archive exclusion.** Underscore-prefixed directories (`_old-*`, `_scratch`, `_gitnexus-runner`) plus a configurable `exclude[]`.
 3. **Fork and vendored-checkout filter.** *Added after the 2026-08-11 cowpath run, which this filter's absence would have sunk.* A repo whose history the user barely authored is somebody else's code sitting inside the estate boundary, and surfacing it as "you already built this" is the product being wrong about its one claim. Two cheap signals from `git shortlog -sn` and `git rev-list --count`:
    - **Authorship ratio.** Commits by the configured author identities over total commits. Below a threshold (default 0.5), classify as `foreign`.
