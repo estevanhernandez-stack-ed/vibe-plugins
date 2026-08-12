@@ -650,8 +650,16 @@ export function normalizeRemote(url) {
     .replace(/\.git$/, '')
     .replace(/\/+$/, '');
   const parts = s.split('/').filter(Boolean);
-  if (parts.length < 3) return null;
-  return [parts[0].toLowerCase(), parts[1], parts[2]].join('/');
+  // Host plus the FULL remaining path. Keying on the first three segments
+  // only works for host/owner/repo and silently merges anything deeper:
+  // gitlab.company.com/team-a/subteam/project-one and .../project-two would
+  // collapse into one record, and collapseDuplicates keeps only the loser's
+  // NAME in siblings, discarding its path — so an unrelated repo's location
+  // becomes unrecoverable in a tool whose whole job is finding where you
+  // built something. Returning null for unparseable input is safe (it stays
+  // ungroupable); a garbage key that collides with another garbage key is not.
+  if (parts.length < 2) return null;
+  return [parts[0].toLowerCase(), ...parts.slice(1)].join('/');
 }
 
 export function collapseDuplicates(repos) {
@@ -659,7 +667,14 @@ export function collapseDuplicates(repos) {
   const loners = [];
   for (const r of repos) {
     const key = normalizeRemote(r.remote);
-    if (!key) { loners.push({ ...r, canonical: true, siblings: [], diverged: false }); continue; }
+    // No usable remote key means dedup status is UNKNOWN, not "verified unique".
+    // Stamping a confident canonical here converts unknown into confidently
+    // correct, which is the same error the diverged flag exists to prevent.
+    // remoteReadFailed rides along so a consumer can say WHY it is unknown.
+    if (!key) {
+      loners.push({ ...r, canonical: true, dedupVerified: false, siblings: [], diverged: false });
+      continue;
+    }
     if (!groups.has(key)) groups.set(key, []);
     groups.get(key).push(r);
   }
@@ -670,6 +685,7 @@ export function collapseDuplicates(repos) {
     collapsed.push({
       ...winner,
       canonical: true,
+      dedupVerified: true,
       siblings: rest.map(r => r.name),
       diverged: rest.some(r => r.head !== winner.head)
     });
