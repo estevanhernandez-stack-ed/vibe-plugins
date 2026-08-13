@@ -327,6 +327,79 @@ surfaced the 919-line uncovered agent door.
 
 ---
 
+## The re-run, and what remediation taught that the walk did not
+
+STAR remediated the same day, across `22bbf52` and `72a6d42`, and the re-walk cost four commands.
+All six items closed, deployed at `star-00052-7jb`. Two of the fixes are better than what was
+recommended, and the difference is the most useful thing in this document.
+
+### Deleting a claim beats correcting it
+
+The recommendation was to change *"There are six tools"* to fourteen. What shipped instead removes
+the count:
+
+> *"NAMED, NEVER COUNTED. This said "There are six tools" while the door served fourteen, and a test
+> pinned the literal "six tools" — so the sentence could not be corrected without the test failing,
+> which is what made the staleness durable. A count in prose is a second source of truth that only
+> ever drifts one way."*
+
+The test now asserts that **no** count string appears at all. Correcting the number would have reset
+the clock; deleting the class of claim stops it. A walker that only reports *"this number is wrong"*
+invites the weaker fix. Worth reporting the shape of the claim alongside the drift, so the reader
+can see that some claims should not exist rather than be updated.
+
+### The best fix for a stale pin is the command that answers it
+
+This is the one to build. The recommendation was to refresh or drop the pins. What shipped replaces
+each value with the invocation that produces it:
+
+> *"They now name the command that answers instead of a value somebody has to remember to retype:
+> revision: `gcloud run services describe star [...]`, HEAD: `git rev-parse --short HEAD`, tests:
+> `python -m pytest -q`. A pin nobody updates is worse than no pin."*
+
+A pin that names its command cannot go stale, because there is no stored value to diverge from. That
+converts the single highest-yield finding class into a class that cannot recur.
+
+**The product consequence:** the plugin should not stop at reporting a stale pin. It should offer the
+rewrite — value to command — the way `vibe-prompt:remediate` offers a diff rather than a complaint.
+That is a v0.1 remediation mode with exactly one template, the highest-confidence transformation in
+the whole pillar, and it is already validated by a human reaching for it unprompted.
+
+The header also keeps the failure as documentation: *"Pins go stale, and these two did [...] Caught
+by a runbook walk, not by anything here."* A runbook that records its own staleness event is
+better evidence than one that quietly got fixed.
+
+### The walk sampled a table it had already enumerated
+
+`72a6d42` is titled *"Six write routes stop handing a stranger their schema."* The walk found five.
+The miss was `/api/rooms/{run_id}/sweeps/{sweep_id}/annotations`, and the failure is not that it was
+unknown — it was printed in the route table extracted in the walk's second command, then not probed,
+along with `/restore`. Seven of nine POST routes were checked, and which seven was decided by
+judgment about which looked interesting.
+
+That is a walker defect, not a runbook defect, and it is the one most likely to survive into a
+build: enumeration must be mechanical and exhaustive, and coverage must be reported as a fraction of
+the enumerated set. A walker that silently checks a subset produces a green report that means
+nothing, which is the same false-green this runbook has now confessed to three times.
+
+### The two contract amendments were the honest option
+
+The `note` promise was softened to *"`note` is **usually** that room's account of why"* rather than
+backfilling a reason nobody recorded onto a room that failed in August. Correct call: the alternative
+is inventing a cause after the fact, which on this app would be the exact overclaim the whole design
+refuses.
+
+And the `source_count` question got a real answer, worth recording because it resolves as a
+non-finding: *"It counts every distinct page a search actually returned during the build — what the
+department SAW. A citation is a page a researcher then chose to stand a finding on. [...] the two
+numbers differ by design and neither is the other's total."*
+
+Filing that as a defect would have been wrong. Raising it as a question was right, and the
+distinction between the two is worth encoding: a walker should be able to emit **QUESTION** as well
+as a verdict, for claims that are undocumented rather than untrue.
+
+---
+
 ## The seed's open questions, revisited
 
 **"Does it author runbooks, or only verify?"** Verify-only still looks right, with one amendment: it
@@ -343,9 +416,26 @@ key on claim shape rather than on role. Role-scoping was not exercised at all he
 
 ## Next act
 
-The seed asked for two independent walks before a build. There are now two. The recommendation is a
-**v0.1 scoped to pins and status assertions**, which is defensible on this evidence alone, with
-role-scoping and walker generation left explicitly unproven rather than designed on one data point.
+The seed asked for two independent walks before a build. There are now two, plus a remediation and a
+re-walk, which the seed did not ask for and which produced the best evidence of the three.
+
+Recommended **v0.1**, defensible on this evidence alone:
+
+1. **Pin checking.** Highest yield, cheapest, needs no credential. Two of two false on first contact.
+2. **Status assertions** against a named environment, with credential preflight that hard-stops.
+3. **One remediation template: value-to-command.** Rewrite a stale pin as the invocation that answers
+   it. Validated by a human reaching for exactly this transformation unprompted, and it retires the
+   finding class rather than resetting its clock.
+4. **Exhaustive enumeration with a reported coverage fraction.** Non-negotiable, because the walk
+   itself failed here and a silently-sampled green report is worthless.
+5. **Verdict states: PASS, FAIL, BLOCKED, SPENDS, HUMAN, QUESTION.** The last is for claims that are
+   undocumented rather than untrue, and it kept `source_count` out of the defect list correctly.
+
+Left explicitly unproven rather than designed on one data point: role-scoping, walker generation,
+environment-as-a-parameter, and HUMAN-step handling on re-run.
+
+The open design problem for the build is the promise-versus-receipt classifier. Everything above is
+worthless if the report cries wolf on three receipts for every real pin.
 
 Separately and immediately, five items belong back in STAR before Sep 5, in rough order of what a
 judge would notice:
