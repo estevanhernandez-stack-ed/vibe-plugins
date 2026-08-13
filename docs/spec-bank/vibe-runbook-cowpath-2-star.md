@@ -9,10 +9,18 @@ entry. Runbook under test: `docs/smoke-2026-08-12.md`.
 **Environment:** live Cloud Run, `https://star-390753828501.us-central1.run.app`.
 **Constraints, set before the walk:** read-only, zero spend, one runbook.
 
+Walked in two passes. The first, unauthenticated, against the HTTP surface. The second, after the
+MCP connector was authorized, against the agent door — the surface the runbook does not cover, where
+the thing under test became the door's own documentation.
+
 **Headline:** the walk verified 5 claims, failed 3, and could not reach 8 of 8 numbered steps. The
 three failures were all in the runbook's preamble, all checkable in one command each, and none of
 them cost a cent. The eight unreachable steps are the ones the plugin's shape sketch was designed
 around. That inversion is the finding.
+
+**The second headline, from the door:** three more numbers in the same runbook drifted, and **none
+of them are defects**. Telling those apart from the revision pin that *is* a defect turned out to be
+the hardest and most important problem the walk surfaced.
 
 ---
 
@@ -107,6 +115,92 @@ document is describing the thing in front of them.
 
 ---
 
+## The agent door, walked
+
+Added after the first pass, once the MCP connector was authorized. Same constraints: read-only,
+zero spend. All six read tools state in their own contracts *"Costs nothing, spends no searches, and
+is never rate-limited"*, so the zero-spend guarantee came from the contract rather than from a
+guess.
+
+The door is the surface the runbook does not cover, so there was no runbook to walk. What was walked
+instead is the door's **own** documentation: the MCP server instructions and the tool descriptions,
+which are the runbook an agent actually reads. They drift the same way.
+
+### 4. The door's instructions say there are six tools. There are fourteen.
+
+> *"There are six tools. `list_rooms`, `get_room` and `ask_room` read; `build_room` and `check_scene`
+> spend; `delete_room` removes."*
+
+Exposed: `ask_room`, `build_room`, `check_scene`, `defend_claim`, `delete_room`, `export_room`,
+`get_room`, `get_sweep`, `import_rooms`, `link_room`, `list_rooms`, `research_question`,
+`sweep_draft`, `write_bible`.
+
+Eight are undocumented in the block an agent reads first: `defend_claim`, `export_room`, `get_sweep`,
+`import_rooms`, `link_room`, `research_question`, `sweep_draft`, `write_bible`. Two of those mutate
+(`import_rooms`, `link_room`) and three spend (`research_question`, `sweep_draft`, `write_bible`).
+
+The individual tool descriptions are excellent and current. It is the summary that is stale, and the
+summary is what an agent uses to decide what is available. Note the sentence *"`delete_room` is the
+only call here that destroys anything"* is still strictly true, so the safety claim survives even
+though the inventory does not.
+
+### 5. An `error` room's `note` is empty, and the contract promises it is not
+
+`list_rooms` documents the field:
+
+> *"A `status` of `error` or `partial` means the build did not finish, and `note` is that room's
+> account of why, in the words the writer was given at the time. [...] Rooms that finished carry an
+> empty `note` and need none."*
+
+Room `d04477363a9a` returns `status: "error"`, `search_count: 0`, `note: ""`. It is the only failed
+room in the account, and it carries exactly the empty note the contract reserves for rooms that
+succeeded.
+
+Partial credit where due: `get_room` on that id does explain itself in the envelope prose, *"This
+build failed and filed nothing [...] a shorter, more specific treatment usually gets further."* So
+the information is not entirely absent. It is generic rather than *that room's account of why*, and
+it is not where the contract says to look. A caller reading `note` to find out what happened gets
+nothing, and cannot distinguish that room from a healthy one on the strength of the field the
+contract points at.
+
+### 6. `source_count` and the drawer citations disagree by about 2x, undocumented
+
+Not filed as a defect, because the relationship between the two may be intentional and is simply
+not stated anywhere read during this walk. Raising it because of where it sits.
+
+| Room | `source_count` | sum of drawer `citations` |
+|---|---|---|
+| Doctor Who: Liverpool and Hamburg | 123 | 73 |
+| Doctor Who Special: Liverpool | 124 | 59 |
+
+Two numbers, both describing sources, differing by roughly a factor of two, with no documented
+relationship in the tool contracts. On most apps that is a curiosity. On this one it sits directly
+on the thesis: STAR's entire design argument is that a number about sources is *computed from a
+ledger of what search actually returned*, never asserted. Step 8c of the smoke list already makes
+exactly this the check that matters, on imported rooms: *"the source count [...] is counted from the
+urls that actually arrived, not from the number the file claims."*
+
+Worth one sentence in the `get_room` contract saying which is which.
+
+### What the door got right
+
+Recording the passes, because a report that only lists failures is not a report.
+
+**The shape-cut announcement works exactly as documented.** `get_room` promises *"Whatever a shape
+leaves out, the reply says so, so a cut is never mistaken for an empty room."* Every `summary` call
+returned: *"This is a `summary`: counts and the story profile, with no findings, no sources and no
+bible. Nothing here is missing from the room."* That is the anti-false-green discipline the rest of
+the app argues for, applied to its own output. **PASS.**
+
+**The chain is real and correctly directed.** `1fd837bdd99e` carries `continues: "01c41bcf266a"`,
+Doctor Who following Liverpool, which is what smoke-list step 6 claims was built. **PASS.**
+
+**The `researchers flagged` line is the honesty thesis, working.** Both complete rooms returned
+explicit statements of what could not be isolated from the archives, unprompted, at the top of the
+reply. Nothing claims to have verified what it did not.
+
+---
+
 ## What generalized from cowpath 1
 
 Five of the seed's claims held under a completely different stack.
@@ -198,6 +292,32 @@ runbook today: two of two pins false, both caught in one command each, zero cost
 
 That is a viable v0.1 scope on its own.
 
+### A pin and a coverage record look identical on the page, and must not be walked alike
+
+The sharpest thing the agent door surfaced, and it would have generated three false FAILs on this
+runbook alone.
+
+STAR's smoke list contains both of these, in the same voice, four lines apart:
+
+- *"Revision `star-00049-j5r`"* — a **pin**. A promise about what you are looking at. Stale means
+  broken, and the report should say FAIL.
+- *"The chain walk over all **17** stored rooms"* — a **coverage record**. Evidence of what was
+  tested, in the past tense. `list_rooms` now returns **12**. Nothing is broken. Rooms were built and
+  deleted, which is what an account does.
+
+Same for *"your Liverpool export says 58"* against a Liverpool room that now reports 124 sources,
+because it was rebuilt on 2026-08-13, after the list was written. And for *"931 tests green"*.
+
+A walker that cannot tell a promise from a receipt does one of two things, both fatal. Flag every
+drifted number and the report is mostly noise, which trains the reader to skip it. Flag none and the
+stale revision pin, which is the one that actually matters, goes unreported alongside them.
+
+The distinguishing signal is grammatical and looks tractable: a pin is present-tense and
+identifying (`Revision X`, `HEAD Y`), a coverage record is past-tense and narrative (*"the chain walk
+**over all 17**"*, *"I proved [...] **at no cost**"*). That is a hypothesis worth testing early in a
+build, because getting it wrong is what makes the difference between a tool someone reads and a tool
+someone mutes.
+
 ### Drift is measured from the runbook's last commit, not its date or its pin
 
 The file is named `smoke-2026-08-12.md` and its header pins `0855bd2`. It was actually last edited
@@ -227,8 +347,56 @@ The seed asked for two independent walks before a build. There are now two. The 
 **v0.1 scoped to pins and status assertions**, which is defensible on this evidence alone, with
 role-scoping and walker generation left explicitly unproven rather than designed on one data point.
 
-Separately and immediately, three items belong back in STAR before Sep 5: fix the auth/validation
-ordering, add an agent-door step to the smoke list, and refresh both header pins.
+Separately and immediately, five items belong back in STAR before Sep 5, in rough order of what a
+judge would notice:
+
+1. Fix the auth/validation ordering, so the documented 401 is what a write route actually answers.
+2. Update the MCP server instructions from six tools to fourteen. An agent reads that block to decide
+   what exists, and eight tools are currently invisible to it, two of which mutate.
+3. Add an agent-door step to the smoke list. It is the newest surface and the only one with a
+   destructive call on it.
+4. Refresh both header pins, or drop them. A pin nobody updates is worse than no pin.
+5. Give a failed room a `note`, or amend the `list_rooms` contract to stop promising one.
+
+---
+
+## Appendix: the smoke-list step that does not exist
+
+Written in the smoke list's own voice, ready to paste as step 9. Offered rather than committed —
+nothing was written into the STAR repo during this walk.
+
+---
+
+### 9. The agent door · 6 min · no spend until you choose to · **newest surface, least walked**
+
+Built in `216b917`, after this list was written, which is why it is at the bottom rather than
+beside the exports it belongs with.
+
+1. Connect the door. In an interactive Claude Code session, `/mcp`, choose STAR, authorize.
+   The consent screen offers `rooms:read`, `rooms:write` and `rooms:delete`. **Take only
+   `rooms:read` unless you have a reason.** Whatever you grant, the agent can call.
+2. Ask it to list your rooms.
+3. Ask it to read one, and watch which shape it asks for.
+
+**Right:** the room list comes back newest first, with `continues` filled on the Doctor Who room
+and empty on Liverpool. A room read at `summary` says out loud what it left out: *"Nothing here is
+missing from the room."* An agent that reads at `full` is spending about 30,000 tokens a room, most
+of it excerpts it already has the urls for. That is not wrong, but it is worth seeing once.
+
+**Wrong and worth reporting:** a room from somebody else's account; a `continues` pointing at a room
+that is not in the list; a shape that quietly returns less without saying so, which is the same
+false-green this list already caught twice on the 401.
+
+**The check that matters:** ask it what tools it has. The door's instructions say **six**. It serves
+**fourteen** — `defend_claim`, `export_room`, `get_sweep`, `import_rooms`, `link_room`,
+`research_question`, `sweep_draft` and `write_bible` are all live and none are named in the block an
+agent reads first. Two of them write and three of them spend. Until that block is updated, the
+honest reading is that the door's inventory is documentation-by-accident: the individual tool
+descriptions are current and excellent, and the summary above them is from a smaller app.
+
+**Do not walk the delete arming on a room you want.** It takes two calls, the first hands back a
+one-time token and destroys nothing, and a deleted room is recoverable **only in the web app**, for
+a window. An agent can take a room out of your workspace and cannot put it back.
 
 ---
 
@@ -262,7 +430,29 @@ git log -1 --format=%h -- docs/smoke-2026-08-12.md   # runbook's own last commit
 git diff --stat 12147aa..HEAD -- star/ web/
 ```
 
-One claim was checked and refuted rather than reported: the MCP metadata advertises
+Agent-door pass, all six read tools, each stating in its own contract that it costs nothing and
+spends no searches:
+
+```
+list_rooms                                  -> 12 rooms, one status=error with note=""
+get_room  d04477363a9a  shape=summary       -> the failed room; note still ""
+get_room  1fd837bdd99e  shape=summary       -> continues=01c41bcf266a, source_count=123
+get_room  01c41bcf266a  shape=summary       -> source_count=124
+```
+
+`shape=summary` was used throughout rather than the `full` default. Per the `get_room` contract a
+full room is about 30,000 tokens, roughly 72% of it quoted excerpts. Reading four rooms at `full`
+would have cost about 120,000 tokens to check counts and a chain link. Worth recording as its own
+small lesson: a walker needs a cheapest-sufficient-shape rule, or verification costs more than the
+thing it verifies.
+
+Two claims were checked and refuted rather than reported. The MCP metadata advertises
 `https://star.626labs.dev` while the service is deployed at a `run.app` address. The custom domain
 resolves to `ghs.googlehosted.com` and serves 200 on both `/` and the protected-resource endpoint.
 Correctly mapped, not a finding.
+
+And `source_count: 124` on the Liverpool room against the runbook's *"your Liverpool export says
+58"* is not a falsification either: that room was rebuilt on 2026-08-13, after the list was written.
+Reporting it as a FAIL would have been the exact mistake the pin-versus-coverage-record section
+exists to prevent, and it was caught by reading `created_at` rather than by being careful.
+
