@@ -27,7 +27,8 @@ Three things, and nothing else:
 1. **It finds the claims in a runbook and tells you what kind each one is.**
 2. **It verifies the two kinds that can be verified, against a named environment, read-only and
    free.**
-3. **It offers exactly one rewrite: a stale pin becomes the command that answers it.**
+3. **It offers two rewrites for a stale pin, and a rule that picks between them.** Either the value
+   becomes the command that answers it, or the value is deleted in favor of what it summarized.
 
 ## What v0.1 is not
 
@@ -107,6 +108,8 @@ Cached at `.vibe-runbook/state/claims.json`. Fields load-bearing enough to name 
   nothing to do with a "check" in another, and inventing a common currency would be the kind of
   asserted number this whole pillar exists to catch. Aggregation in the report groups by the raw
   unit string, which is how `"4 checks and 1 sweep"` is produced. See *Cost*.
+- `venue` — whether this claim sits somewhere its reader can run a command. Input to the remediation
+  rule; see *Remediation*. A runbook step is executable-venue, a served API description is not.
 - `verdict`, `evidence`, `checked_at` (populated by `:walk`)
 
 ## The classifier
@@ -183,22 +186,51 @@ explicitly:
   insight as value-to-command: a claim that costs money to verify may be better restated as one that
   does not.
 
-## Remediation: one template
+## Remediation: two templates, and the rule that picks between them
 
-`value-to-command`. A stale pin is rewritten as the invocation that produces it.
+Both templates fix the **same** claim shape, a stale pin. They are not two features covering more
+ground. Shipping one alone is a correctness defect, because the tool would then confidently offer the
+wrong rewrite for a whole class of pins: `value-to-command` applied to *"There are six tools"* yields
+something like *"run `tools/list` and count them"*, which is absurd. The right fix there was to stop
+counting.
 
-Earned, not invented. STAR's remediation replaced `Revision star-00049-j5r` with
+### The discriminator: can the reader execute?
+
+| Where the claim lives | Fix | Because |
+|---|---|---|
+| A doc read by a human at a terminal | `value-to-command` | They have a shell. The value can be replaced by the invocation that produces it. |
+| Static text with no execution context — served API descriptions, tool instructions, prose for a reader without the repo | `name-not-count` | A command is meaningless there. Replace the summary with the enumerable thing it was summarizing. |
+
+This adds one field to the claim schema: **`venue`**, whether the claim sits somewhere its reader can
+run a command. It is the input to the rule, and getting it wrong is how the tool offers nonsense.
+
+### `value-to-command`
+
+A stale pin becomes the invocation that produces it. STAR's remediation replaced
+`Revision star-00049-j5r` with
 `gcloud run services describe star [...] --format='value(status.latestReadyRevisionName)'`, and HEAD
 with `git rev-parse --short HEAD`. **A pin that names its command cannot go stale, because there is no
 stored value to diverge from.** That retires the highest-yield finding class rather than resetting
 its clock.
 
-Confidence-routed per vibe-prompt precedent, with per-file backup and rollback. Opt-in only.
+### `name-not-count`
 
-**A second template is a candidate and is not in v0.1:** *delete the claim rather than correct it*.
-STAR's other fix removed `"There are six tools"` entirely instead of changing it to fourteen, on the
-grounds that a count in prose is a second source of truth that only ever drifts one way. That is the
-better fix and it is supported by exactly one observation, so it waits.
+A summarizing value in unexecutable text is deleted in favor of what it summarized. STAR's fix
+removed *"There are six tools"* rather than changing it to fourteen, and made the test assert that
+**no** count string appears at all:
+
+> *"A count in prose is a second source of truth that only ever drifts one way."*
+
+Correcting the number resets the clock. Removing the class of claim stops it.
+
+### Both
+
+Confidence-routed per vibe-prompt precedent, with per-file backup and rollback. Opt-in only, via
+`:remediate`, and always named in the walk report so the reader is told the fix exists.
+
+**The discriminator is the part to test, not the templates.** Each template has one observation behind
+it, which is thin — but the *rule* has one example on each side of the line, which is exactly enough
+to state it and check it. STAR's fixture holds both answers.
 
 ## Cost
 
@@ -244,6 +276,9 @@ Required before any ship:
 
 - Classifier accuracy on the STAR fixture, stated as a number, with every misclassification named.
 - A test that a receipt is **never** emitted as FAIL. This is the one that protects the product.
+- A test that the remediation discriminator picks correctly on both STAR pins: the revision pin gets
+  `value-to-command`, the tool count gets `name-not-count`. Both answers are known, and offering the
+  wrong template is worse than offering none.
 - A test that enumeration is exhaustive and that coverage is reported as a fraction.
 - Round-trip on a second, non-STAR runbook before stable. Real-app validation is the family ship bar.
 
