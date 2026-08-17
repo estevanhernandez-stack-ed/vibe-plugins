@@ -3,7 +3,7 @@
   "products": {
     "626-mod-launcher": {
       "repo": "estevanhernandez-stack-ed/626-mod-launcher",
-      "version": "v0.17.0",
+      "version": "v0.18.1",
       "source": "release"
     },
     "Celestia3": {
