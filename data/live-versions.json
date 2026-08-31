@@ -3,7 +3,7 @@
   "products": {
     "626-mod-launcher": {
       "repo": "estevanhernandez-stack-ed/626-mod-launcher",
-      "version": "v0.19.0",
+      "version": "v0.20.0",
       "source": "release"
     },
     "Celestia3": {
@@ -13,7 +13,7 @@
     },
     "ROROROblox": {
       "repo": "estevanhernandez-stack-ed/ROROROblox",
-      "version": "v1.23.0.0",
+      "version": "v1.24.0.0",
       "source": "release"
     },
     "Sanduhr_f-r_Claude": {
