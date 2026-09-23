@@ -126,12 +126,12 @@
     },
     {
       "name": "vibe-prompt",
-      "description": "The prompt-engineering loop for your app's LLM features. /vibe-prompt:scan inventories every prompt site (registry and inline, TS/JS and Python, monorepo-aware); :audit fires 13 structural smells (F1-F13) scored on 5 dimensions, including the F10-F12 prompt-injection family; :eval behaviorally tests prompts against your production model with a calibrated LLM-judge (position-bias mitigation, verbosity penalty, optional jailbreak fixtures — cost-gated); :grade synthesizes composite grades with monotonic-baseline regression tracking; :remediate closes the audit-to-fix loop with confidence-routed diffs, backup, and rollback; :iterate proposes new AI features your app could ship next. Composer-aware across four composer kinds; injection findings hand off to vibe-sec. Validated on a real Next.js + Firebase + Gemini app, where it caught a live cross-vendor persona leak the master directive was supposed to prevent.",
+      "description": "The prompt-engineering loop for your app's LLM features. /vibe-prompt:scan inventories every prompt site (registry and inline, TS/JS and Python, monorepo-aware); :audit fires 14 structural smells (F1-F14) scored on 5 dimensions, including the F10-F12 prompt-injection family, F14 for code that breaks on newer Claude models (thinking params, forced tool choice, first-block response reads), and retired or soon-retiring model pins; :eval behaviorally tests prompts against your production model with a calibrated LLM-judge (position-bias mitigation, verbosity penalty, optional jailbreak fixtures — cost-gated); :grade synthesizes composite grades with monotonic-baseline regression tracking; :remediate closes the audit-to-fix loop with confidence-routed diffs, backup, and rollback; :iterate proposes new AI features your app could ship next. Composer-aware across four composer kinds; injection findings hand off to vibe-sec. Validated on a real Next.js + Firebase + Gemini app, where it caught a live cross-vendor persona leak the master directive was supposed to prevent.",
       "source": {
         "source": "git-subdir",
         "url": "https://github.com/estevanhernandez-stack-ed/Vibe-Prompt",
         "path": "plugins/vibe-prompt",
-        "ref": "v0.7.1"
+        "ref": "v0.8.0"
       }
     },
     {
