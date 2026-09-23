@@ -1,6 +1,6 @@
 # Doctrine eval harness
 
-**Status:** build-ready. **Consumes:** [../conventions/operating-doctrine.md](../conventions/operating-doctrine.md) v1.0.0. **Produces:** `fixtures/doctrine-eval/` in this repo + a first A/B report.
+**Status:** harness built and piloted 2026-09-23 (`fixtures/doctrine-eval/`: setup script, rubric, transcript extractor; first report in `reports/pilot-2026-09-23.md`, n=1 per condition). The full 3× run is next. **Consumes:** [../conventions/operating-doctrine.md](../conventions/operating-doctrine.md) v1.0.0. **Produces:** `fixtures/doctrine-eval/` in this repo + a first A/B report.
 
 ## Objective
 
