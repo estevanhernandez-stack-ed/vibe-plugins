@@ -1,6 +1,8 @@
 # Spec seed: vibe-prompt v0.8 — round-trip-sourced candidates
 
-**Status:** EVIDENCE-BACKED candidate list, not yet scoped. Source: the v0.7.1 cross-app round-trip (2026-06-09, 3/3 apps PASS, 15/15 criteria — Celestia3, WeSeeYouAtTheMovies, QuizShow). Per-app receipts live in each app's `docs/vibe-prompt/audit-2026-06-09.md`.
+**Status (2026-09-22):** v0.8.0 shipped re-scoped as "Opus 5.5 era readiness": F14 model-migration breakage, F6-retiring-model, and the known-models refresh, which closes #1 below. **Every other item here is now the v0.9 candidate list.** v0.8's validation added three more v0.9 items: dated-id checks against the retirement table, scan scope for non-workspace root `scripts/`, and prompt-text style advisories. See the Vibe-Prompt CHANGELOG, "Known gaps".
+
+**Original status:** EVIDENCE-BACKED candidate list, not yet scoped. Source: the v0.7.1 cross-app round-trip (2026-06-09, 3/3 apps PASS, 15/15 criteria — Celestia3, WeSeeYouAtTheMovies, QuizShow). Per-app receipts live in each app's `docs/vibe-prompt/audit-2026-06-09.md`.
 
 ## Top tier (multi-app confirmed)
 
