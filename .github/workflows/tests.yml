@@ -1,0 +1,41 @@
+name: tests
+
+# Offline unit tests for the repo's own scripts (stdlib unittest, no installs).
+# Covers the marketplace gate's decision logic and the committed manifest's
+# shape rules; the networked gate itself lives in marketplace-gate.yml.
+on:
+  pull_request:
+    paths:
+      - ".claude-plugin/marketplace.json"
+      - "scripts/**"
+      - "tests/**"
+      - ".github/workflows/tests.yml"
+  push:
+    branches: [main]
+    paths:
+      - ".claude-plugin/marketplace.json"
+      - "scripts/**"
+      - "tests/**"
+      - ".github/workflows/tests.yml"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  unit:
+    name: Script unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.11"
+
+      - name: Run unit tests
+        run: python -m unittest discover -s tests -v

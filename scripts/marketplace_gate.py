@@ -34,6 +34,14 @@ For every entry in .claude-plugin/marketplace.json this script runs:
   g. drift             — informational, never blocking: commits on the default
                          branch ahead of the pinned tag (gh compare API).
 
+Before any of that, each entry's shape is validated (manifest-entry): source
+type must be `url` or `git-subdir` (the `github` type is banned — it resolves
+SSH clone URLs), url must be an https://github.com/<owner>/<repo> URL, ref must
+be tag-shaped, and path must stay inside the clone. Every one of those values
+is interpolated into a gh API endpoint, a git argv, or a filesystem path, and
+on pull_request runs the PR author controls them — so a malformed entry FAILs
+here instead of reaching gh/git or walking outside the temp clone.
+
 Honesty cap (no-silent-caps rule): this gate does NOT perform a real
 `claude /plugin install` — there is no headless Claude Code in CI. It
 simulates the loader contract instead: ref resolves, HTTPS clone succeeds,
@@ -104,6 +112,15 @@ PATH_LEAK_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
 ]
 
 URL_SPAN_RE = re.compile(r"https?://[^\s)\"'<>]+")
+
+# Manifest-entry shape validation (runs before any value reaches gh/git/fs).
+ALLOWED_SOURCE_TYPES = {"url", "git-subdir"}
+GITHUB_URL_RE = re.compile(
+    r"^https://github\.com/([A-Za-z0-9][A-Za-z0-9-]*/[A-Za-z0-9._-]+?)(?:\.git)?/?$"
+)
+TAG_REF_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._/-]*$")
+SHA_RE = re.compile(r"^[0-9a-fA-F]{7,40}$")
+BRANCH_REFS = {"main", "master", "HEAD", "develop"}
 
 # Registry-reference extraction (run only over markdown code contexts).
 NPX_RE = re.compile(r"\bnpx\s+((?:-{1,2}[\w=./-]+\s+)*)(\S+)")
@@ -240,13 +257,64 @@ def force_rmtree(path: Path) -> None:
 # -----------------------------------------------------------------------------
 
 
-def parse_owner_repo(url: str) -> str:
-    """'https://github.com/Owner/Repo.git' -> 'Owner/Repo'."""
-    tail = url.split("github.com/", 1)[1]
-    tail = tail.rstrip("/")
-    if tail.endswith(".git"):
-        tail = tail[: -len(".git")]
-    return tail
+def parse_owner_repo(url: str) -> str | None:
+    """'https://github.com/Owner/Repo.git' -> 'Owner/Repo'; None if not that shape."""
+    m = GITHUB_URL_RE.match(url or "")
+    if not m or ".." in m.group(1):
+        return None
+    return m.group(1)
+
+
+def validate_entry(entry: dict) -> list[str]:
+    """Shape problems with one marketplace.json entry ([] when clean).
+
+    Encodes the repo's standing rules (CLAUDE.md gotchas): no `github` source
+    type, no ref pinned to a branch or SHA. Also refuses values that would be
+    unsafe to interpolate into a gh endpoint, git argv, or filesystem path.
+    """
+    problems: list[str] = []
+    source = entry.get("source")
+    if not isinstance(source, dict):
+        return ["entry has no source object"]
+
+    kind = source.get("source")
+    if kind == "github":
+        problems.append(
+            "source type 'github' is banned: it resolves SSH clone URLs and fails "
+            "publickey-denied for users without GitHub SSH keys (use 'url' or 'git-subdir')"
+        )
+    elif kind not in ALLOWED_SOURCE_TYPES:
+        problems.append(f"unknown source type {kind!r} (expected url or git-subdir)")
+
+    url = source.get("url")
+    if not isinstance(url, str) or parse_owner_repo(url) is None:
+        problems.append(f"url {url!r} is not an https://github.com/<owner>/<repo> URL")
+
+    ref = source.get("ref")
+    if not isinstance(ref, str) or not ref:
+        problems.append("ref is missing")
+    elif not TAG_REF_RE.match(ref) or ".." in ref or ref.endswith((".", "/", ".lock")):
+        problems.append(f"ref {ref!r} is not a valid tag name")
+    elif ref in BRANCH_REFS:
+        problems.append(f"ref {ref!r} is a branch: stable pins must be tags")
+    elif SHA_RE.match(ref):
+        problems.append(f"ref {ref!r} looks like a commit SHA: stable pins must be tags")
+
+    path = source.get("path", "")
+    if kind == "git-subdir" and not path:
+        problems.append("git-subdir entry has no path")
+    if path:
+        if not isinstance(path, str):
+            problems.append("path is not a string")
+        else:
+            parts = path.replace("\\", "/").split("/")
+            if (
+                path.startswith(("/", "\\", "~"))
+                or re.match(r"^[A-Za-z]:", path)
+                or ".." in parts
+            ):
+                problems.append(f"path {path!r} must be relative and stay inside the repo")
+    return problems
 
 
 def strip_tag_prefix(tag: str, plugin_name: str) -> str:
@@ -254,7 +322,7 @@ def strip_tag_prefix(tag: str, plugin_name: str) -> str:
     prefixed = f"{plugin_name}-v"
     if tag.startswith(prefixed):
         return tag[len(prefixed):]
-    if tag.startswith("v"):
+    if re.match(r"^v\d", tag):  # not the 'v' in 'vibe-sec-v1.0.0'
         return tag[1:]
     return tag
 
@@ -764,13 +832,23 @@ def gate_plugin(
     skip_registry: bool,
     paths_severity: str = "fail",
 ) -> PluginReport:
-    source = entry["source"]
+    source = entry.get("source") if isinstance(entry.get("source"), dict) else {}
+    problems = validate_entry(entry)
     report = PluginReport(
-        name=entry["name"],
-        ref=source["ref"],
-        owner_repo=parse_owner_repo(source["url"]),
-        path=source.get("path", ""),
+        name=str(entry.get("name", "?")),
+        ref=str(source.get("ref", "?")),
+        owner_repo=parse_owner_repo(str(source.get("url", ""))) or "?",
+        path=str(source.get("path", "")),
     )
+    if problems:
+        report.add("manifest-entry", FAIL, *problems)
+        for name in (
+            "ref-resolution", "clone", "manifest", "version-coherence",
+            "leak-lint", "registry-refs",
+        ):
+            report.add(name, SKIP, "manifest entry invalid")
+        return report
+    report.add("manifest-entry", PASS, f"{source.get('source')} source, tag-shaped ref")
 
     ref_ok = check_ref_resolution(report, gh)
 
@@ -918,7 +996,7 @@ def main(argv: list[str] | None = None) -> int:
     for value in args.only:
         only.update(p.strip() for p in value.split(",") if p.strip())
     if only:
-        known = {p["name"] for p in plugins}
+        known = {p.get("name") for p in plugins}
         unknown = only - known
         if unknown:
             print(
@@ -926,7 +1004,7 @@ def main(argv: list[str] | None = None) -> int:
                 file=sys.stderr,
             )
             return 2
-        plugins = [p for p in plugins if p["name"] in only]
+        plugins = [p for p in plugins if p.get("name") in only]
 
     denylist = [
         term.strip()
