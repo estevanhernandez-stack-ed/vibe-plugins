@@ -131,7 +131,7 @@
         "source": "git-subdir",
         "url": "https://github.com/estevanhernandez-stack-ed/Vibe-Prompt",
         "path": "plugins/vibe-prompt",
-        "ref": "v0.8.1"
+        "ref": "v0.8.2"
       }
     },
     {
@@ -171,7 +171,7 @@
         "source": "git-subdir",
         "url": "https://github.com/estevanhernandez-stack-ed/Vibe-Runbook",
         "path": "plugins/vibe-runbook",
-        "ref": "v0.2.0"
+        "ref": "v0.2.1"
       }
     },
     {
