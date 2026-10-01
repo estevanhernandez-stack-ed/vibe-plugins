@@ -13,7 +13,7 @@
     },
     "ROROROblox": {
       "repo": "estevanhernandez-stack-ed/ROROROblox",
-      "version": "v1.31.0.0",
+      "version": "v1.32.0.0",
       "source": "release"
     },
     "Sanduhr_f-r_Claude": {
@@ -53,7 +53,7 @@
     },
     "vibe-cartographer": {
       "repo": "estevanhernandez-stack-ed/vibe-cartographer",
-      "version": "v1.11.0",
+      "version": "v1.12.0",
       "source": "release"
     },
     "vibe-doc": {
@@ -88,8 +88,18 @@
     },
     "vibe-prompt": {
       "repo": "estevanhernandez-stack-ed/Vibe-Prompt",
-      "version": "v0.8.0",
+      "version": "v0.8.1",
       "source": "release"
+    },
+    "vibe-recall": {
+      "repo": "estevanhernandez-stack-ed/Vibe-Recall",
+      "version": "v0.1.2",
+      "source": "release"
+    },
+    "vibe-runbook": {
+      "repo": "estevanhernandez-stack-ed/Vibe-Runbook",
+      "version": "v0.2.0",
+      "source": "tag"
     },
     "vibe-sec": {
       "repo": "estevanhernandez-stack-ed/vibe-sec",
