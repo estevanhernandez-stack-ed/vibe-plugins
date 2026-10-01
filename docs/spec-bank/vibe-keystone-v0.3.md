@@ -57,7 +57,7 @@ In `vibe-plugins/CLAUDE.md` the ratio is roughly 3:1 inventory to gotcha. Around
 
 1. **Scope:** generated output, plus Keystone's own SKILL, plus an estate migration pass as the real-app validation.
 2. **Break, don't branch:** the new shape replaces the current skeleton. No lean/full mode selection. `v0.3.0`.
-3. **Audience:** frontier-model-first. Assume Opus 5 / Fable 5 reads the produced file. Cut what a capable model infers.
+3. **Audience:** frontier-model-first. Assume the current frontier tier reads the produced file (Opus 5 / Fable 5 when this was written; the seat era map names the tier's model for each era, never this spec). Cut what a capable model infers. *(Line patched 2026-10-01 per the Opus 5.5 board; the tiering RFC's "tiers, never model IDs" rule applies to specs too.)*
 4. **`/doctor` posture:** complement, verified rather than assumed. Keystone births lean; `/doctor` maintains files that drifted. No rightsizing capability gets built into Keystone, and the produced keystone names `/doctor` as the maintenance path.
 5. **Protected-content guard ships for all users**, not as a migration exception.
 
