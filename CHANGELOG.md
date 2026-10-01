@@ -11,6 +11,20 @@ This marketplace is not versioned with semver tags. Each entry is dated; promoti
 
 ## [Unreleased]
 
+### Added
+
+- **`tests/test_marketplace_gate.py`** and a `tests` workflow: 41 offline stdlib-unittest cases for the marketplace gate (tag-prefix stripping, manifest/version coherence, leak-lint tiers and denylist redaction, registry-ref extraction, ref resolution) plus a check that every committed `marketplace.json` entry passes the gate's shape rules.
+
+### Changed
+
+- **Marketplace gate validates each entry's shape first.** The `github` source type, branch or SHA refs, non-`https://github.com` URLs, and paths that escape the clone now FAIL before any value reaches `gh`, `git`, or the filesystem.
+- **Workflow actions pinned to commit SHAs**, with Dependabot keeping the pins current; read-only jobs no longer persist the checkout token.
+
+### Fixed
+
+- **`pnpm-lock.yaml` regenerated.** It still carried the extracted `packages/vibe-test` importer and its dev tree (46 audit advisories, 1 critical); `pnpm audit` is now clean.
+- **Gate tag stripping** no longer eats the leading `v` of a mismatched `<plugin>-vX.Y.Z` tag, so the version-coherence failure message names the real tag.
+
 ## [2026-04-28] — Foundations layer + ecosystem documentation
 
 ### Added
