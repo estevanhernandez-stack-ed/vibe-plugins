@@ -163,6 +163,26 @@
         "path": "plugins/vibe-glow",
         "ref": "v0.2.0"
       }
+    },
+    {
+      "name": "vibe-runbook",
+      "description": "Your runbook says do X and you will see W. Nothing checks whether that is still true. /vibe-runbook:author drafts one from what it can actually derive about your app: a revision pin that answers itself, the commands that run it, the deploy and rollback scripts where they exist, and the names of the configuration keys it needs. What a repository cannot tell you (severity thresholds, escalation, the reasoning behind a fix) comes out as explicit questions, and every later check reports them still unanswered. Every derived claim is checked before it is written; a check that could not run says so on the page; pins name the command that answers them rather than a value that goes stale. It never overwrites a runbook you wrote, it proposes beside it. Then the walker keeps it true: reads a runbook, classifies every claim, and walks the machine-checkable ones against an environment you name, read-only, never spending. Six verdicts: PASS, FAIL, BLOCKED, SPENDS, HUMAN, QUESTION. Past-tense coverage records are reported and never failed. Credential preflight hard-stops rather than walking your local machine and calling it green. Every report states the fraction of the enumerated surface it actually checked.",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/estevanhernandez-stack-ed/Vibe-Runbook",
+        "path": "plugins/vibe-runbook",
+        "ref": "v0.2.0"
+      }
+    },
+    {
+      "name": "vibe-recall",
+      "description": "Surface prior art from your own repos while you spec the next one. Indexes an estate root into a shallow card per repo (symbol names, dependency names, entrypoint paths, claim and gotcha strings from README and CLAUDE.md, never a file body), ranks the cards against a phrase or a spec file, and verifies a hit at current HEAD before it claims anything. Honest zero-hit. Tenant walls are yours to configure and never silently dropped. It never writes code and never edits a repo it indexes; a real hit hands off to /vibe-recall:brief for a verified write-up and then to vibe-taker to move the code. A UserPromptSubmit hook surfaces a one-line prior-art banner when a prompt reads like build intent and the index has something to say.",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/estevanhernandez-stack-ed/Vibe-Recall",
+        "path": "plugins/vibe-recall",
+        "ref": "v0.1.2"
+      }
     }
   ]
 }
