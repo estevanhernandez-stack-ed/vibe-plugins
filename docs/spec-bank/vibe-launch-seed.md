@@ -29,3 +29,22 @@ Composes with, never duplicates: `scripts/marketplace_gate.py` (the mechanical c
 ## Family conventions to honor at birth
 
 Solo repo (`vibe-launch`), no telemetry, session+friction loggers + `:evolve-launch` from day 1, state in `.vibe-launch/`, real-app validation = run `:release` + `:promote` on the next actual plugin release and diff against the hand loop. Tag-convention table and the gate invocation are read from this repo, not duplicated.
+
+## Strengthened 2026-10-01: smoke the published artifact, not the dev tree
+
+The same rule surfaced three times in the Sonnet 5.5 sweep window, in three products, and belongs in `:release`:
+
+- **Sanduhr PR #55** (decision 2026-09-13, verified): three defects, each of which would have made the shipped MCP feature a no-op or a crash for Store and Velopack users, passed the unit suites and the dev-tree live smoke. Only publishing with the exact release-script arguments and cold-running the published artifact exposed them (the after-build copy invisible to `dotnet publish -o`, a per-home config path, and a trimmer crash on `tools/list`). The fix added `scripts/smoke-mcp.ps1` plus a runbook step that cold-runs the published exe.
+- **SnapSnip's Settings window** was dead on the shipped build for three months while the dev tree opened it fine (sweep brief).
+- **RBX15 v4.0.0** had its Store tile rejected on a defect the repo build never showed (sweep brief).
+
+A fourth from July makes the same point from the installer side: Sanduhr's first Velopack release used a packId that installed into the app's own data directory, and the installer's rollback-rename-then-delete destroyed the usage vault at install time. The pre-publish install test caught it; publish-then-discover would have shipped a vault-destroyer (decision 2026-07-14, verified).
+
+So `:release` gains a step between "suite green" and "tag": **build with the exact release arguments, install or cold-run the produced artifact, and exercise the surfaces the release notes and reviewer letter promise.** It is a per-repo script the plugin calls, never a check the plugin invents, and it reports what it ran. A release whose repo has no such script gets the finding, not a pass.
+
+Two smaller additions from the same window:
+
+- **Version-bound text must open with the version.** Sanduhr 3.4.0 published with 3.3's description; RORORO 1.32's six localized sheets still carried the 1.31 what's-new, and the only signal was a console warning. `:release` checks CHANGELOG, release notes and any what's-new sheet for the version it is about to tag, and hands copy quality to `vibe-market :lint` when that exists (see `vibe-market-seed.md`).
+- **The release caller is itself a release check.** Six of thirteen plugin repos carry the ten-line tag-push caller that makes tagging into releasing; the seven without it are the worst release-lag cases in the 2026-09-11 sweep. `:release` reports a missing caller as a finding, so the "shipped but unreleased" class stops depending on memory.
+
+**The v2 boundary moves.** The Store and Partner Center leg the seed deferred now has a walked cowpath in `store-listing-console`: listings written through the Store API, packages uploaded by hand, read-back verification before a commit that happens only on a typed word, and a measured correction of the "one-way door" rule (a mixed submission is not uncommittable; each side simply cannot see the other's edits until the commit). A `:promote`-for-store can be specced from that record rather than speculated. It is still not v1; the marketplace loop remains the proven cowpath.

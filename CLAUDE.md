@@ -33,7 +33,7 @@ Two channels: **stable** is this repo (tagged, promoted), **canary** is a plugin
   node -e "console.log(require('./.claude-plugin/marketplace.json').plugins.length)"
   node -e "for(const p of require('./.claude-plugin/marketplace.json').plugins){const s=p.source;const r=(s.url||'https://github.com/'+s.repo).replace('https://github.com/','');console.log([p.name,r,s.path||'(root)',s.ref].join(' | '))}"
   ```
-- Family conventions — promotion checklist, decision-log backend, data home, model tiering, operating doctrine: `docs/conventions/`
+- Family conventions — promotion checklist, decision-log backend, data home, model tiering, operating doctrine, headless runs: `docs/conventions/`
 - Build-ready specs: `docs/spec-bank/`
 - Aggregation pivot history: `docs/migration-plan.md`
 - Shared core extraction order: `packages/core/README.md`
