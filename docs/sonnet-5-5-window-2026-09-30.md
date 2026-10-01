@@ -30,6 +30,10 @@ Sources: platform.claude.com models overview, Sonnet 5.5 what's-new and promptin
 | **vibe-prompt v0.8.1** (`fdf8dbf`, release cut, canary; 1329 tests): `claude-sonnet-5-5` in known-models, Sonnet 5 to legacy, Sonnet 4.5 row to scheduled 2026-11-30, F14 extended to Sonnet 5.5 with the `between_tools` nuance. The computer-tool break is recorded for Opus 5.5 and Sonnet 5.5 only; Fable 5.1's what's-new doesn't name it. | `Vibe-Prompt` |
 | **Mirror model retired.** `dotclaude` was archived tonight; `~/.claude-personal` is now its own repo (`dotclaude-personal`). Memory saved so no session resyncs a mirror again. The estate keystone's three dotclaude lines are stale. | memory file, `Projects/CLAUDE.md` (yours) |
 
+## Overnight 2026-10-01: the top three, done
+
+Este approved the top three before going offline. Landed: Cart v1.12.0 and vibe-prompt v0.8.1 promoted to stable (`febf0ad`); Vibe-Runbook v0.2.0 and Vibe-Recall v0.1.2 registered in the manifest, storefront, spec-bank and dashboard (`99be0a4`, gate PASS 2/2, Recall re-tagged after the version-pair slip); seat `modelSettings["claude-sonnet-5-5"].effortLevel = medium` (`6a8fd3a`), with the v1.12.0 worker brief verified on a Sonnet 5.5 worker against a hermetic fixture (payload byte-identical, two named checks, commit SHA, left-out list). Not done: a real `/plugin marketplace update` plus install of the four bumped or new entries, which is Este's to run; the full real-app Cart cycle; Runbook's README and scrubbed fixture; Recall's canary line and LICENSE. All filed as tasks.
+
 ## The board
 
 ### Ready (verified, cheap)
