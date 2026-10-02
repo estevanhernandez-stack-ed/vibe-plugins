@@ -42,7 +42,7 @@
         "source": "git-subdir",
         "url": "https://github.com/estevanhernandez-stack-ed/vibe-sec",
         "path": "packages/vibe-sec",
-        "ref": "vibe-sec-v0.10.0"
+        "ref": "vibe-sec-v0.10.1"
       }
     },
     {
