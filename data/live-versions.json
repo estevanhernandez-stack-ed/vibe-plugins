@@ -88,7 +88,7 @@
     },
     "vibe-prompt": {
       "repo": "estevanhernandez-stack-ed/Vibe-Prompt",
-      "version": "v0.8.1",
+      "version": "v0.8.2",
       "source": "release"
     },
     "vibe-recall": {
@@ -98,8 +98,8 @@
     },
     "vibe-runbook": {
       "repo": "estevanhernandez-stack-ed/Vibe-Runbook",
-      "version": "v0.2.0",
-      "source": "tag"
+      "version": "v0.2.1",
+      "source": "release"
     },
     "vibe-sec": {
       "repo": "estevanhernandez-stack-ed/vibe-sec",
