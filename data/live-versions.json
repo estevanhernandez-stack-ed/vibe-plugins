@@ -18,7 +18,7 @@
     },
     "Sanduhr_f-r_Claude": {
       "repo": "estevanhernandez-stack-ed/Sanduhr_f-r_Claude",
-      "version": "v2.3.0-mac",
+      "version": "v2.3.4-mac",
       "source": "release",
       "latest_tag": "v3.4.2"
     },
@@ -49,7 +49,7 @@
     },
     "vibe-access": {
       "repo": "estevanhernandez-stack-ed/vibe-access",
-      "version": "v0.2.0",
+      "version": "v0.3.0",
       "source": "release"
     },
     "vibe-cartographer": {
@@ -65,7 +65,7 @@
     "vibe-glow": {
       "repo": "estevanhernandez-stack-ed/vibe-glow",
       "version": "v0.2.0",
-      "source": "tag"
+      "source": "release"
     },
     "vibe-insights": {
       "repo": "estevanhernandez-stack-ed/vibe-insights",
@@ -94,7 +94,7 @@
     },
     "vibe-recall": {
       "repo": "estevanhernandez-stack-ed/Vibe-Recall",
-      "version": "v0.1.2",
+      "version": "v0.1.3",
       "source": "release"
     },
     "vibe-runbook": {
