@@ -181,7 +181,7 @@
         "source": "git-subdir",
         "url": "https://github.com/estevanhernandez-stack-ed/Vibe-Recall",
         "path": "plugins/vibe-recall",
-        "ref": "v0.1.2"
+        "ref": "v0.1.3"
       }
     }
   ]
