@@ -29,7 +29,7 @@ The architecture: **foundations underneath, pillars on top.** Foundation tools e
 
 | Plugin | Solo repo | Latest | Purpose |
 |---|---|---|---|
-| <img src="assets/icons/vibe-cartographer.svg" width="26" alt=""> **Vibe Cartographer** | [`vibe-cartographer`](https://github.com/estevanhernandez-stack-ed/vibe-cartographer) | [![](https://img.shields.io/github/v/tag/estevanhernandez-stack-ed/vibe-cartographer?label=&color=17d4fa)](https://github.com/estevanhernandez-stack-ed/vibe-cartographer/tags) | Plot your course from idea to shipped app — eight commands (onboard → reflect) plus L3.5 self-evolution. Vibe coding with course correction. |
+| <img src="assets/icons/vibe-cartographer.svg" width="26" alt=""> **Vibe Cartographer** | [`vibe-cartographer`](https://github.com/estevanhernandez-stack-ed/vibe-cartographer) | [![](https://img.shields.io/github/v/tag/estevanhernandez-stack-ed/vibe-cartographer?label=&color=17d4fa)](https://github.com/estevanhernandez-stack-ed/vibe-cartographer/tags) | Find your direction no matter where you start. Eight commands from raw idea to shipped app, or `/take` any backlog, findings report or plan and run it overnight. |
 | <img src="assets/icons/vibe-doc.svg" width="26" alt=""> **Vibe Doc** | [`Vibe-Doc`](https://github.com/estevanhernandez-stack-ed/Vibe-Doc) | [![](https://img.shields.io/github/v/tag/estevanhernandez-stack-ed/Vibe-Doc?label=&color=17d4fa)](https://github.com/estevanhernandez-stack-ed/Vibe-Doc/tags) | Documentation gap analyzer. Scans, classifies, finds the missing technical docs, generates them from your existing artifacts. |
 | <img src="assets/icons/vibe-sec.svg" width="26" alt=""> **Vibe Sec** | [`vibe-sec`](https://github.com/estevanhernandez-stack-ed/vibe-sec) | [![](https://img.shields.io/github/v/tag/estevanhernandez-stack-ed/vibe-sec?label=&color=17d4fa)](https://github.com/estevanhernandez-stack-ed/vibe-sec/tags) | Tier-aware security audit + orchestration. Ten-concern audit (secrets, deps, supply-chain, auth, OWASP survey, threat-model…); defers to gitleaks/OSV/Semgrep/Trivy when present. |
 | <img src="assets/icons/vibe-test.svg" width="26" alt=""> **Vibe Test** | [`vibe-test`](https://github.com/estevanhernandez-stack-ed/vibe-test) | [![](https://img.shields.io/github/v/tag/estevanhernandez-stack-ed/vibe-test?label=&color=17d4fa)](https://github.com/estevanhernandez-stack-ed/vibe-test/tags) | Test analyzer + generator. Classifies by app type and maturity tier, measures coverage honestly, generates tests proportional to deployment risk — catches the broken harnesses other tools assume away. |
@@ -135,7 +135,7 @@ AI-assisted creation has predictable patterns of friction — in software (vibe-
   - **Thesis Engine** — knowledge foundation: research feeder (topics, primary sources, opposing positions, methodology, prior art)
   - **Vibe Keystone** — structural foundation: bootstraps a tenant-aware `CLAUDE.md` so every other plugin operates on a consistent contract
 - **Pillars.** Shape how you work — through the build, after the ship, and across repos.
-  - **Vibe Cartographer** — plot the course from idea to shipped app (vibe coding course correction)
+  - **Vibe Cartographer** — find your direction no matter where you start (idea to shipped app, or take over any list overnight)
   - **Vibe Doc** — close the documentation vacuum (ADRs, runbooks, threat models)
   - **Vibe Sec** — close the security vacuum (secrets, auth, input validation, dependencies)
   - **Vibe Test** — close the testing vacuum (smoke → behavioral → edge → integration)
