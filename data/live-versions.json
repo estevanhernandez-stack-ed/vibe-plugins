@@ -3,7 +3,7 @@
   "products": {
     "626-mod-launcher": {
       "repo": "estevanhernandez-stack-ed/626-mod-launcher",
-      "version": "v0.23.0",
+      "version": "v0.25.0",
       "source": "release"
     },
     "Celestia3": {
@@ -18,7 +18,7 @@
     },
     "Sanduhr_f-r_Claude": {
       "repo": "estevanhernandez-stack-ed/Sanduhr_f-r_Claude",
-      "version": "v2.22.0-mac",
+      "version": "v2.26.0-mac",
       "source": "release",
       "latest_tag": "v3.4.3"
     },
@@ -49,12 +49,12 @@
     },
     "vibe-access": {
       "repo": "estevanhernandez-stack-ed/vibe-access",
-      "version": "v0.3.0",
+      "version": "v0.3.1",
       "source": "release"
     },
     "vibe-cartographer": {
       "repo": "estevanhernandez-stack-ed/vibe-cartographer",
-      "version": "v1.12.0",
+      "version": "v1.13.0",
       "source": "release"
     },
     "vibe-doc": {
@@ -84,22 +84,22 @@
     },
     "vibe-lingual": {
       "repo": "estevanhernandez-stack-ed/Vibe-Lingual",
-      "version": "v0.1.0",
+      "version": "v0.1.1",
       "source": "release"
     },
     "vibe-prompt": {
       "repo": "estevanhernandez-stack-ed/Vibe-Prompt",
-      "version": "v0.8.2",
+      "version": "v0.8.3",
       "source": "release"
     },
     "vibe-recall": {
       "repo": "estevanhernandez-stack-ed/Vibe-Recall",
-      "version": "v0.1.3",
+      "version": "v0.1.4",
       "source": "release"
     },
     "vibe-runbook": {
       "repo": "estevanhernandez-stack-ed/Vibe-Runbook",
-      "version": "v0.2.1",
+      "version": "v0.2.2",
       "source": "release"
     },
     "vibe-sec": {
@@ -109,17 +109,17 @@
     },
     "vibe-taker": {
       "repo": "estevanhernandez-stack-ed/vibe-taker",
-      "version": "v0.2.0",
+      "version": "v0.2.1",
       "source": "release"
     },
     "vibe-test": {
       "repo": "estevanhernandez-stack-ed/vibe-test",
-      "version": "vibe-test-v0.4.0",
+      "version": "vibe-test-v0.4.1",
       "source": "release"
     },
     "vibe-thesis": {
       "repo": "estevanhernandez-stack-ed/Vibe-Thesis",
-      "version": "v0.2.0",
+      "version": "v0.2.1",
       "source": "release"
     },
     "vibe-walk": {
