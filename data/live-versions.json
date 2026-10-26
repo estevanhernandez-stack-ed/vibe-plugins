@@ -18,8 +18,9 @@
     },
     "Sanduhr_f-r_Claude": {
       "repo": "estevanhernandez-stack-ed/Sanduhr_f-r_Claude",
-      "version": "v3.9.1",
-      "source": "release"
+      "version": "v2.32.0-mac",
+      "source": "release",
+      "latest_tag": "v3.9.1"
     },
     "SnipSnap": {
       "repo": "estevanhernandez-stack-ed/SnipSnap",
@@ -38,7 +39,7 @@
     },
     "rororo-ur-task": {
       "repo": "estevanhernandez-stack-ed/rororo-ur-task",
-      "version": "v0.9.1",
+      "version": "v0.13.0",
       "source": "release"
     },
     "thesis-engine": {
