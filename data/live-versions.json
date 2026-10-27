@@ -13,12 +13,12 @@
     },
     "ROROROblox": {
       "repo": "estevanhernandez-stack-ed/ROROROblox",
-      "version": "v1.34.0.0",
+      "version": "v1.35.0.0",
       "source": "release"
     },
     "Sanduhr_f-r_Claude": {
       "repo": "estevanhernandez-stack-ed/Sanduhr_f-r_Claude",
-      "version": "v2.32.0-mac",
+      "version": "v2.33.1-mac",
       "source": "release",
       "latest_tag": "v3.9.1"
     },
