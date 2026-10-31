@@ -18,8 +18,9 @@
     },
     "Sanduhr_f-r_Claude": {
       "repo": "estevanhernandez-stack-ed/Sanduhr_f-r_Claude",
-      "version": "v4.0.1",
-      "source": "release"
+      "version": "v2.38.0-mac",
+      "source": "release",
+      "latest_tag": "v4.0.1"
     },
     "SnipSnap": {
       "repo": "estevanhernandez-stack-ed/SnipSnap",
