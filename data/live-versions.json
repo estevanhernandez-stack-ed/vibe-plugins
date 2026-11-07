@@ -18,7 +18,7 @@
     },
     "Sanduhr_f-r_Claude": {
       "repo": "estevanhernandez-stack-ed/Sanduhr_f-r_Claude",
-      "version": "v2.41.0-mac",
+      "version": "v0.3.0-time",
       "source": "release",
       "latest_tag": "v4.6.0"
     },
