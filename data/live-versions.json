@@ -3,7 +3,7 @@
   "products": {
     "626-mod-launcher": {
       "repo": "estevanhernandez-stack-ed/626-mod-launcher",
-      "version": "v0.25.0",
+      "version": "v0.26.0",
       "source": "release"
     },
     "Celestia3": {
@@ -18,9 +18,9 @@
     },
     "Sanduhr_f-r_Claude": {
       "repo": "estevanhernandez-stack-ed/Sanduhr_f-r_Claude",
-      "version": "v0.3.0-time",
+      "version": "v2.42.0-mac",
       "source": "release",
-      "latest_tag": "v4.6.0"
+      "latest_tag": "v4.7.0"
     },
     "SnipSnap": {
       "repo": "estevanhernandez-stack-ed/SnipSnap",
