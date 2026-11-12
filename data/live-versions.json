@@ -3,9 +3,8 @@
   "products": {
     "626-mod-launcher": {
       "repo": "estevanhernandez-stack-ed/626-mod-launcher",
-      "version": "v0.27.0",
-      "source": "release",
-      "latest_tag": "v0.28.0"
+      "version": "v0.28.1",
+      "source": "release"
     },
     "Celestia3": {
       "repo": "estevanhernandez-stack-ed/Celestia3",
@@ -14,13 +13,12 @@
     },
     "ROROROblox": {
       "repo": "estevanhernandez-stack-ed/ROROROblox",
-      "version": "v1.36.0.0",
-      "source": "release",
-      "latest_tag": "v1.37.0.0"
+      "version": "v1.37.0.0",
+      "source": "release"
     },
     "Sanduhr_f-r_Claude": {
       "repo": "estevanhernandez-stack-ed/Sanduhr_f-r_Claude",
-      "version": "v2.42.4-mac",
+      "version": "v2.43.0-mac",
       "source": "release",
       "latest_tag": "v4.7.0"
     },
