@@ -4,7 +4,8 @@
     "626-mod-launcher": {
       "repo": "estevanhernandez-stack-ed/626-mod-launcher",
       "version": "v0.28.1",
-      "source": "release"
+      "source": "release",
+      "latest_tag": "v0.28.2"
     },
     "Celestia3": {
       "repo": "estevanhernandez-stack-ed/Celestia3",
